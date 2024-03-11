@@ -37,6 +37,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     //first name field
     final firstNameField = TextFormField(
       autofocus: false,
@@ -117,14 +118,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final datePicker = DatePickerWidget(
         color: Colors.white,
         userDate: 'Pick Date',
-        buttonColor: Colors.black,
+        buttonColor: Colors.transparent,
         dob: birthEditingController);
 
     //country picker
     final countryPicker = CountryPickerWidget(
         color: Colors.white,
         userCountry: 'Pick Country',
-        buttonColor: Colors.black,
+        buttonColor: Colors.transparent,
         countryOf: countryEditingController);
 
     //email field
@@ -239,9 +240,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
 //sign up button
     final signUpButton = Material(
-      elevation: 5,
+      elevation: 1,
       borderRadius: BorderRadius.circular(30),
-      color: Colors.black,
+      color: Colors.transparent,
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         shape: RoundedRectangleBorder(
@@ -264,7 +265,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
 
     return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: theme.primaryColor,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -279,7 +280,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         body: Center(
             child: SingleChildScrollView(
           child: Container(
-            color: Colors.black,
+            color: theme.primaryColor,
             child: Padding(
               padding: const EdgeInsets.only(left: 36, right: 36),
               child: Form(
@@ -297,12 +298,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     Column(
                       children: const [
-                        Text("Create new account",
+                        Text("Your vote counts,",
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 20,
-                                fontFamily: 'Kanit-Regular',
-                                fontStyle: FontStyle.italic)),
+                                fontSize: 25,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.bold)),
+                        Text("Create a new account",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w400)),
                       ],
                     ),
                     const SizedBox(height: 30),
@@ -311,10 +318,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     lastNameField,
                     const SizedBox(height: 20),
                     emailField,
-                    const SizedBox(height: 20),
-                    datePicker,
-                    const SizedBox(height: 20),
-                    countryPicker,
                     const SizedBox(height: 20),
                     passwordField,
                     const SizedBox(height: 20),

@@ -2,11 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:ticketzone/screen/main/main_screen.dart';
-// import 'package:ticketzone/screen/signup-signin/forgot_password_screen.dart';
-// import 'package:ticketzone/screen/signup-signin/google_registration_screen.dart';
-// import 'package:ticketzone/screen/signup-signin/registration_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:vote/screen/navigator/navigator_screen.dart';
 import 'package:vote/screen/signup-signin/registration_screen.dart';
 import 'package:vote/widget/background_video_widget.dart';
 
@@ -35,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    ThemeData theme = Theme.of(context);
 
     //email field
     final emailField = TextFormField(
@@ -108,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     final loginButton = Material(
-      elevation: 5,
+      elevation: 1,
       borderRadius: BorderRadius.circular(30),
       color: Colors.transparent,
       child: MaterialButton(
@@ -119,6 +117,8 @@ class _LoginScreenState extends State<LoginScreen> {
         minWidth: MediaQuery.of(context).size.width / 1.5,
         onPressed: () {
           // signIn(emailController.text, passwordController.text);
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const NavigatorScreen()));
         },
         child: const Text(
           "Login",
@@ -149,8 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
         body: Stack(
       children: [
-        Container(
-            color: Colors.transparent, child: const BackgroundVideoWidget()),
+        Container(color: theme.primaryColor),
         Center(
             child: SingleChildScrollView(
           child: Container(
@@ -257,4 +256,66 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
     ));
   }
+
+  // // login function
+  // void signIn(String email, String password) async {
+  //   if (_formKey.currentState!.validate()) {
+  //     try {
+  //       await _auth
+  //           .signInWithEmailAndPassword(email: email, password: password)
+  //           .then((uid) async => {
+  //                 prefs = await SharedPreferences.getInstance(),
+  //                 prefs.setString("email", email),
+  //                 prefs.setString("password", password),
+  //                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //                   content: Text("Login Successful"),
+  //                   backgroundColor: Colors.green,
+  //                   showCloseIcon: true,
+  //                   closeIconColor: Colors.white,
+  //                 )),
+  //                 await getTickets(uid.user!.uid),
+  //                 //Fluttertoast.showToast(msg: "Login Successful"),
+  //                 Navigator.of(context).pushReplacement(MaterialPageRoute(
+  //                     builder: (context) => const MainScreen())),
+  //               });
+  //     } on FirebaseAuthException catch (error) {
+  //       switch (error.code) {
+  //         case "invalid-email":
+  //           errorMessage = "Your email address appears to be malformed.";
+
+  //           break;
+  //         case "wrong-password":
+  //           errorMessage = "Your password is wrong.";
+  //           break;
+  //         case "user-not-found":
+  //           errorMessage = "User with this email doesn't exist.";
+  //           break;
+  //         case "user-disabled":
+  //           errorMessage = "User with this email has been disabled.";
+  //           break;
+  //         case "too-many-requests":
+  //           errorMessage = "Too many requests";
+  //           break;
+  //         case "operation-not-allowed":
+  //           errorMessage = "Signing in with Email and Password is not enabled.";
+  //           break;
+  //         default:
+  //           errorMessage = "An undefined Error happened.";
+  //       }
+
+  //       // Fluttertoast.showToast(msg: errorMessage!);
+
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text(
+  //             errorMessage!,
+  //           ),
+  //           backgroundColor: Colors.red,
+  //           closeIconColor: Colors.white,
+  //           showCloseIcon: true,
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 }

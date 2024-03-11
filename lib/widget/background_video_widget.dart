@@ -18,7 +18,7 @@ class _BackgroundVideoWidgetState extends State<BackgroundVideoWidget> {
         VideoPlayerController.asset('assets/background/background.mp4')
           ..initialize().then((_) {
             videoController.play();
-            videoController.setLooping(true);
+            videoController.setLooping(false);
           });
   }
 
