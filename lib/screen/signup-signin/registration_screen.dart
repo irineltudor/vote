@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vote/screen/verify/verify_intro_screen.dart';
 import 'package:vote/widget/country_picker_widget.dart';
 
 import '../../widget/date_picker_widget.dart';
@@ -251,6 +252,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         minWidth: MediaQuery.of(context).size.width / 1.5,
         onPressed: () {
           // signUp(emailEditingController.text, passwordEditingController.text);
+          Navigator.pushAndRemoveUntil(
+              (context),
+              MaterialPageRoute(
+                  builder: (context) => const VerifyIntroScreen()),
+              (route) => false);
         },
         child: const Text(
           "Sign Up",

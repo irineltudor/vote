@@ -49,6 +49,7 @@ class _NewsSliderState extends State<NewsSlider> {
 
     if (articles.isEmpty) {
       return Container(
+          height: height / 4,
           color: theme.scaffoldBackgroundColor,
           child: Center(
               child: CircularProgressIndicator(

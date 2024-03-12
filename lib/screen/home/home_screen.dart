@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:news_api_flutter_package/model/article.dart';
-import 'package:news_api_flutter_package/news_api_flutter_package.dart';
-import 'package:vote/consts.dart';
 
 import '../../widget/menu_widget.dart';
 import '../../widget/news_slider.dart';
@@ -46,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         subtitle: Text("Hello, Tudor",
                             style: theme.textTheme.headlineLarge),
                         trailing: ClipOval(
-                            child: Image.asset("assets/profile/profile.png")),
+                            child: Image.asset("assets/profile/profile.jpg")),
                       )
                     ]),
               ),

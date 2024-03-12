@@ -7,7 +7,7 @@ class MenuItems {
   static const search = MenuItem('Search', Icons.search);
   static const ballots = MenuItem('Ballot', Icons.ballot);
   static const idCard = MenuItem('Card', Icons.perm_identity);
-  static const settings = MenuItem('Settings', Icons.settings);
+  static const settings = MenuItem('More', Icons.more_horiz);
 
   static const all = <MenuItem>[home, search, ballots, idCard, settings];
 }

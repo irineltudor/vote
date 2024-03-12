@@ -121,6 +121,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.9.0"
+  cnic_scanner:
+    dependency: "direct main"
+    description:
+      name: cnic_scanner
+      sha256: "7c30a428e1767b974c9da4eccbb7e1e8f1a44ea52d6ce04fa1dfd73c9beb45f3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   collection:
     dependency: transitive
     description:
@@ -440,6 +448,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.4+1"
+  google_mlkit_commons:
+    dependency: transitive
+    description:
+      name: google_mlkit_commons
+      sha256: "42173a8ba89f386486cc5b8249e84da4a4b861daa70498373627d985eb418689"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.0"
+  google_mlkit_text_recognition:
+    dependency: transitive
+    description:
+      name: google_mlkit_text_recognition
+      sha256: "588021c99536fdfb173eeecc4ee1b60ea4e0bd4be9787f52363c85346ae20364"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.0"
   google_nav_bar:
     dependency: "direct main"
     description:
@@ -548,10 +572,10 @@ packages:
     dependency: "direct main"
     description:
       name: image_picker
-      sha256: b6951e25b795d053a6ba03af5f710069c99349de9341af95155d52665cb4607c
+      sha256: "7d7f2768df2a8b0a3cefa5ef4f84636121987d403130e70b17ef7e2cf650ba84"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.9"
+    version: "1.0.4"
   image_picker_android:
     dependency: transitive
     description:
@@ -612,10 +636,10 @@ packages:
     dependency: "direct main"
     description:
       name: intl
-      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.17.0"
+    version: "0.18.1"
   js:
     dependency: transitive
     description:

@@ -5,7 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:vote/screen/ballot/ballot_screen.dart';
 import 'package:vote/screen/card/card_screen.dart';
-import 'package:vote/screen/settings/settings_screen.dart';
+import 'package:vote/screen/more/more_screen.dart';
 
 import '../../item/menu_item.dart';
 import '../../widget/menu_widget.dart';
@@ -29,7 +29,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
     const SearchScreen(),
     const BallotScreen(),
     const CardScreen(),
-    const SettingsScreen()
+    const MoreScreen()
   ];
 
   @override
@@ -58,7 +58,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
               child: const Icon(Icons.perm_identity)),
           IconTheme(
               data: IconThemeData(color: theme.primaryColor),
-              child: const Icon(Icons.settings)),
+              child: const Icon(Icons.more_horiz)),
         ],
         onTap: (value) => setState(() {
           index = value;

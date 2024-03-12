@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../widget/menu_widget.dart';
 
@@ -50,8 +49,10 @@ class _CardScreenState extends State<CardScreen> {
               decoration: BoxDecoration(
                   color: theme.scaffoldBackgroundColor,
                   shape: BoxShape.circle,
-                  boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)]),
-              child: MenuWidget(),
+                  boxShadow: const [
+                    BoxShadow(color: Colors.black, blurRadius: 1)
+                  ]),
+              child: const MenuWidget(),
             )),
         Positioned(
             top: height * 0.19,
@@ -60,8 +61,7 @@ class _CardScreenState extends State<CardScreen> {
             right: 0,
             child: ClipRRect(
               borderRadius: const BorderRadius.vertical(
-                  top: const Radius.circular(45),
-                  bottom: const Radius.circular(45)),
+                  top: Radius.circular(45), bottom: Radius.circular(45)),
               child: Container(
                 color: theme.scaffoldBackgroundColor,
               ),
