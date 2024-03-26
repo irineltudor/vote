@@ -6,10 +6,27 @@ class MenuWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-        onPressed: () => ZoomDrawer.of(context)!.toggle(),
-        highlightColor: Colors.transparent,
-        icon: IconTheme(
-            data: Theme.of(context).iconTheme, child: const Icon(Icons.menu)));
+    ThemeData theme = Theme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+          color: theme.scaffoldBackgroundColor,
+          shape: BoxShape.circle,
+          border: Border.all(
+              color: theme.dialogBackgroundColor.withOpacity(0.5), width: 2),
+          boxShadow: ([
+            BoxShadow(
+                color: theme.dialogBackgroundColor.withOpacity(0.8),
+                blurRadius: 1.5)
+          ])),
+      child: IconButton(
+          onPressed: () => ZoomDrawer.of(context)!.toggle(),
+          highlightColor: Colors.transparent,
+          icon: IconTheme(
+              data: Theme.of(context).iconTheme,
+              child: const Icon(
+                Icons.menu,
+              ))),
+    );
   }
 }

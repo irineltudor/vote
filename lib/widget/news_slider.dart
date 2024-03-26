@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:news_api_flutter_package/model/article.dart';
 import 'package:news_api_flutter_package/news_api_flutter_package.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../consts.dart';
 import 'news_slider_item.dart';
@@ -31,12 +32,23 @@ class _NewsSliderState extends State<NewsSlider> {
 
   Future<void> getData() async {
     await _newsApi
-        .getEverything(query: 'politics', language: 'en')
+        .getEverything(
+      query: 'politics',
+    )
         .then((value) {
       setState(() {
+        value.removeWhere((element) {
+          return element.author == null ||
+              element.content == null ||
+              element.url == null ||
+              element.title == null ||
+              element.urlToImage == null ||
+              element.description == null ||
+              element.publishedAt == null;
+        });
+        print(articles);
         articles = value;
       });
-      print(articles.length);
     }).catchError((onError) {
       print("Caught article error :" + onError.toString());
     });

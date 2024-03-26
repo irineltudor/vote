@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:vote/screen/more/account_details_screen.dart';
+import 'package:vote/screen/more/change_password_screen.dart';
 import 'package:vote/screen/more/pin_screen.dart';
 import 'package:vote/screen/signup-signin/login_screen.dart';
+import 'package:vote/screen/verify/card_details_screen.dart';
 
+import '../../consts.dart';
+import '../../widget/custom_card_widget.dart';
 import '../../widget/menu_widget.dart';
+import '../verify/verify_intro_screen.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});
@@ -19,6 +25,8 @@ class _MoreScreenState extends State<MoreScreen> {
     final width = MediaQuery.of(context).size.width;
     ThemeData theme = Theme.of(context);
 
+    String pin = PIN;
+
     final logoutButton = Container(
       height: height / 15,
       margin: EdgeInsets.symmetric(horizontal: width / 3),
@@ -32,9 +40,7 @@ class _MoreScreenState extends State<MoreScreen> {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
               boxShadow: [
-                BoxShadow(
-                    color: theme.dialogBackgroundColor.withOpacity(0.25),
-                    blurRadius: 4)
+                BoxShadow(color: Color.fromARGB(246, 0, 0, 0), blurRadius: 4)
               ],
               color: theme.primaryColor),
           child: Row(
@@ -82,8 +88,7 @@ class _MoreScreenState extends State<MoreScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                           boxShadow: [
                             BoxShadow(
-                                color: theme.dialogBackgroundColor
-                                    .withOpacity(0.25),
+                                color: Color.fromARGB(246, 0, 0, 0),
                                 blurRadius: 4)
                           ]),
                       height: height / 8,
@@ -121,16 +126,19 @@ class _MoreScreenState extends State<MoreScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _card(
-                                text: 'Set up Pin',
-                                icon: Icons.lock,
+                            CustomCardWidget(
+                                text: 'Change ID Card',
+                                icon: Icons.perm_identity,
                                 theme: theme,
-                                statefulWidget: PinScreen()),
-                            _card(
-                                text: 'Change Password',
-                                icon: Icons.password,
-                                theme: theme,
-                                statefulWidget: PinScreen())
+                                statefulWidget: const VerifyIntroScreen(),
+                                pin: pin),
+                            CustomCardWidget(
+                              text: 'Set up Pin',
+                              icon: Icons.lock,
+                              theme: theme,
+                              statefulWidget: const PinScreen(),
+                              pin: pin,
+                            ),
                           ],
                         ),
                         SizedBox(
@@ -139,16 +147,20 @@ class _MoreScreenState extends State<MoreScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _card(
-                                text: 'Change Username',
-                                icon: Icons.ads_click_outlined,
-                                theme: theme,
-                                statefulWidget: PinScreen()),
-                            _card(
-                                text: 'Search ',
-                                icon: Icons.search,
-                                theme: theme,
-                                statefulWidget: PinScreen())
+                            CustomCardWidget(
+                              text: 'Change Password',
+                              icon: Icons.password,
+                              theme: theme,
+                              statefulWidget: const ChangePasswordScreen(),
+                              pin: pin,
+                            ),
+                            CustomCardWidget(
+                              text: 'Account details',
+                              icon: Icons.edit,
+                              theme: theme,
+                              statefulWidget: const AccountDetailsScreen(),
+                              pin: pin,
+                            )
                           ],
                         )
                       ],
@@ -168,17 +180,26 @@ class _MoreScreenState extends State<MoreScreen> {
                   borderRadius: BorderRadius.all(Radius.circular(45)),
                   color: theme.scaffoldBackgroundColor,
                   boxShadow: [
-                    BoxShadow(
-                        color: theme.dialogBackgroundColor.withOpacity(0.5),
-                        blurRadius: 4)
+                    BoxShadow(color: Color.fromARGB(0, 0, 0, 0), blurRadius: 2)
                   ]),
               padding: const EdgeInsets.only(
                   top: 10, left: 32, right: 32, bottom: 10),
-              child: Center(
-                child: Text(
-                  "More",
-                  style: theme.textTheme.titleSmall,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.more_horiz,
+                    color: theme.dialogBackgroundColor,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    "More",
+                    style: theme.textTheme.headlineMedium,
+                  ),
+                ],
               )),
         ),
         Positioned(
@@ -186,57 +207,8 @@ class _MoreScreenState extends State<MoreScreen> {
             height: height * 0.05,
             left: 0,
             right: height / 2.5,
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                  color: theme.scaffoldBackgroundColor,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(color: theme.dialogBackgroundColor, blurRadius: 1)
-                  ]),
-              child: MenuWidget(),
-            )),
+            child: const MenuWidget()),
       ]),
-    );
-  }
-
-  Widget _card(
-      {required String text,
-      required IconData icon,
-      required ThemeData theme,
-      required StatefulWidget statefulWidget}) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => statefulWidget));
-      },
-      child: Container(
-        height: 160,
-        width: 150,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(45)),
-            color: theme.scaffoldBackgroundColor,
-            boxShadow: [
-              BoxShadow(
-                  color: theme.dialogBackgroundColor.withOpacity(0.25),
-                  blurRadius: 4)
-            ]),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: theme.primaryColor,
-              size: 75,
-            ),
-            Text(
-              text,
-              style: theme.textTheme.bodySmall,
-            )
-          ],
-        ),
-      ),
     );
   }
 }

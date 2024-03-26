@@ -22,7 +22,8 @@ class Intro4Screen extends StatelessWidget {
             ),
             Text(
               "Now you can vote from anywhere",
-              style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(color: theme.scaffoldBackgroundColor),
             ),
           ]),
     );

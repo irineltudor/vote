@@ -5,8 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vote/screen/verify/facial_recognition_screen.dart';
-
-import '../../src/custom_dialog.dart';
+import 'package:vote/widget/custom_dialog_widget.dart';
 
 class CardDetailsScreen extends StatefulWidget {
   const CardDetailsScreen({super.key});

@@ -23,7 +23,8 @@ class Intro2Screen extends StatelessWidget {
             ),
             Text(
               "Create an account",
-              style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(color: theme.scaffoldBackgroundColor),
             ),
           ]),
     );

@@ -3,7 +3,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:vote/screen/ballot/ballot_screen.dart';
+import 'package:vote/screen/elections/elections_screen.dart';
 import 'package:vote/screen/card/card_screen.dart';
 import 'package:vote/screen/more/more_screen.dart';
 
@@ -26,8 +26,8 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
   int index = 0;
   final screens = [
     const HomeScreen(),
+    const ElectionsScreen(),
     const SearchScreen(),
-    const BallotScreen(),
     const CardScreen(),
     const MoreScreen()
   ];
@@ -49,10 +49,10 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
               child: const Icon(Icons.home)),
           IconTheme(
               data: IconThemeData(color: theme.primaryColor),
-              child: const Icon(Icons.search)),
+              child: const Icon(Icons.ballot)),
           IconTheme(
               data: IconThemeData(color: theme.primaryColor),
-              child: const Icon(Icons.ballot)),
+              child: const Icon(Icons.search)),
           IconTheme(
               data: IconThemeData(color: theme.primaryColor),
               child: const Icon(Icons.perm_identity)),
@@ -65,20 +65,6 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
         }),
       ),
       body: Stack(children: <Widget>[
-        // Positioned(
-        //     top: height * 0.04,
-        //     height: height * 0.05,
-        //     left: 0,
-        //     right: height / 2.5,
-        //     child: Container(
-        //       width: 40,
-        //       height: 40,
-        //       decoration: BoxDecoration(
-        //           color: theme.scaffoldBackgroundColor,
-        //           shape: BoxShape.circle,
-        //           boxShadow: [BoxShadow(color: Colors.black, blurRadius: 3)]),
-        //       child: MenuWidget(),
-        //     )),
         ZoomDrawer(
           borderRadius: 30,
           angle: -15,

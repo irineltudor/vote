@@ -23,7 +23,8 @@ class Intro3Screen extends StatelessWidget {
             ),
             Text(
               "Verify it using your identification card",
-              style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(color: theme.scaffoldBackgroundColor),
             ),
           ]),
     );

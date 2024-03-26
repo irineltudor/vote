@@ -22,11 +22,13 @@ class Intro1Screen extends StatelessWidget {
             ),
             Text(
               "Vote with blockchain: ",
-              style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(color: theme.scaffoldBackgroundColor),
             ),
             Text(
               "Easy, secure, and everywhere!",
-              style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(color: theme.scaffoldBackgroundColor),
             ),
           ]),
     );

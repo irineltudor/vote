@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:vote/consts.dart';
+import 'package:vote/screen/more/pin_screen.dart';
+import 'package:vote/screen/verify/verify_intro_screen.dart';
+import 'package:vote/widget/custom_card_widget.dart';
 
 import '../../widget/menu_widget.dart';
 import '../../widget/news_slider.dart';
@@ -12,11 +16,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int status = 0; // 0-unverified,1-waiting,2-verified
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     ThemeData theme = Theme.of(context);
+
+    String pin = PIN;
+
+    setState(() {
+      status = 2;
+    });
 
     return Scaffold(
       backgroundColor: theme.primaryColor,
@@ -53,15 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: height * 0.05,
             left: 0,
             right: height / 2.5,
-            child: Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                  color: theme.scaffoldBackgroundColor,
-                  shape: BoxShape.circle,
-                  boxShadow: [BoxShadow(color: Colors.black, blurRadius: 1)]),
-              child: MenuWidget(),
-            )),
+            child: const MenuWidget()),
         Positioned(
             top: height * 0.19,
             height: height * 0.7,
@@ -76,24 +80,94 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(children: [
                   Padding(
                     padding: EdgeInsets.all(20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Campaings",
-                          style: theme.textTheme.headlineMedium,
-                        ),
-                        GestureDetector(
-                          onTap: () => {},
-                          child: Text(
-                            "View all",
-                            style: theme.textTheme.bodySmall,
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: theme.scaffoldBackgroundColor,
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          border: Border.all(
+                              color:
+                                  theme.dialogBackgroundColor.withOpacity(0.5),
+                              width: 2),
+                          boxShadow: ([
+                            BoxShadow(
+                                color: theme.dialogBackgroundColor
+                                    .withOpacity(0.8),
+                                blurRadius: 1.5)
+                          ])),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Account status",
+                            style: theme.textTheme.headlineSmall,
                           ),
+                          status == 0
+                              ? Row(
+                                  children: [
+                                    Icon(
+                                      Icons.not_interested,
+                                      color: Colors.red,
+                                    ),
+                                    Text(
+                                      "Unverified",
+                                      style: theme.textTheme.labelMedium
+                                          ?.copyWith(color: Colors.red),
+                                    ),
+                                  ],
+                                )
+                              : status == 1
+                                  ? Row(
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_drop_down_circle,
+                                          color: Colors.orange,
+                                        ),
+                                        Text(
+                                          "Waiting",
+                                          style: theme.textTheme.labelMedium
+                                              ?.copyWith(color: Colors.orange),
+                                        ),
+                                      ],
+                                    )
+                                  : Row(
+                                      children: [
+                                        Icon(
+                                          Icons.verified,
+                                          color: Colors.blue,
+                                        ),
+                                        Text(
+                                          "Verified",
+                                          style: theme.textTheme.labelMedium
+                                              ?.copyWith(color: Colors.blue),
+                                        ),
+                                      ],
+                                    )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        CustomCardWidget(
+                            text: 'Change ID Card',
+                            icon: Icons.perm_identity,
+                            theme: theme,
+                            statefulWidget: const VerifyIntroScreen(),
+                            pin: pin),
+                        CustomCardWidget(
+                          text: 'Set up Pin',
+                          icon: Icons.lock,
+                          theme: theme,
+                          statefulWidget: const PinScreen(),
+                          pin: pin,
                         ),
                       ],
                     ),
                   ),
-                  NewsSlider(),
                   Padding(
                     padding: EdgeInsets.all(20),
                     child: Row(
@@ -106,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         GestureDetector(
                           onTap: () => {},
                           child: Text(
-                            "View all",
+                            "Politics",
                             style: theme.textTheme.bodySmall,
                           ),
                         ),

@@ -41,7 +41,7 @@ dependencies:
   firebase_auth: ^4.3.0
   firebase_core: ^2.8.0
   datetime_picker_formfield: ^2.0.0
-  fluttertoast: any
+  fluttertoast: ^8.2.4
   file_picker: ^5.2.10
   curved_navigation_bar: ^1.0.3
   image_cropper: ^3.0.2
@@ -62,6 +62,9 @@ dependencies:
   news_api_flutter_package: ^1.1.1
   lottie: ^2.2.0
   cnic_scanner: ^0.0.4
+  country_flags: ^1.0.0
+  blur: ^3.1.0
+  url_launcher: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +82,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  fonts:
+  - family: KanitRegular
+    fonts:
+    - asset: assets/fonts/Kanit-Regular.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -88,12 +95,18 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   # assets:
   assets:
-  - assets/logo/logo-black.png
-  - assets/logo/logo-white.png
+  - assets/logo/dark/logo.png
+  - assets/logo/light/logo.png
+  - assets/logo/dark/logo.mp4
+  - assets/logo/light/logo.mp4
   - assets/background/background.mp4
   - assets/profile/
   - assets/animations/
   - assets/verify/
+  - assets/election/election.jpg
+  - assets/election/candidate.png
+  - assets/fonts/Kanit-Regular.ttf
+  - assets/party/party.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

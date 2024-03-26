@@ -17,7 +17,8 @@ class TAppTheme {
       textTheme: TTextTheme.lightTextTheme,
       elevatedButtonTheme: TElevatedButtonTheme.lightElevatedButtonTheme,
       iconTheme: TIconTheme.lightIconTheme,
-      listTileTheme: TListTileTheme.lightListTileTheme);
+      listTileTheme: TListTileTheme.lightListTileTheme,
+      package: "assets/logo/light");
   static ThemeData darkTheme = ThemeData(
       useMaterial3: true,
       fontFamily: 'Poppins',
@@ -28,5 +29,6 @@ class TAppTheme {
       textTheme: TTextTheme.darkTextTheme,
       elevatedButtonTheme: TElevatedButtonTheme.darkElevatedButtonTheme,
       iconTheme: TIconTheme.darkIconTheme,
-      listTileTheme: TListTileTheme.darkListTileTheme);
+      listTileTheme: TListTileTheme.darkListTileTheme,
+      package: "assets/logo/dark");
 }

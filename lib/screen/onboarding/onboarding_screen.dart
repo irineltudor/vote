@@ -20,7 +20,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData _theme = Theme.of(context);
+    ThemeData theme = Theme.of(context);
 
     return Scaffold(
       body: Stack(children: [
@@ -45,17 +45,23 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               children: [
                 GestureDetector(
                     onTap: () {
-                      _controller.jumpToPage(3);
+                      onLastPage ? null : _controller.jumpToPage(3);
                     },
-                    child: const Text(
-                      "skip",
-                      style: TextStyle(color: Colors.white),
-                    )),
+                    child: onLastPage
+                        ? Text(
+                            "skip",
+                            style: TextStyle(color: theme.primaryColor),
+                          )
+                        : Text(
+                            "skip",
+                            style:
+                                TextStyle(color: theme.scaffoldBackgroundColor),
+                          )),
                 SmoothPageIndicator(
                   controller: _controller,
                   count: 4,
-                  effect: const ExpandingDotsEffect(
-                    dotColor: Colors.white,
+                  effect: ExpandingDotsEffect(
+                    dotColor: theme.scaffoldBackgroundColor,
                     activeDotColor: Color.fromARGB(255, 12, 100, 250),
                   ),
                 ),
@@ -71,9 +77,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             ),
                           );
                         },
-                        child: const Text(
+                        child: Text(
                           "done",
-                          style: TextStyle(color: Colors.white),
+                          style:
+                              TextStyle(color: theme.scaffoldBackgroundColor),
                         ))
                     : GestureDetector(
                         onTap: () {
@@ -81,9 +88,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               duration: const Duration(milliseconds: 500),
                               curve: Curves.easeIn);
                         },
-                        child: const Text(
+                        child: Text(
                           "next",
-                          style: TextStyle(color: Colors.white),
+                          style:
+                              TextStyle(color: theme.scaffoldBackgroundColor),
                         )),
               ],
             ))
