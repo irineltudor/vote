@@ -97,8 +97,8 @@ flutter:
   assets:
   - assets/logo/dark/logo.png
   - assets/logo/light/logo.png
-  - assets/logo/dark/logo.mp4
-  - assets/logo/light/logo.mp4
+  - assets/logo/light/logo_animation.json
+  - assets/logo/dark/logo_animation.json
   - assets/background/background.mp4
   - assets/profile/
   - assets/animations/

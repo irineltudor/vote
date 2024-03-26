@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:news_api_flutter_package/model/article.dart';
+import 'package:news_api_flutter_package/model/error.dart';
 import 'package:news_api_flutter_package/news_api_flutter_package.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -49,8 +50,9 @@ class _NewsSliderState extends State<NewsSlider> {
         print(articles);
         articles = value;
       });
-    }).catchError((onError) {
-      print("Caught article error :" + onError.toString());
+    }).catchError((Error) {
+      ApiError error = Error as ApiError;
+      print("Error ${error.message}");
     });
   }
 

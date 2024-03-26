@@ -7,6 +7,7 @@ import 'package:video_player/video_player.dart';
 import 'package:vote/screen/navigator/navigator_screen.dart';
 import 'package:vote/screen/signup-signin/registration_screen.dart';
 import 'package:vote/widget/background_video_widget.dart';
+import 'package:lottie/lottie.dart';
 
 import 'forgot_password_screen.dart';
 
@@ -37,8 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   late SharedPreferences prefs;
 
-  // late VideoPlayerController _controller;
-
   late bool isDarkMode;
 
   @override
@@ -52,11 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final width = MediaQuery.of(context).size.width;
     ThemeData theme = Theme.of(context);
     bool isDarkMode = theme.brightness == Brightness.dark;
-
-    // _controller = VideoPlayerController.asset(
-    //     isDarkMode ? "assets/logo/dark/logo.mp4" : "assets/logo/light/logo.mp4")
-    //   ..initialize();
-    // _controller.play();
 
     //email field
     final emailField = TextFormField(
@@ -157,8 +151,8 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
 
-    // emailController.text = "tirynel@yahoo.com";
-    // passwordController.text = "12345678";
+    emailController.text = "tirynel@yahoo.com";
+    passwordController.text = "12345678";
 
     // if (isLoggedIn) {
     //   return Scaffold(
@@ -189,13 +183,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: <Widget>[
                     SizedBox(
                       height: 200,
-                      child: Image.asset(
-                        isDarkMode
-                            ? "assets/logo/dark/logo.png"
-                            : "assets/logo/light/logo.png",
-                        fit: BoxFit.contain,
-                      ),
-                      // child: VideoPlayer(_controller),
+                      child:
+                          //  Image.asset(
+                          //   isDarkMode
+                          //       ? "assets/logo/dark/logo.png"
+                          //       : "assets/logo/light/logo.png",
+                          //   fit: BoxFit.contain,
+                          // ),
+                          LottieBuilder.asset(isDarkMode
+                              ? "assets/logo/dark/logo_animation.json"
+                              : "assets/logo/light/logo_animation.json"),
                     ),
                     Column(
                       children: [
@@ -282,12 +279,6 @@ class _LoginScreenState extends State<LoginScreen> {
         )),
       ],
     ));
-  }
-
-  @override
-  void dispose() {
-    // _controller.dispose();
-    super.dispose();
   }
 
   // login function
