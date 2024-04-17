@@ -4,42 +4,56 @@ import 'package:vote/screen/more/pin_screen.dart';
 
 import 'pin_dialog_widget.dart';
 
-class CustomCardWidget extends StatelessWidget {
+class CustomCardWidget extends StatefulWidget {
   String text;
   IconData icon;
-  ThemeData theme;
   StatefulWidget statefulWidget;
   String pin;
+  Future<void> function;
 
   CustomCardWidget(
-      {super.key,
-      required this.text,
+      {required this.text,
       required this.icon,
-      required this.theme,
       required this.statefulWidget,
-      required this.pin});
+      required this.pin,
+      required this.function});
 
+  @override
+  State<CustomCardWidget> createState() => _CustomCardWidgetState();
+}
+
+class _CustomCardWidgetState extends State<CustomCardWidget> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+
+    String text = widget.text;
+    IconData icon = widget.icon;
+    StatefulWidget statefulWidget = widget.statefulWidget;
+    String pin = widget.pin;
     return GestureDetector(
-      onTap: () {
-        pin != '----'
+      onTap: () async {
+        pin != ""
             ? showDialog(
                 context: context,
                 barrierColor: Colors.black38,
                 builder: (BuildContext context) {
                   return PinDialogBox(
-                    function: () {
-                      Navigator.push(
+                    function: () async {
+                      String refresh = await Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => statefulWidget));
+                      if (refresh == "refresh") {
+                        widget.function;
+                        print("aici");
+                      }
                     },
                     pin: pin,
+                    text: "Enter your pin",
                   );
                 })
-            : Navigator.push(context,
+            : await Navigator.push(context,
                 MaterialPageRoute(builder: (context) => statefulWidget));
       },
       child: Container(

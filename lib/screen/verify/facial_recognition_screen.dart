@@ -100,8 +100,7 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
       alignment: Alignment.bottomRight,
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const NavigatorScreen()));
+          Navigator.of(context).pop("refresh");
         },
         child: Text(
           "Next",

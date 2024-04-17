@@ -188,39 +188,43 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ),
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-              height: height / 1.65,
-              width: width / 1.1,
-              margin: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                  color: theme.scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.all(Radius.circular(45))),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      detailContainer('Current Password', oldPasswordField, 0),
-                      SizedBox(height: 10),
-                      Container(
-                          margin: EdgeInsets.symmetric(horizontal: 15),
-                          child: Divider(
-                            color:
-                                theme.dialogBackgroundColor.withOpacity(0.25),
-                            thickness: 5,
-                          )),
-                      detailContainer('New Password', newPasswordField, 1),
-                      detailContainer(
-                          'Confirm New Password', renewPasswordField, 2),
-                    ]),
-              )),
-          updateButton
-        ],
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: 75),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+                height: height / 1.65,
+                width: width / 1.1,
+                margin: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                    color: theme.scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.all(Radius.circular(45))),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        detailContainer(
+                            'Current Password', oldPasswordField, 0),
+                        SizedBox(height: 10),
+                        Container(
+                            margin: EdgeInsets.symmetric(horizontal: 15),
+                            child: Divider(
+                              color:
+                                  theme.dialogBackgroundColor.withOpacity(0.25),
+                              thickness: 5,
+                            )),
+                        detailContainer('New Password', newPasswordField, 1),
+                        detailContainer(
+                            'Confirm New Password', renewPasswordField, 2),
+                      ]),
+                )),
+            updateButton
+          ],
+        ),
       ),
     );
   }

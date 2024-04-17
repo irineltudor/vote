@@ -56,8 +56,7 @@ class _VerifyIntroScreenState extends State<VerifyIntroScreen> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => const NavigatorScreen()));
+                      Navigator.of(context).pop();
                     },
                     child: Text(
                       "Skip",

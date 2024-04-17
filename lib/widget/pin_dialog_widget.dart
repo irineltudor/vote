@@ -6,19 +6,21 @@ import 'package:fluttertoast/fluttertoast.dart';
 class PinDialogBox extends StatefulWidget {
   Function function;
   String pin;
+  String text;
 
-  PinDialogBox({required this.function, required this.pin});
+  PinDialogBox({required this.function, required this.pin, required this.text});
 
   @override
-  _PinDialogBoxState createState() => _PinDialogBoxState(pin: pin);
+  _PinDialogBoxState createState() => _PinDialogBoxState();
 }
 
 class _PinDialogBoxState extends State<PinDialogBox> {
   String enteredPin = '';
   bool isPinVisible = false;
-  String pin;
+  late String pin = widget.pin;
+  late String text = widget.text;
 
-  _PinDialogBoxState({required this.pin});
+  _PinDialogBoxState();
 
   Widget numButton(int number, ThemeData theme) {
     return Padding(
@@ -57,7 +59,6 @@ class _PinDialogBoxState extends State<PinDialogBox> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-
     return Container(
       margin: EdgeInsets.only(top: 400),
       decoration: BoxDecoration(
@@ -69,7 +70,7 @@ class _PinDialogBoxState extends State<PinDialogBox> {
         children: [
           Center(
             child: Text(
-              "Enter Your Pin",
+              text,
               style: theme.textTheme.headlineMedium,
             ),
           ),

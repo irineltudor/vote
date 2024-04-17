@@ -11,17 +11,13 @@ class ElectionScreen extends StatefulWidget {
   ElectionScreen({super.key, required this.electionId});
 
   @override
-  State<ElectionScreen> createState() =>
-      _ElectionScreenState(electionId: electionId);
+  State<ElectionScreen> createState() => _ElectionScreenState();
 }
 
 class _ElectionScreenState extends State<ElectionScreen> {
-  final String electionId;
   final _formKey = GlobalKey<FormState>();
   bool alreadyVoted = false;
   int selectedCandidateIndex = -1;
-
-  _ElectionScreenState({required this.electionId});
 
   @override
   void initState() {
@@ -34,6 +30,7 @@ class _ElectionScreenState extends State<ElectionScreen> {
     ThemeData theme = Theme.of(context);
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final String electionId = widget.electionId;
 
     int noCandidates = 7;
     print("$selectedCandidateIndex === $alreadyVoted");

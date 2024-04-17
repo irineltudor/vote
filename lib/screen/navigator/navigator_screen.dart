@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -8,6 +9,8 @@ import 'package:vote/screen/card/card_screen.dart';
 import 'package:vote/screen/more/more_screen.dart';
 
 import '../../item/menu_item.dart';
+import '../../model/user.dart';
+import '../../service/user_service.dart';
 import '../../widget/menu_widget.dart';
 import '../home/home_screen.dart';
 import '../menu/menu_screen.dart';
@@ -23,6 +26,23 @@ class NavigatorScreen extends StatefulWidget {
 class _NavigatorScreenState extends State<NavigatorScreen> {
   List<MenuItem> menuItem = MenuItems.all;
 
+  UserModel loggedInUser = UserModel();
+  final UserService userService = UserService();
+  User? user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async {
+    // userService.getUser(user!.uid).then((value) {
+    //   loggedInUser = value;
+    //   setState(() {});
+    // });
+  }
+
   int index = 0;
   final screens = [
     const HomeScreen(),
@@ -37,6 +57,19 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     ThemeData theme = Theme.of(context);
+
+    // if (loggedInUser.email != null) {
+    //   if (loggedInUser.status == 0) {
+    //     String refresh = await Navigator.push(
+    //                       context,
+    //                       MaterialPageRoute(
+    //                           builder: (context) => statefulWidget));
+    //     if (refresh == "refresh") {
+    //                     widget.function;
+    //                     print("aici");
+    //                   }
+    //   }
+    // }
 
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(

@@ -4,13 +4,18 @@
 // import 'package:fiteat/model/user_model.dart';
 // import 'package:fiteat/screens/home/home_screen.dart';
 // import 'package:fiteat/screens/signup-signin/details_screen.dart';
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vote/screen/navigator/navigator_screen.dart';
 import 'package:vote/screen/verify/verify_intro_screen.dart';
+import 'package:vote/service/user_service.dart';
 import 'package:vote/widget/country_picker_widget.dart';
 
+import '../../model/user.dart';
 import '../../widget/date_picker_widget.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -32,6 +37,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final confirmPasswordEditingController = TextEditingController();
   final birthEditingController = TextEditingController();
   final countryEditingController = TextEditingController();
+
+  final UserService userService = UserService();
 
   // string for displaying the error
   String? errorMessage;
@@ -119,17 +126,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     //date picker
     final datePicker = DatePickerWidget(
-        color: Colors.white,
         userDate: 'Pick Date',
         buttonColor: Colors.transparent,
         dob: birthEditingController);
-
-    //country picker
-    final countryPicker = CountryPickerWidget(
-        color: Colors.white,
-        userCountry: 'Pick Country',
-        buttonColor: Colors.transparent,
-        countryOf: countryEditingController);
 
     //email field
     final emailField = TextFormField(
@@ -274,8 +273,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     emailEditingController.text = "tirynel@yahoo.com";
     passwordEditingController.text = "12345678";
     confirmPasswordEditingController.text = "12345678";
-    birthEditingController.text = "";
-    countryEditingController.text = "";
 
     return Scaffold(
         backgroundColor: theme.primaryColor,
@@ -323,19 +320,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         firstNameField,
                         const SizedBox(height: 20),
                         lastNameField,
                         const SizedBox(height: 20),
                         emailField,
                         const SizedBox(height: 20),
+                        datePicker,
+                        const SizedBox(height: 20),
                         passwordField,
                         const SizedBox(height: 20),
                         confirmPasswordField,
                         const SizedBox(height: 25),
                         signUpButton,
-                        const SizedBox(height: 15)
+                        const SizedBox(height: 20)
                       ],
                     ),
                   ),
@@ -393,23 +392,38 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     //calling our usermodel
     //sending these valuse
 
-    // User? user = _auth.currentUser;
+    User? user = _auth.currentUser;
 
-    // UserModel userModel = UserModel(
-    //     uid: user!.uid,
-    //     email: user.email,
-    //     firstname: firstNameEditingController.text,
-    //     lastname: lastNameEditingController.text,
-    //     dob: birthEditingController.text);
+    LinkedHashMap<String, String> idCard = LinkedHashMap();
 
-    // await FirebaseFirestore.instance
-    //     .collection("user")
-    //     .doc(user.uid)
-    //     .set(userModel.toMap());
+    idCard['firstname'] = "";
+    idCard['lastname'] = "";
+    idCard['sex'] = "";
+    idCard['nationality'] = "";
+    idCard['country'] = "";
+    idCard['county'] = "";
+    idCard['city'] = "";
+    idCard['address'] = "";
+    idCard['dob'] = "";
+    idCard['personalCode'] = "";
+    idCard['issueDate'] = "";
+    idCard['expireDate'] = "";
+
+    UserModel userModel = UserModel(
+        uid: user!.uid,
+        email: user.email,
+        firstname: firstNameEditingController.text,
+        lastname: lastNameEditingController.text,
+        dob: birthEditingController.text,
+        status: 0,
+        pin: "",
+        idCard: idCard);
+
+    userService.addUser(userModel);
 
     Navigator.pushAndRemoveUntil(
         (context),
-        MaterialPageRoute(builder: (context) => const VerifyIntroScreen()),
+        MaterialPageRoute(builder: (context) => const NavigatorScreen()),
         (route) => false);
   }
 }
