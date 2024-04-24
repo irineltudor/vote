@@ -49,7 +49,9 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
   Future<void> getData() async {
     userService.getUser(user!.uid).then((value) {
       loggedInUser = value;
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 
@@ -66,6 +68,7 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
     final width = MediaQuery.of(context).size.width;
     ThemeData theme = Theme.of(context);
 
+    print("Aici");
     if (loggedInUser.firstname == null) {
       return Container(
           color: theme.primaryColor,
@@ -500,7 +503,9 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
               onPressed: () {
                 userService.deleteIdCard(loggedInUser);
                 Navigator.pop(context);
-                setState(() {});
+                if (mounted) {
+                  setState(() {});
+                }
               },
               style: ButtonStyle(
                 backgroundColor:

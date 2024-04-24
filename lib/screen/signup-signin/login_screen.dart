@@ -332,11 +332,12 @@ class _LoginScreenState extends State<LoginScreen> {
           case "invalid-credential":
             errorMessage = "Your email or password are invalid.";
             break;
+          case 'network-request-failed':
+            errorMessage = "No internet connection";
+            break;
           default:
             errorMessage = "An undefined Error happened.";
         }
-
-        // Fluttertoast.showToast(msg: errorMessage!);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

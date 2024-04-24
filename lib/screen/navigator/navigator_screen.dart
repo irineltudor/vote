@@ -7,6 +7,7 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:vote/screen/elections/elections_screen.dart';
 import 'package:vote/screen/card/card_screen.dart';
 import 'package:vote/screen/more/more_screen.dart';
+import 'package:vote/screen/verify/verify_intro_screen.dart';
 
 import '../../item/menu_item.dart';
 import '../../model/user.dart';
@@ -30,19 +31,6 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
   final UserService userService = UserService();
   User? user = FirebaseAuth.instance.currentUser;
 
-  @override
-  void initState() {
-    super.initState();
-    getData();
-  }
-
-  Future<void> getData() async {
-    // userService.getUser(user!.uid).then((value) {
-    //   loggedInUser = value;
-    //   setState(() {});
-    // });
-  }
-
   int index = 0;
   final screens = [
     const HomeScreen(),
@@ -57,19 +45,6 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     ThemeData theme = Theme.of(context);
-
-    // if (loggedInUser.email != null) {
-    //   if (loggedInUser.status == 0) {
-    //     String refresh = await Navigator.push(
-    //                       context,
-    //                       MaterialPageRoute(
-    //                           builder: (context) => statefulWidget));
-    //     if (refresh == "refresh") {
-    //                     widget.function;
-    //                     print("aici");
-    //                   }
-    //   }
-    // }
 
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(

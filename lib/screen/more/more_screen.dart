@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,9 +5,7 @@ import 'package:vote/screen/more/account_details_screen.dart';
 import 'package:vote/screen/more/change_password_screen.dart';
 import 'package:vote/screen/more/pin_screen.dart';
 import 'package:vote/screen/signup-signin/login_screen.dart';
-import 'package:vote/screen/verify/card_details_screen.dart';
 
-import '../../consts.dart';
 import '../../model/user.dart';
 import '../../service/storage_service.dart';
 import '../../service/user_service.dart';
@@ -38,7 +35,9 @@ class _MoreScreenState extends State<MoreScreen> {
   Future<void> getData() async {
     userService.getUser(user!.uid).then((value) {
       loggedInUser = value;
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 
@@ -133,28 +132,29 @@ class _MoreScreenState extends State<MoreScreen> {
                             children: [
                               ListTile(
                                 leading: ClipOval(
-                                    child: FutureBuilder(
-                                  future: storageService.getProfilePicture(
-                                    loggedInUser.uid!,
-                                  ),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                            ConnectionState.done &&
-                                        snapshot.hasData) {
-                                      return Image.network(
-                                        snapshot.data!,
-                                      );
-                                    }
-                                    if (snapshot.connectionState ==
-                                            ConnectionState.waiting ||
-                                        !snapshot.hasData) {
-                                      return CircularProgressIndicator();
-                                    }
+                                  child: FutureBuilder(
+                                    future: storageService.getProfilePicture(
+                                      loggedInUser.uid!,
+                                    ),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
+                                        return Image.network(
+                                          snapshot.data!,
+                                        );
+                                      }
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.waiting ||
+                                          !snapshot.hasData) {
+                                        return CircularProgressIndicator();
+                                      }
 
-                                    return Image.asset(
-                                        "assets/profile/profile.jpg");
-                                  },
-                                )),
+                                      return Image.asset(
+                                          "assets/profile/profile.jpg");
+                                    },
+                                  ),
+                                ),
                                 title: Text(
                                     "${loggedInUser.lastname} ${loggedInUser.firstname}",
                                     style: theme.textTheme.titleLarge
@@ -186,18 +186,20 @@ class _MoreScreenState extends State<MoreScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               CustomCardWidget(
-                                text: 'Change ID Card',
+                                text: loggedInUser.idCard!['firstname'] != ''
+                                    ? 'Change ID Card'
+                                    : 'Add ID Card',
                                 icon: Icons.perm_identity,
                                 statefulWidget: const VerifyIntroScreen(),
                                 pin: pin,
-                                function: getData(),
+                                function: getData,
                               ),
                               CustomCardWidget(
                                 text: 'Set up Pin',
                                 icon: Icons.lock,
                                 statefulWidget: const PinScreen(),
                                 pin: pin,
-                                function: getData(),
+                                function: getData,
                               ),
                             ],
                           ),
@@ -212,14 +214,14 @@ class _MoreScreenState extends State<MoreScreen> {
                                 icon: Icons.password,
                                 statefulWidget: const ChangePasswordScreen(),
                                 pin: pin,
-                                function: getData(),
+                                function: getData,
                               ),
                               CustomCardWidget(
                                 text: 'Account details',
                                 icon: Icons.edit,
                                 statefulWidget: const AccountDetailsScreen(),
                                 pin: pin,
-                                function: getData(),
+                                function: getData,
                               )
                             ],
                           )

@@ -6,11 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:vote/consts.dart';
 import 'package:vote/screen/more/pin_screen.dart';
 import 'package:vote/screen/verify/verify_intro_screen.dart';
+import 'package:vote/service/storage_service.dart';
 import 'package:vote/service/user_service.dart';
 import 'package:vote/widget/custom_card_widget.dart';
 
 import '../../model/user.dart';
-import '../../service/storage_service.dart';
 import '../../widget/menu_widget.dart';
 import '../../widget/news_slider.dart';
 
@@ -36,7 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> getData() async {
     userService.getUser(user!.uid).then((value) {
       loggedInUser = value;
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 
@@ -85,23 +87,23 @@ class _HomeScreenState extends State<HomeScreen> {
                               loggedInUser.uid!,
                             ),
                             builder: (context, snapshot) {
-                              // if (snapshot.connectionState ==
-                              //         ConnectionState.done &&
-                              //     snapshot.hasData) {
-                              //   return Image.network(
-                              //     snapshot.data!,
-                              //   );
-                              // }
-                              // if (snapshot.connectionState ==
-                              //         ConnectionState.waiting ||
-                              //     !snapshot.hasData) {
-                              //   return CircularProgressIndicator();
-                              // }
+                              if (snapshot.connectionState ==
+                                      ConnectionState.done &&
+                                  snapshot.hasData) {
+                                return Image.network(
+                                  snapshot.data!,
+                                );
+                              }
+                              if (snapshot.connectionState ==
+                                      ConnectionState.waiting ||
+                                  !snapshot.hasData) {
+                                return const CircularProgressIndicator();
+                              }
 
                               return Image.asset("assets/profile/profile.jpg");
                             },
                           )),
-                        )
+                        ),
                       ]),
                 ),
               )),
@@ -199,18 +201,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           CustomCardWidget(
-                            text: 'Change ID Card',
+                            text: loggedInUser.idCard!['firstname'] != ''
+                                ? 'Change ID Card'
+                                : 'Add ID Card',
                             icon: Icons.perm_identity,
                             statefulWidget: const VerifyIntroScreen(),
                             pin: pin,
-                            function: getData(),
+                            function: getData,
                           ),
                           CustomCardWidget(
                             text: 'Set up Pin',
                             icon: Icons.lock,
                             statefulWidget: const PinScreen(),
                             pin: pin,
-                            function: getData(),
+                            function: getData,
                           ),
                         ],
                       ),

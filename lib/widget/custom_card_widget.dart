@@ -4,15 +4,17 @@ import 'package:vote/screen/more/pin_screen.dart';
 
 import 'pin_dialog_widget.dart';
 
+// ignore: must_be_immutable
 class CustomCardWidget extends StatefulWidget {
-  String text;
-  IconData icon;
-  StatefulWidget statefulWidget;
-  String pin;
-  Future<void> function;
+  final String text;
+  final IconData icon;
+  final StatefulWidget statefulWidget;
+  final String pin;
+  final Function function;
 
   CustomCardWidget(
-      {required this.text,
+      {super.key,
+      required this.text,
       required this.icon,
       required this.statefulWidget,
       required this.pin,
@@ -26,7 +28,6 @@ class _CustomCardWidgetState extends State<CustomCardWidget> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-
     String text = widget.text;
     IconData icon = widget.icon;
     StatefulWidget statefulWidget = widget.statefulWidget;
@@ -44,10 +45,10 @@ class _CustomCardWidgetState extends State<CustomCardWidget> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => statefulWidget));
-                      if (refresh == "refresh") {
-                        widget.function;
-                        print("aici");
-                      }
+                      // if (refresh == "refresh") {
+                      //   widget.function;
+                      //   print("aici");
+                      // }
                     },
                     pin: pin,
                     text: "Enter your pin",
@@ -59,6 +60,7 @@ class _CustomCardWidgetState extends State<CustomCardWidget> {
       child: Container(
         height: 160,
         width: 150,
+        padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
             color: theme.scaffoldBackgroundColor,
             borderRadius: BorderRadius.all(Radius.circular(50)),
@@ -80,6 +82,7 @@ class _CustomCardWidgetState extends State<CustomCardWidget> {
             Text(
               text,
               style: theme.textTheme.bodySmall,
+              textAlign: TextAlign.center,
             )
           ],
         ),

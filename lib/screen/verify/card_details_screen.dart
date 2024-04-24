@@ -274,7 +274,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
                               return ("Personal Code cannot be empty");
                             }
 
-                            if (value!.length != 13) {
+                            if (value.length != 13) {
                               return ("Enter a valid personal number(13 characters)");
                             }
 
