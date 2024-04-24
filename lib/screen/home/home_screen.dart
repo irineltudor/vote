@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:vote/screen/more/pin_screen.dart';
+import 'package:vote/screen/verify/card_change_screen.dart';
 import 'package:vote/screen/verify/verify_intro_screen.dart';
 import 'package:vote/service/storage_service.dart';
 import 'package:vote/service/user_service.dart';
@@ -52,7 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
             color: theme.scaffoldBackgroundColor,
           )));
     } else {
-      String pin = loggedInUser.pin!;
       return Scaffold(
         backgroundColor: theme.primaryColor,
         body: Stack(children: <Widget>[
@@ -201,15 +201,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ? 'Change ID Card'
                                 : 'Add ID Card',
                             icon: Icons.perm_identity,
-                            statefulWidget: const VerifyIntroScreen(),
-                            pin: pin,
+                            statefulWidget: const CardChangeScreen(),
+                            pin: loggedInUser.pin!,
                             function: getData,
                           ),
                           CustomCardWidget(
                             text: 'Set up Pin',
                             icon: Icons.lock,
                             statefulWidget: const PinScreen(),
-                            pin: pin,
+                            pin: loggedInUser.pin!,
                             function: getData,
                           ),
                         ],

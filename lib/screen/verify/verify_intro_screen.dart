@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vote/screen/verify/card_details_screen.dart';
 
 class VerifyIntroScreen extends StatefulWidget {
   const VerifyIntroScreen({super.key});
@@ -43,36 +42,6 @@ class _VerifyIntroScreenState extends State<VerifyIntroScreen> {
               ),
             ],
           ),
-          Container(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, height / 20),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      "Skip",
-                      style: theme.textTheme.bodySmall,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => const CardDetailsScreen()));
-                    },
-                    child: Icon(
-                      Icons.navigate_next_rounded,
-                      color: theme.primaryColor,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          )
         ]),
       ),
     );

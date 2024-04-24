@@ -84,7 +84,6 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
             const SizedBox(
               height: 100,
             ),
-            _next(theme: theme)
           ]),
         ),
       ),

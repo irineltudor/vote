@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:vote/screen/onboarding/intro4_screen.dart';
-import 'package:vote/screen/onboarding/intro1_screen.dart';
-import 'package:vote/screen/onboarding/intro2_screen.dart';
-import 'package:vote/screen/onboarding/intro3_screen.dart';
 import 'package:vote/screen/signup-signin/login_screen.dart';
+import 'package:vote/screen/verify/card_details_screen.dart';
+import 'package:vote/screen/verify/facial_recognition_screen.dart';
+import 'package:vote/screen/verify/verify_intro_screen.dart';
 
-class OnBoardingScreen extends StatefulWidget {
-  const OnBoardingScreen({super.key});
+class CardChangeScreen extends StatefulWidget {
+  const CardChangeScreen({super.key});
 
   @override
-  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
+  State<CardChangeScreen> createState() => _CardChangeScreenState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen> {
+class _CardChangeScreenState extends State<CardChangeScreen> {
   final PageController _controller = PageController();
 
   bool onLastPage = false;
@@ -28,18 +27,17 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           controller: _controller,
           onPageChanged: (index) {
             setState(() {
-              onLastPage = (index == 3);
+              onLastPage = (index == 2);
             });
           },
           children: const [
-            Intro1Screen(),
-            Intro2Screen(),
-            Intro3Screen(),
-            Intro4Screen()
+            VerifyIntroScreen(),
+            CardDetailsScreen(),
+            FacialRecognitionScreen(),
           ],
         ),
         Container(
-            alignment: const Alignment(0, 0.75),
+            alignment: const Alignment(0, 0.95),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -50,37 +48,34 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     child: onLastPage
                         ? Text(
                             "skip",
-                            style: TextStyle(color: theme.primaryColor),
+                            style: TextStyle(
+                                color: theme.scaffoldBackgroundColor,
+                                fontWeight: FontWeight.bold),
                           )
                         : Text(
                             "skip",
-                            style:
-                                TextStyle(color: theme.scaffoldBackgroundColor),
+                            style: TextStyle(
+                                color: theme.primaryColor,
+                                fontWeight: FontWeight.bold),
                           )),
                 SmoothPageIndicator(
                   controller: _controller,
-                  count: 4,
+                  count: 3,
                   effect: ExpandingDotsEffect(
-                    dotColor: theme.scaffoldBackgroundColor,
+                    dotColor: theme.primaryColor,
                     activeDotColor: const Color.fromARGB(255, 12, 100, 250),
                   ),
                 ),
                 onLastPage
                     ? GestureDetector(
                         onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return const LoginScreen();
-                              },
-                            ),
-                          );
+                          Navigator.of(context).pop("refresh");
                         },
                         child: Text(
                           "done",
-                          style:
-                              TextStyle(color: theme.scaffoldBackgroundColor),
+                          style: TextStyle(
+                              color: theme.primaryColor,
+                              fontWeight: FontWeight.bold),
                         ))
                     : GestureDetector(
                         onTap: () {
@@ -90,8 +85,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         },
                         child: Text(
                           "next",
-                          style:
-                              TextStyle(color: theme.scaffoldBackgroundColor),
+                          style: TextStyle(
+                              color: theme.primaryColor,
+                              fontWeight: FontWeight.bold),
                         )),
               ],
             ))

@@ -1,3 +1,4 @@
+import 'package:blur/blur.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vote/model/user.dart';
@@ -51,6 +52,11 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
           )));
     } else {
       int count = 5;
+      String status = loggedInUser.status == 0
+          ? "Unverified"
+          : loggedInUser.status == 1
+              ? "Verified"
+              : "Waiting";
 
       return Scaffold(
         backgroundColor: theme.primaryColor,
@@ -100,26 +106,102 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                         bottom: Radius.circular(45), top: Radius.circular(45)),
                     color: theme.scaffoldBackgroundColor,
                   ),
-                  child: Column(
-                    children: [
-                      Expanded(
-                          flex: 1,
-                          child: Container(
-                              width: width,
-                              decoration: BoxDecoration(
-                                color: theme.scaffoldBackgroundColor,
+                  child: loggedInUser.status == 1
+                      ? Column(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                    width: width,
+                                    decoration: BoxDecoration(
+                                      color: theme.scaffoldBackgroundColor,
+                                    ),
+                                    child: Center(
+                                        child: Text(
+                                            "There are $count elections")))),
+                            Expanded(
+                                flex: 15,
+                                child: ListView.builder(
+                                    itemCount: count,
+                                    itemBuilder: (context, index) {
+                                      return buildElection(Election(), theme);
+                                    })),
+                          ],
+                        )
+                      : Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: [
+                              Blur(
+                                blur: 10,
+                                blurColor: theme.scaffoldBackgroundColor,
+                                borderRadius: BorderRadius.circular(45),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(45))),
+                                  child: ListView.builder(
+                                      itemCount: 2,
+                                      itemBuilder: (context, index) {
+                                        return buildElection(Election(), theme);
+                                      }),
+                                ),
                               ),
-                              child: Center(
-                                  child: Text("There are $count elections")))),
-                      Expanded(
-                          flex: 15,
-                          child: ListView.builder(
-                              itemCount: count,
-                              itemBuilder: (context, index) {
-                                return buildElection(Election(), theme);
-                              })),
-                    ],
-                  ),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    color: theme.scaffoldBackgroundColor,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(45))),
+                                child: loggedInUser.status == 0
+                                    ? Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(
+                                            Icons.not_interested,
+                                            color: Colors.red,
+                                          ),
+                                          Text(
+                                            "Unverified",
+                                            style: theme.textTheme.labelMedium
+                                                ?.copyWith(color: Colors.red),
+                                          ),
+                                        ],
+                                      )
+                                    : loggedInUser.status == 1
+                                        ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Icon(
+                                                Icons.verified,
+                                                color: Colors.blue,
+                                              ),
+                                              Text(
+                                                "Verified",
+                                                style: theme
+                                                    .textTheme.labelMedium
+                                                    ?.copyWith(
+                                                        color: Colors.blue),
+                                              ),
+                                            ],
+                                          )
+                                        : Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Icon(
+                                                Icons.arrow_drop_down_circle,
+                                                color: Colors.orange,
+                                              ),
+                                              Text(
+                                                "Waiting",
+                                                style: theme
+                                                    .textTheme.labelMedium
+                                                    ?.copyWith(
+                                                        color: Colors.orange),
+                                              ),
+                                            ],
+                                          ),
+                              ),
+                            ]),
                 ),
               )),
           Positioned(
@@ -168,7 +250,7 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
     Widget img = Image.asset("assets/election/election.jpg");
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.only(bottom: 20),
       child: MaterialButton(
         splashColor: theme.scaffoldBackgroundColor,
         onPressed: () {

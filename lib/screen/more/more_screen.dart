@@ -5,6 +5,7 @@ import 'package:vote/screen/more/account_details_screen.dart';
 import 'package:vote/screen/more/change_password_screen.dart';
 import 'package:vote/screen/more/pin_screen.dart';
 import 'package:vote/screen/signup-signin/login_screen.dart';
+import 'package:vote/screen/verify/card_change_screen.dart';
 
 import '../../model/user.dart';
 import '../../service/storage_service.dart';
@@ -191,7 +192,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                     ? 'Change ID Card'
                                     : 'Add ID Card',
                                 icon: Icons.perm_identity,
-                                statefulWidget: const VerifyIntroScreen(),
+                                statefulWidget: const CardChangeScreen(),
                                 pin: pin,
                                 function: getData,
                               ),

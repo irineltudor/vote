@@ -38,10 +38,13 @@ class _CustomCardWidgetState extends State<CustomCardWidget> {
                 builder: (BuildContext context) {
                   return PinDialogBox(
                     function: () async {
-                      // if (refresh == "refresh") {
-                      //   widget.function;
-                      //   print("aici");
-                      // }
+                      String? refresh = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => statefulWidget));
+                      if (refresh == "refresh") {
+                        widget.function.call();
+                      }
                     },
                     pin: pin,
                     text: "Enter your pin",

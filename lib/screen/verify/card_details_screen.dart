@@ -81,7 +81,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
         backgroundColor: theme.scaffoldBackgroundColor,
         body: Container(
           margin:
-              const EdgeInsets.only(left: 20, right: 20, top: 50, bottom: 0),
+              const EdgeInsets.only(left: 20, right: 20, top: 50, bottom: 50),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -193,15 +193,15 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Align(
-        alignment: Alignment.bottomRight,
+        alignment: Alignment.center,
         child: GestureDetector(
           onTap: () {
             postDetailsToDB();
           },
           child: Text(
-            "Next",
+            "Update",
             style:
-                theme.textTheme.bodyLarge?.copyWith(color: theme.primaryColor),
+                theme.textTheme.titleLarge?.copyWith(color: theme.primaryColor),
           ),
         ),
       ),
@@ -539,6 +539,8 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
     //calling our usermodel
     //sending these valuse
 
+    ThemeData theme = Theme.of(context);
+
     if (_formKey.currentState!.validate()) {
       LinkedHashMap<String, String> idCard = LinkedHashMap();
 
@@ -557,8 +559,19 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
 
       userService.updateIdCard(loggedInUser, idCard);
 
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const FacialRecognitionScreen()));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            margin: EdgeInsets.fromLTRB(100, 0, 100, 400),
+            duration: Duration(seconds: 1),
+            content: Text(
+              "Details Updated",
+            ),
+            backgroundColor: theme.primaryColor,
+          ),
+        );
+      }
     }
   }
 }
