@@ -12,7 +12,6 @@ import '../../service/storage_service.dart';
 import '../../service/user_service.dart';
 import '../../widget/custom_card_widget.dart';
 import '../../widget/menu_widget.dart';
-import '../verify/verify_intro_screen.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key});

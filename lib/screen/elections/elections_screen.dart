@@ -52,11 +52,6 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
           )));
     } else {
       int count = 5;
-      String status = loggedInUser.status == 0
-          ? "Unverified"
-          : loggedInUser.status == 1
-              ? "Verified"
-              : "Waiting";
 
       return Scaffold(
         backgroundColor: theme.primaryColor,
@@ -136,7 +131,7 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                                 blurColor: theme.scaffoldBackgroundColor,
                                 borderRadius: BorderRadius.circular(45),
                                 child: Container(
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(45))),
                                   child: ListView.builder(
@@ -147,11 +142,11 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                                 ),
                               ),
                               Container(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                     color: theme.scaffoldBackgroundColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(45))),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(45))),
                                 child: loggedInUser.status == 0
                                     ? Row(
                                         mainAxisSize: MainAxisSize.min,

@@ -89,19 +89,4 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
       ),
     );
   }
-
-  Widget _next({required ThemeData theme}) {
-    return Align(
-      alignment: Alignment.bottomRight,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).pop("refresh");
-        },
-        child: Text(
-          "Next",
-          style: theme.textTheme.bodyLarge?.copyWith(color: theme.primaryColor),
-        ),
-      ),
-    );
-  }
 }

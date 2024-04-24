@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:vote/screen/signup-signin/login_screen.dart';
 import 'package:vote/screen/verify/card_details_screen.dart';
 import 'package:vote/screen/verify/facial_recognition_screen.dart';
 import 'package:vote/screen/verify/verify_intro_screen.dart';

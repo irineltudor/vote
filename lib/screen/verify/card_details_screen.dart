@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:vote/screen/verify/facial_recognition_screen.dart';
 import 'package:vote/service/user_service.dart';
 import '../../service/storage_service.dart';
 
@@ -563,9 +562,9 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.fromLTRB(100, 0, 100, 400),
-            duration: Duration(seconds: 1),
-            content: Text(
+            margin: const EdgeInsets.fromLTRB(100, 0, 100, 400),
+            duration: const Duration(seconds: 1),
+            content: const Text(
               "Details Updated",
             ),
             backgroundColor: theme.primaryColor,

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:vote/screen/more/pin_screen.dart';
 import 'package:vote/screen/verify/card_change_screen.dart';
-import 'package:vote/screen/verify/verify_intro_screen.dart';
 import 'package:vote/service/storage_service.dart';
 import 'package:vote/service/user_service.dart';
 import 'package:vote/widget/custom_card_widget.dart';

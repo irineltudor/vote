@@ -71,10 +71,12 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
         ZoomDrawer(
           borderRadius: 30,
           angle: -15,
-          slideWidth: width / 1.75,
-          style: DrawerStyle.style1,
+          slideWidth: width / 1.6,
+          style: DrawerStyle.defaultStyle,
           showShadow: true,
-          menuBackgroundColor: const Color.fromARGB(115, 0, 0, 0),
+          shadowLayer1Color: theme.scaffoldBackgroundColor.withOpacity(0.3),
+          shadowLayer2Color: theme.scaffoldBackgroundColor.withOpacity(0.6),
+          menuBackgroundColor: theme.primaryColor,
           mainScreen: screens[index],
           menuScreen: Builder(builder: (context) {
             return MenuScreen(
