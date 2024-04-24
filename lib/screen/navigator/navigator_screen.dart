@@ -77,9 +77,9 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
           borderRadius: 30,
           angle: -15,
           slideWidth: width / 1.75,
-          style: DrawerStyle.Style1,
+          style: DrawerStyle.style1,
           showShadow: true,
-          backgroundColor: Color.fromARGB(115, 0, 0, 0),
+          menuBackgroundColor: Color.fromARGB(115, 0, 0, 0),
           mainScreen: screens[index],
           menuScreen: Builder(builder: (context) {
             return MenuScreen(

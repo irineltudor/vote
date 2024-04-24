@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     emailController.text = "tirynel@yahoo.com";
-    passwordController.text = "12345678";
+    passwordController.text = "1234567";
 
     // if (isLoggedIn) {
     //   return Scaffold(

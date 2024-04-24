@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:vote/service/user_service.dart';
+
+import '../../model/user.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -18,6 +22,25 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       TextEditingController();
   final TextEditingController renewPasswordEditingController =
       TextEditingController();
+
+  final UserService userService = UserService();
+  UserModel loggedInUser = UserModel();
+  User? user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async {
+    userService.getUser(user!.uid).then((value) {
+      loggedInUser = value;
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,6 +190,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       ),
     );
 
+    oldPasswordEditingController.text = "1234567";
+    newPasswordEditingController.text = "123456";
+    renewPasswordEditingController.text = "123456";
+
     return Scaffold(
       backgroundColor: theme.primaryColor,
       appBar: AppBar(
@@ -265,43 +292,26 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-  Future<void> changePassword(String newPassword, String oldPassword) async {
+  void changePassword(String newPassword, String oldPassword) async {
     if (_formKey.currentState!.validate()) {
-      Navigator.of(context).pop();
-      //  var credentials = EmailAuthProvider.credential(email: user?.email ?? " " , password: oldPassword);
-      //  try{
-      //   await user?.reauthenticateWithCredential(credentials).then((value) => {
-      //  user?.updatePassword(newPassword).then((value) => {errorMessage = "Successfully changed password",Fluttertoast.showToast(msg: '$errorMessage'),Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const MoreScreen()))}).catchError((onError){
-      //         errorMessage = "Password can't be changed" + onError.toString();
-      //         Fluttertoast.showToast(msg: '$errorMessage');
-      //   })
-      //  });
-      //  }on FirebaseAuthException catch (error) {
-      //     switch (error.code) {
-      //       case "invalid-email":
-      //         errorMessage = "Your email address appears to be malformed.";
+      await userService.changePassword(newPassword, oldPassword).then((value) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              value,
+            ),
+            backgroundColor: value == "Successfully changed password"
+                ? Colors.green
+                : Colors.red,
+            closeIconColor: Colors.white,
+            showCloseIcon: true,
+          ),
+        );
 
-      //         break;
-      //       case "wrong-password":
-      //         errorMessage = "Your password is wrong.";
-      //         break;
-      //       case "user-not-found":
-      //         errorMessage = "User with this email doesn't exist.";
-      //         break;
-      //       case "user-disabled":
-      //         errorMessage = "User with this email has been disabled.";
-      //         break;
-      //       case "too-many-requests":
-      //         errorMessage = "Too many requests";
-      //         break;
-      //       case "operation-not-allowed":
-      //         errorMessage = "Signing in with Email and Password is not enabled.";
-      //         break;
-      //       default:
-      //         errorMessage = "An undefined Error happened.";
-      //     }
-      //     Fluttertoast.showToast(msg: '$errorMessage');
-      //  }
+        if (value == "Successfully changed password") {
+          Navigator.pop(context);
+        }
+      });
     }
   }
 }

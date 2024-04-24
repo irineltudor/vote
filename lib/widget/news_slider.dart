@@ -19,7 +19,7 @@ class NewsSlider extends StatefulWidget {
 class _NewsSliderState extends State<NewsSlider> {
   late final PageController _pageController;
 
-  final NewsAPI _newsApi = NewsAPI(NEWS_API_KEY);
+  final NewsAPI _newsApi = NewsAPI(apiKey: NEWS_API_KEY);
   List<Article> articles = [];
 
   int _pageIndex = 0;
@@ -34,7 +34,7 @@ class _NewsSliderState extends State<NewsSlider> {
   Future<void> getData() async {
     await _newsApi
         .getEverything(
-      query: 'politics',
+      query: 'politics&romania-tate',
     )
         .then((value) {
       setState(() {

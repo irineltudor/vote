@@ -248,7 +248,7 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
                         borderRadius:
                             BorderRadius.only(topLeft: Radius.circular(25))),
                     child: showFlag(
-                        CountryFlags.flag(
+                        CountryFlag.fromCountryCode(
                             idCard["country"].toLowerCase().substring(0, 2)),
                         theme.textTheme.headlineMedium!,
                         theme.scaffoldBackgroundColor),
@@ -463,9 +463,9 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
           );
   }
 
-  Widget showFlag(CountryFlags countryFlags, TextStyle style, Color color) {
+  Widget showFlag(CountryFlag countryFlag, TextStyle style, Color color) {
     return personalDetails
-        ? countryFlags
+        ? countryFlag
         : Blur(
             blur: 5,
             blurColor: color,
