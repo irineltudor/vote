@@ -1,11 +1,5 @@
-import 'dart:collection';
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vote/service/user_service.dart';
 import 'package:vote/widget/pin_dialog_widget.dart';
@@ -67,7 +61,7 @@ class _PinScreenState extends State<PinScreen> {
             },
           ),
           title: Container(
-            margin: EdgeInsets.only(left: 80),
+            margin: const EdgeInsets.only(left: 80),
             child: Text(
               "Update Pin",
               style: theme.textTheme.headlineMedium
@@ -76,15 +70,15 @@ class _PinScreenState extends State<PinScreen> {
           ),
         ),
         body: Container(
-          margin: EdgeInsets.all(20),
+          margin: const EdgeInsets.all(20),
           decoration: BoxDecoration(
               color: theme.scaffoldBackgroundColor,
-              borderRadius: BorderRadius.all(Radius.circular(45))),
+              borderRadius: const BorderRadius.all(Radius.circular(45))),
           child: Center(
             child: Container(
-              margin: EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
               height: 450,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.all(Radius.circular(45))),
               child: ListView(
@@ -134,7 +128,7 @@ class _PinScreenState extends State<PinScreen> {
 
                   for (var i = 0; i < 3; i++)
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: List.generate(3,
@@ -144,7 +138,7 @@ class _PinScreenState extends State<PinScreen> {
                     ),
 
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

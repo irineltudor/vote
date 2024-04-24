@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:vote/screen/more/pin_screen.dart';
 
 import 'pin_dialog_widget.dart';
 
-// ignore: must_be_immutable
 class CustomCardWidget extends StatefulWidget {
   final String text;
   final IconData icon;
@@ -12,7 +9,7 @@ class CustomCardWidget extends StatefulWidget {
   final String pin;
   final Function function;
 
-  CustomCardWidget(
+  const CustomCardWidget(
       {super.key,
       required this.text,
       required this.icon,
@@ -41,10 +38,6 @@ class _CustomCardWidgetState extends State<CustomCardWidget> {
                 builder: (BuildContext context) {
                   return PinDialogBox(
                     function: () async {
-                      String refresh = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => statefulWidget));
                       // if (refresh == "refresh") {
                       //   widget.function;
                       //   print("aici");
@@ -60,10 +53,10 @@ class _CustomCardWidgetState extends State<CustomCardWidget> {
       child: Container(
         height: 160,
         width: 150,
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
             color: theme.scaffoldBackgroundColor,
-            borderRadius: BorderRadius.all(Radius.circular(50)),
+            borderRadius: const BorderRadius.all(Radius.circular(50)),
             border: Border.all(
                 color: theme.dialogBackgroundColor.withOpacity(0.5), width: 2),
             boxShadow: ([

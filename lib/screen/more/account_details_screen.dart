@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
 
 import '../../model/user.dart';
@@ -37,7 +35,6 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     if (loggedInUser.firstname == null) {
@@ -51,7 +48,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
       DateTime today = DateTime.now();
       DateTime date = DateFormat('MM-dd-yyyy').parse(loggedInUser.dob!);
 
-      int age = (today.difference(date).inDays / 365).floor();
+      (today.difference(date).inDays / 365).floor();
 
       return Scaffold(
         backgroundColor: theme.primaryColor,
@@ -66,7 +63,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
             },
           ),
           title: Container(
-            margin: EdgeInsets.only(left: 55),
+            margin: const EdgeInsets.only(left: 55),
             child: Text(
               "Account details ",
               style: theme.textTheme.headlineMedium
@@ -76,14 +73,14 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         ),
         body: Stack(children: <Widget>[
           Container(
-            padding: EdgeInsets.only(top: 250, bottom: 60),
+            padding: const EdgeInsets.only(top: 250, bottom: 60),
             decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   detailContainer("Email", loggedInUser.email!),
-                  detailContainer("Date of Birth",
-                      "${DateFormat("d MMMM yyyy").format(date)}"),
+                  detailContainer(
+                      "Date of Birth", DateFormat("d MMMM yyyy").format(date)),
                   detailContainer("Pin", loggedInUser.pin!),
                   detailContainer(
                     "Account Status",
@@ -100,11 +97,11 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
           Container(
             height: 200,
             width: width,
-            padding: EdgeInsets.all(50),
+            padding: const EdgeInsets.all(50),
             decoration: BoxDecoration(color: theme.primaryColor),
             child: Center(
               child: Container(
-                padding: EdgeInsets.all(3),
+                padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
@@ -117,8 +114,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
             ),
           ),
           Container(
-            padding: EdgeInsets.all(3),
-            margin: EdgeInsets.only(left: 230, top: 50),
+            padding: const EdgeInsets.all(3),
+            margin: const EdgeInsets.only(left: 230, top: 50),
             decoration: BoxDecoration(
               color: theme.scaffoldBackgroundColor,
               shape: BoxShape.circle,
@@ -142,10 +139,10 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
           Container(
             height: 80,
             width: width,
-            margin: EdgeInsets.only(top: 160, left: 30, right: 30),
+            margin: const EdgeInsets.only(top: 160, left: 30, right: 30),
             decoration: BoxDecoration(
                 color: theme.scaffoldBackgroundColor,
-                borderRadius: BorderRadius.all(Radius.circular(20)),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
                 boxShadow: [
                   BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 2)
                 ]),
@@ -173,8 +170,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     return Container(
       height: 100,
       width: width,
-      padding: EdgeInsets.all(12),
-      margin: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: theme.dialogBackgroundColor.withOpacity(0.1),
         borderRadius: const BorderRadius.all(Radius.circular(5)),

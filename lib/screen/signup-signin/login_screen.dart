@@ -1,12 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:video_player/video_player.dart';
 import 'package:vote/screen/navigator/navigator_screen.dart';
 import 'package:vote/screen/signup-signin/registration_screen.dart';
-import 'package:vote/widget/background_video_widget.dart';
 import 'package:lottie/lottie.dart';
 
 import 'forgot_password_screen.dart';
@@ -42,13 +38,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     ThemeData theme = Theme.of(context);
     bool isDarkMode = theme.brightness == Brightness.dark;
 
@@ -248,7 +242,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         const RegistrationScreen()));
                           },
                           child: Container(
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
                                 color: theme.primaryColor,
                                 boxShadow: [
@@ -291,24 +285,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   prefs = await SharedPreferences.getInstance(),
                   prefs.setString("email", email),
                   prefs.setString("password", password),
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    elevation: 20,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30))),
-                    content: Text("Login Successful"),
-                    backgroundColor: Colors.green,
-                    showCloseIcon: true,
-                    closeIconColor: Colors.white,
-                  )),
-                  // await getTickets(uid.user!.uid),
-                  //Fluttertoast.showToast(msg: "Login Successful"),
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const NavigatorScreen())),
+                  if (mounted)
+                    {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        elevation: 20,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30))),
+                        content: Text("Login Successful"),
+                        backgroundColor: Colors.green,
+                        showCloseIcon: true,
+                        closeIconColor: Colors.white,
+                      )),
+                      // await getTickets(uid.user!.uid),
+                      //Fluttertoast.showToast(msg: "Login Successful"),
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const NavigatorScreen())),
+                    }
                 });
       } on FirebaseAuthException catch (error) {
-        print(error.code);
         switch (error.code) {
           case "invalid-email":
             errorMessage = "Your email address appears to be malformed.";
@@ -339,16 +335,18 @@ class _LoginScreenState extends State<LoginScreen> {
             errorMessage = "An undefined Error happened.";
         }
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              errorMessage!,
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                errorMessage!,
+              ),
+              backgroundColor: Colors.red,
+              closeIconColor: Colors.white,
+              showCloseIcon: true,
             ),
-            backgroundColor: Colors.red,
-            closeIconColor: Colors.white,
-            showCloseIcon: true,
-          ),
-        );
+          );
+        }
       }
     }
   }

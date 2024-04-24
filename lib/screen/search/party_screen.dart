@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 import '../../model/party.dart';
 
 class PartyScreen extends StatefulWidget {
-  Party party;
-  PartyScreen({super.key, required this.party});
+  final Party party;
+  const PartyScreen({super.key, required this.party});
 
   @override
   State<PartyScreen> createState() => _AccountDetailsScreenState();
@@ -18,7 +16,6 @@ class _AccountDetailsScreenState extends State<PartyScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     Party party = widget.party;
@@ -74,7 +71,7 @@ class _AccountDetailsScreenState extends State<PartyScreen> {
                   borderRadius: const BorderRadius.all(Radius.circular(40))),
               child: ListTile(
                 title: Text(
-                  '${party.name}',
+                  party.name,
                   style: theme.textTheme.titleLarge,
                   textAlign: TextAlign.center,
                 ),
@@ -139,11 +136,11 @@ class _AccountDetailsScreenState extends State<PartyScreen> {
       },
       child: Container(
         height: 200,
-        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 50),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(40)),
+            borderRadius: const BorderRadius.all(Radius.circular(40)),
             color: theme.scaffoldBackgroundColor,
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(color: Color.fromARGB(246, 0, 0, 0), blurRadius: 4)
             ]),
         child: ClipRRect(
@@ -152,17 +149,18 @@ class _AccountDetailsScreenState extends State<PartyScreen> {
             Expanded(
               flex: 5,
               child: Container(
-                  margin: EdgeInsets.all(10),
-                  padding: EdgeInsets.all(5),
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: theme.scaffoldBackgroundColor,
-                      borderRadius: BorderRadius.all(Radius.circular(70))),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(70))),
                   child: ClipOval(child: img)),
             ),
             Expanded(
               flex: 3,
               child: Container(
-                padding: EdgeInsets.only(left: 10),
+                padding: const EdgeInsets.only(left: 10),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -191,13 +189,13 @@ class _AccountDetailsScreenState extends State<PartyScreen> {
     return showDialog(
         context: context,
         builder: (context) => Container(
-              margin: EdgeInsets.only(top: 400),
+              margin: const EdgeInsets.only(top: 400),
               decoration: BoxDecoration(
                   color: theme.scaffoldBackgroundColor,
                   borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(45))),
+                      const BorderRadius.vertical(top: Radius.circular(45))),
               child: Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
                     Expanded(flex: 1, child: ClipOval(child: img)),

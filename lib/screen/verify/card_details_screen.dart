@@ -1,16 +1,9 @@
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cnic_scanner/cnic_scanner.dart';
-import 'package:cnic_scanner/model/cnic_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:vote/screen/verify/facial_recognition_screen.dart';
 import 'package:vote/service/user_service.dart';
-import 'package:vote/widget/custom_dialog_widget.dart';
 import '../../service/storage_service.dart';
 
 import '../../model/user.dart';
@@ -92,17 +85,17 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 18,
               ),
               Text('Enter ID Card Details',
                   style: theme.textTheme.headlineMedium),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               Text('To verify your Account, please enter your id card details.',
                   style: theme.textTheme.headlineSmall),
-              SizedBox(
+              const SizedBox(
                 height: 35,
               ),
               Expanded(
@@ -267,7 +260,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
                             border: InputBorder.none,
                             errorStyle: theme.textTheme.labelMedium,
                             isDense: true,
-                            contentPadding: EdgeInsets.only(left: 5.0),
+                            contentPadding: const EdgeInsets.only(left: 5.0),
                           ),
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -349,7 +342,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
                         isDense: true,
                         hintStyle: theme.textTheme.bodySmall,
                         errorStyle: theme.textTheme.labelMedium,
-                        contentPadding: EdgeInsets.all(0),
+                        contentPadding: const EdgeInsets.all(0),
                       ),
                       validator: (value) {
                         RegExp regex = RegExp(r'M|F');
@@ -449,7 +442,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
                         isDense: true,
                         hintStyle: theme.textTheme.bodySmall,
                         errorStyle: theme.textTheme.labelMedium,
-                        contentPadding: EdgeInsets.all(0),
+                        contentPadding: const EdgeInsets.all(0),
                       ),
                       style: theme.textTheme.bodyMedium,
                       textInputAction: TextInputAction.done,
@@ -516,7 +509,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
                         isDense: true,
                         hintStyle: theme.textTheme.bodySmall,
                         errorStyle: theme.textTheme.labelMedium,
-                        contentPadding: EdgeInsets.all(0),
+                        contentPadding: const EdgeInsets.all(0),
                       ),
                       validator: (value) {
                         if (value!.isEmpty) {

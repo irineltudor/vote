@@ -71,10 +71,10 @@ class _MoreScreenState extends State<MoreScreen> {
                 MaterialPageRoute(builder: (context) => const LoginScreen()));
           },
           child: Container(
-            padding: EdgeInsets.all(3),
+            padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                boxShadow: [
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                boxShadow: const [
                   BoxShadow(color: Color.fromARGB(246, 0, 0, 0), blurRadius: 4)
                 ],
                 color: theme.primaryColor),
@@ -108,20 +108,21 @@ class _MoreScreenState extends State<MoreScreen> {
               left: 0,
               right: 0,
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                    bottom: const Radius.circular(45)),
+                borderRadius:
+                    const BorderRadius.vertical(bottom: Radius.circular(45)),
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(10, 90, 10, 10),
+                  padding: const EdgeInsets.fromLTRB(10, 90, 10, 10),
                   color: theme.scaffoldBackgroundColor,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
                         decoration: BoxDecoration(
                             color: theme.primaryColor,
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            boxShadow: [
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20)),
+                            boxShadow: const [
                               BoxShadow(
                                   color: Color.fromARGB(246, 0, 0, 0),
                                   blurRadius: 4)
@@ -147,7 +148,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                       if (snapshot.connectionState ==
                                               ConnectionState.waiting ||
                                           !snapshot.hasData) {
-                                        return CircularProgressIndicator();
+                                        return const CircularProgressIndicator();
                                       }
 
                                       return Image.asset(
@@ -203,7 +204,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 40,
                           ),
                           Row(
@@ -239,9 +240,9 @@ class _MoreScreenState extends State<MoreScreen> {
             right: 5,
             child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(45)),
+                    borderRadius: const BorderRadius.all(Radius.circular(45)),
                     color: theme.scaffoldBackgroundColor,
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                           color: Color.fromARGB(0, 0, 0, 0), blurRadius: 2)
                     ]),

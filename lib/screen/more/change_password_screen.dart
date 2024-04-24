@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:vote/service/user_service.dart';
 
 import '../../model/user.dart';
@@ -57,7 +55,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ?.copyWith(color: theme.scaffoldBackgroundColor),
       keyboardType: TextInputType.visiblePassword,
       validator: (value) {
-        RegExp regex = new RegExp(r'^.{6,}$');
+        RegExp regex = RegExp(r'^.{6,}$');
         if (value!.isEmpty) {
           return ("Current Password is required");
         }
@@ -96,7 +94,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ?.copyWith(color: theme.scaffoldBackgroundColor),
       keyboardType: TextInputType.visiblePassword,
       validator: (value) {
-        RegExp regex = new RegExp(r'^.{6,}$');
+        RegExp regex = RegExp(r'^.{6,}$');
         if (value!.isEmpty) {
           return ("Password is required");
         }
@@ -227,7 +225,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 margin: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                     color: theme.scaffoldBackgroundColor,
-                    borderRadius: BorderRadius.all(Radius.circular(45))),
+                    borderRadius: const BorderRadius.all(Radius.circular(45))),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -236,9 +234,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       children: [
                         detailContainer(
                             'Current Password', oldPasswordField, 0),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Container(
-                            margin: EdgeInsets.symmetric(horizontal: 15),
+                            margin: const EdgeInsets.symmetric(horizontal: 15),
                             child: Divider(
                               color:
                                   theme.dialogBackgroundColor.withOpacity(0.25),
@@ -265,16 +263,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       width: width,
       padding: const EdgeInsets.all(15),
       margin: index == 1
-          ? EdgeInsets.symmetric(horizontal: 15, vertical: 10)
-          : EdgeInsets.symmetric(horizontal: 15),
+          ? const EdgeInsets.symmetric(horizontal: 15, vertical: 10)
+          : const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
         color: theme.primaryColor,
         borderRadius: index == 0
-            ? BorderRadius.only(
+            ? const BorderRadius.only(
                 topLeft: Radius.circular(45), topRight: Radius.circular(45))
             : index == 1
                 ? null
-                : BorderRadius.only(
+                : const BorderRadius.only(
                     bottomLeft: Radius.circular(45),
                     bottomRight: Radius.circular(45)),
       ),

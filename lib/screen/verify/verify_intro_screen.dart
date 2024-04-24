@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:vote/screen/verify/card_details_screen.dart';
-
-import '../navigator/navigator_screen.dart';
 
 class VerifyIntroScreen extends StatefulWidget {
   const VerifyIntroScreen({super.key});

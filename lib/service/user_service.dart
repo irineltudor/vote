@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../model/user.dart';
 
@@ -86,6 +85,7 @@ class UserService {
                     ?.updatePassword(newPassword)
                     // ignore: body_might_complete_normally_catch_error
                     .catchError((onError) {
+                  // ignore: invalid_return_type_for_catch_error
                   return "Password can't be changed $onError";
                 })
               });

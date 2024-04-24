@@ -1,16 +1,20 @@
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+// ignore: must_be_immutable
 class PinDialogBox extends StatefulWidget {
   Function function;
   String pin;
   String text;
 
-  PinDialogBox({required this.function, required this.pin, required this.text});
+  PinDialogBox(
+      {super.key,
+      required this.function,
+      required this.pin,
+      required this.text});
 
   @override
+  // ignore: library_private_types_in_public_api
   _PinDialogBoxState createState() => _PinDialogBoxState();
 }
 
@@ -60,10 +64,10 @@ class _PinDialogBoxState extends State<PinDialogBox> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return Container(
-      margin: EdgeInsets.only(top: 400),
+      margin: const EdgeInsets.only(top: 400),
       decoration: BoxDecoration(
           color: theme.scaffoldBackgroundColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(45))),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(45))),
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
         physics: const BouncingScrollPhysics(),
@@ -119,7 +123,7 @@ class _PinDialogBoxState extends State<PinDialogBox> {
 
           for (var i = 0; i < 3; i++)
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(
@@ -128,7 +132,7 @@ class _PinDialogBoxState extends State<PinDialogBox> {
             ),
 
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

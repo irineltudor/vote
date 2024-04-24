@@ -5,7 +5,7 @@ class StorageService {
       firebase_storage.FirebaseStorage.instance;
 
   Future<String> getProfilePicture(String uid) async {
-    String imageUrl = 'profile-pic/' + uid + '.png';
+    String imageUrl = 'profile-pic/$uid.png';
     String error = "";
     String downloadURL = "";
     try {
@@ -28,7 +28,7 @@ class StorageService {
   }
 
   Future<String> getCandidatePicture(String id) async {
-    String imageUrl = 'candidate-pic/' + id + '.png';
+    String imageUrl = 'candidate-pic/$id.png';
     String error = "";
     String downloadURL = "";
     try {
@@ -52,7 +52,7 @@ class StorageService {
   }
 
   Future<String> getElectionPicture(String id) async {
-    String imageUrl = 'election-pic/' + id + '.png';
+    String imageUrl = 'election-pic/$id.png';
     String error = "";
     String downloadURL = "";
     try {
@@ -76,7 +76,7 @@ class StorageService {
   }
 
   Future<String> getTournamentPromo(String id) async {
-    String imageUrl = 'tournament-promo/' + id + '.mp4';
+    String imageUrl = 'tournament-promo/$id.mp4';
     String error = "";
     String downloadURL = "";
     try {

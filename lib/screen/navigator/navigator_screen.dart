@@ -1,24 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:vote/screen/elections/elections_screen.dart';
 import 'package:vote/screen/card/card_screen.dart';
 import 'package:vote/screen/more/more_screen.dart';
-import 'package:vote/screen/verify/verify_intro_screen.dart';
 
 import '../../item/menu_item.dart';
 import '../../model/user.dart';
 import '../../service/user_service.dart';
-import '../../widget/menu_widget.dart';
 import '../home/home_screen.dart';
 import '../menu/menu_screen.dart';
 import '../search/search_screen.dart';
 
 class NavigatorScreen extends StatefulWidget {
-  const NavigatorScreen({Key? key}) : super(key: key);
+  const NavigatorScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => _NavigatorScreenState();
@@ -43,7 +39,6 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
     ThemeData theme = Theme.of(context);
 
     return Scaffold(
@@ -79,7 +74,7 @@ class _NavigatorScreenState extends State<NavigatorScreen> {
           slideWidth: width / 1.75,
           style: DrawerStyle.style1,
           showShadow: true,
-          menuBackgroundColor: Color.fromARGB(115, 0, 0, 0),
+          menuBackgroundColor: const Color.fromARGB(115, 0, 0, 0),
           mainScreen: screens[index],
           menuScreen: Builder(builder: (context) {
             return MenuScreen(

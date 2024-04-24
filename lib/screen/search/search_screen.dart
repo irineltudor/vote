@@ -19,7 +19,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     List<String> parties = [
@@ -71,10 +70,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     ThemeData theme = Theme.of(context);
-
-    int count = 5;
 
     if (query == '') {
       searchedPartyList = partyList;
@@ -144,8 +140,8 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Container(
               decoration: BoxDecoration(
                 color: theme.scaffoldBackgroundColor,
-                borderRadius: const BorderRadius.vertical(
-                    bottom: const Radius.circular(45)),
+                borderRadius:
+                    const BorderRadius.vertical(bottom: Radius.circular(45)),
               ),
               padding: const EdgeInsets.only(
                   top: 10, left: 32, right: 32, bottom: 10),
@@ -197,8 +193,8 @@ class _SearchScreenState extends State<SearchScreen> {
           subtitle: Text(party.memberList.join(" , ")),
           trailing: ClipRRect(
             borderRadius: const BorderRadius.vertical(
-              bottom: const Radius.circular(45),
-              top: const Radius.circular(45),
+              bottom: Radius.circular(45),
+              top: Radius.circular(45),
             ),
             child: party.img,
           ),

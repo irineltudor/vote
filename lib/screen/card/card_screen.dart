@@ -1,7 +1,3 @@
-import 'dart:collection';
-import 'dart:ffi';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +5,6 @@ import 'package:blur/blur.dart';
 import 'package:vote/widget/pin_dialog_widget.dart';
 import 'dart:math' show pi;
 
-import '../../consts.dart';
 import '../../model/user.dart';
 import '../../service/storage_service.dart';
 import '../../service/user_service.dart';
@@ -34,7 +29,6 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData();
     controller = AnimationController(
@@ -65,10 +59,8 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     ThemeData theme = Theme.of(context);
 
-    print("Aici");
     if (loggedInUser.firstname == null) {
       return Container(
           color: theme.primaryColor,
@@ -87,10 +79,10 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
               left: 0,
               right: 0,
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                    bottom: const Radius.circular(45)),
+                borderRadius:
+                    const BorderRadius.vertical(bottom: Radius.circular(45)),
                 child: Container(
-                    padding: EdgeInsets.fromLTRB(10, 90, 10, 10),
+                    padding: const EdgeInsets.fromLTRB(10, 90, 10, 10),
                     color: theme.scaffoldBackgroundColor,
                     child: loggedInUser.idCard!["country"] == ""
                         ? Center(
@@ -119,14 +111,15 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
                                   personalDetails ? openDialog(theme) : null;
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  margin: EdgeInsets.symmetric(vertical: 15),
+                                  padding: const EdgeInsets.all(5),
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 15),
                                   decoration: BoxDecoration(
                                     color: personalDetails
                                         ? Colors.red
                                         : Colors.grey,
                                     borderRadius: BorderRadius.circular(30),
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                           color: Color.fromARGB(246, 0, 0, 0),
                                           spreadRadius: 1,
@@ -134,7 +127,8 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
                                     ],
                                   ),
                                   child: personalDetails
-                                      ? Icon(Icons.delete, color: Colors.white)
+                                      ? const Icon(Icons.delete,
+                                          color: Colors.white)
                                       : Icon(Icons.delete,
                                           color: Colors.white.withOpacity(0.5)),
                                 ),
@@ -159,12 +153,13 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
                                           : viewDetails();
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(15),
-                                  margin: EdgeInsets.symmetric(vertical: 60),
+                                  padding: const EdgeInsets.all(15),
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 60),
                                   decoration: BoxDecoration(
                                     color: theme.primaryColor,
                                     borderRadius: BorderRadius.circular(30),
-                                    boxShadow: [
+                                    boxShadow: const [
                                       BoxShadow(
                                           color: Color.fromARGB(246, 0, 0, 0),
                                           spreadRadius: 1,
@@ -172,9 +167,9 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
                                     ],
                                   ),
                                   child: personalDetails
-                                      ? Icon(Icons.visibility,
+                                      ? const Icon(Icons.visibility,
                                           color: Colors.white)
-                                      : Icon(Icons.visibility_off,
+                                      : const Icon(Icons.visibility_off,
                                           color: Colors.white),
                                 ),
                               ),
@@ -188,7 +183,7 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
             right: 5,
             child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(45)),
+                  borderRadius: const BorderRadius.all(Radius.circular(45)),
                   color: theme.scaffoldBackgroundColor,
                 ),
                 padding: const EdgeInsets.only(
@@ -228,9 +223,9 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
       width: 360,
       height: 250,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(25)),
+          borderRadius: const BorderRadius.all(Radius.circular(25)),
           color: theme.scaffoldBackgroundColor,
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(color: Color.fromARGB(246, 0, 0, 0), blurRadius: 4)
           ]),
       child: Column(children: [
@@ -278,11 +273,10 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
                         ),
                         Expanded(
                           flex: 1,
-                          child: Container(
-                              child: Divider(
+                          child: Divider(
                             color: theme.dialogBackgroundColor,
                             thickness: 1.5,
-                          )),
+                          ),
                         ),
                         Expanded(
                             flex: 10,
@@ -303,145 +297,142 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
         ),
         Expanded(
           flex: 4,
-          child: Container(
-            child: Row(children: [
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.all(10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FutureBuilder(
-                        future: storageService.getProfilePicture(
-                          loggedInUser.uid!,
-                        ),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                                  ConnectionState.done &&
-                              snapshot.hasData) {
-                            return Image.network(
-                              snapshot.data!,
-                            );
-                          }
-                          if (snapshot.connectionState ==
-                                  ConnectionState.waiting ||
-                              !snapshot.hasData) {
-                            return CircularProgressIndicator();
-                          }
-
-                          return Image.asset("assets/profile/profile.jpg");
-                        },
+          child: Row(children: [
+            Expanded(
+              flex: 1,
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FutureBuilder(
+                      future: storageService.getProfilePicture(
+                        loggedInUser.uid!,
                       ),
-                      showPersonalDetails(
-                          '${idCard["lastname"]} ${idCard["firstname"]}',
-                          theme.textTheme.labelSmall!,
-                          theme.scaffoldBackgroundColor),
-                    ],
-                  ),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done &&
+                            snapshot.hasData) {
+                          return Image.network(
+                            snapshot.data!,
+                          );
+                        }
+                        if (snapshot.connectionState ==
+                                ConnectionState.waiting ||
+                            !snapshot.hasData) {
+                          return const CircularProgressIndicator();
+                        }
+
+                        return Image.asset("assets/profile/profile.jpg");
+                      },
+                    ),
+                    showPersonalDetails(
+                        '${idCard["lastname"]} ${idCard["firstname"]}',
+                        theme.textTheme.labelSmall!,
+                        theme.scaffoldBackgroundColor),
+                  ],
                 ),
               ),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(10, 10, 20, 10),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Personal Code',
-                              style: theme.textTheme.labelLarge,
-                            ),
-                            showPersonalDetails(
-                                idCard["personalCode"],
-                                theme.textTheme.labelSmall!,
-                                theme.scaffoldBackgroundColor),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Address',
-                                  style: theme.textTheme.labelLarge,
-                                ),
-                                showPersonalDetails(
-                                    '${idCard["county"]}, ${idCard["city"]}, ${idCard["address"]}',
-                                    theme.textTheme.labelSmall!,
-                                    theme.scaffoldBackgroundColor),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Sex',
-                                  style: theme.textTheme.labelLarge,
-                                ),
-                                showPersonalDetails(
-                                    idCard["sex"],
-                                    theme.textTheme.labelSmall!,
-                                    theme.scaffoldBackgroundColor),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Nationality',
-                                  style: theme.textTheme.labelLarge,
-                                ),
-                                showPersonalDetails(
-                                    idCard["nationality"],
-                                    theme.textTheme.labelSmall!,
-                                    theme.scaffoldBackgroundColor),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Date of birth',
-                                  style: theme.textTheme.labelLarge,
-                                ),
-                                showPersonalDetails(
-                                    idCard["dob"],
-                                    theme.textTheme.labelSmall!,
-                                    theme.scaffoldBackgroundColor),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Valability',
-                              style: theme.textTheme.labelLarge,
-                            ),
-                            showPersonalDetails(
-                                "${idCard["issueDate"]} - ${idCard["expireDate"]}",
-                                theme.textTheme.labelSmall!,
-                                theme.scaffoldBackgroundColor),
-                          ],
-                        ),
-                      ]),
-                ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(10, 10, 20, 10),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Personal Code',
+                            style: theme.textTheme.labelLarge,
+                          ),
+                          showPersonalDetails(
+                              idCard["personalCode"],
+                              theme.textTheme.labelSmall!,
+                              theme.scaffoldBackgroundColor),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Address',
+                                style: theme.textTheme.labelLarge,
+                              ),
+                              showPersonalDetails(
+                                  '${idCard["county"]}, ${idCard["city"]}, ${idCard["address"]}',
+                                  theme.textTheme.labelSmall!,
+                                  theme.scaffoldBackgroundColor),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Sex',
+                                style: theme.textTheme.labelLarge,
+                              ),
+                              showPersonalDetails(
+                                  idCard["sex"],
+                                  theme.textTheme.labelSmall!,
+                                  theme.scaffoldBackgroundColor),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Nationality',
+                                style: theme.textTheme.labelLarge,
+                              ),
+                              showPersonalDetails(
+                                  idCard["nationality"],
+                                  theme.textTheme.labelSmall!,
+                                  theme.scaffoldBackgroundColor),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Date of birth',
+                                style: theme.textTheme.labelLarge,
+                              ),
+                              showPersonalDetails(
+                                  idCard["dob"],
+                                  theme.textTheme.labelSmall!,
+                                  theme.scaffoldBackgroundColor),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Valability',
+                            style: theme.textTheme.labelLarge,
+                          ),
+                          showPersonalDetails(
+                              "${idCard["issueDate"]} - ${idCard["expireDate"]}",
+                              theme.textTheme.labelSmall!,
+                              theme.scaffoldBackgroundColor),
+                        ],
+                      ),
+                    ]),
               ),
-            ]),
-          ),
+            ),
+          ]),
         ),
       ]),
     );

@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 // import 'package:intl/intl.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({Key? key}) : super(key: key);
+  const ForgotPasswordScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
 
@@ -78,12 +79,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           if (_formKey.currentState!.validate()) {
             try {
               await _auth.sendPasswordResetEmail(email: emailController.text);
+              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text("Email sent"),
                 backgroundColor: Colors.green,
                 showCloseIcon: true,
                 closeIconColor: Colors.white,
               ));
+              // ignore: use_build_context_synchronously
               Navigator.of(context).pop();
             } on FirebaseAuthException catch (error) {
               switch (error.code) {
@@ -92,6 +95,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   break;
               }
 
+              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -155,7 +159,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         Text('Reset Password,',
                             style: theme.textTheme.headlineMedium?.copyWith(
                                 color: theme.scaffoldBackgroundColor)),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Text('Type in your email address',
                             style: theme.textTheme.labelLarge?.copyWith(
                                 color: theme.scaffoldBackgroundColor)),

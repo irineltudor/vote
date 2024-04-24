@@ -18,11 +18,10 @@ class MenuScreen extends StatelessWidget {
   final ThemeData theme;
 
   const MenuScreen(
-      {Key? key,
+      {super.key,
       required this.currentItem,
       required this.onSelectedItem,
-      required this.theme})
-      : super(key: key);
+      required this.theme});
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +37,14 @@ class MenuScreen extends StatelessWidget {
           const Spacer(),
           Container(
             width: 100,
-            margin: EdgeInsets.only(left: 15),
+            margin: const EdgeInsets.only(left: 15),
             child: Image.asset(
               isDarkMode
                   ? "assets/logo/dark/logo.png"
                   : "assets/logo/light/logo.png",
             ),
           ),
-          ...MenuItems.all.map(buildMenuItem).toList(),
+          ...MenuItems.all.map(buildMenuItem),
           const Spacer(flex: 2),
         ],
       )),

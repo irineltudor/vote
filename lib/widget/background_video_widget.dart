@@ -1,5 +1,5 @@
+// ignore: implementation_imports
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:video_player/video_player.dart';
 
 class BackgroundVideoWidget extends StatefulWidget {
@@ -14,6 +14,7 @@ class _BackgroundVideoWidgetState extends State<BackgroundVideoWidget> {
 
   @override
   void initState() {
+    super.initState();
     videoController =
         VideoPlayerController.asset('assets/background/background.mp4')
           ..initialize().then((_) {

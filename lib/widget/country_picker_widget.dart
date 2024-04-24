@@ -1,40 +1,29 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-// ignore: must_be_immutable
 class CountryPickerWidget extends StatefulWidget {
-  Color color;
-  String userCountry;
-  Color buttonColor;
-  TextEditingController countryOf;
+  final Color color;
+  final String userCountry;
+  final Color buttonColor;
+  final TextEditingController countryOf;
 
-  CountryPickerWidget(
-      {Key? key,
+  const CountryPickerWidget(
+      {super.key,
       required this.color,
       required this.userCountry,
       required this.buttonColor,
-      required this.countryOf})
-      : super(key: key);
+      required this.countryOf});
+
   @override
-  _CountryPickerWidgetState createState() => _CountryPickerWidgetState(
-      color: color,
-      userCountry: userCountry,
-      buttonColor: buttonColor,
-      countryOf: countryOf);
+  State<CountryPickerWidget> createState() => _CountryPickerWidgetState();
 }
 
 class _CountryPickerWidgetState extends State<CountryPickerWidget> {
-  Country country = Country.worldWide;
-  Color color;
-  String userCountry;
-  Color buttonColor;
-  TextEditingController countryOf;
-  _CountryPickerWidgetState(
-      {required this.color,
-      required this.userCountry,
-      required this.buttonColor,
-      required this.countryOf});
+  late Country country = Country.worldWide;
+  late Color color = widget.color;
+  late String userCountry = widget.userCountry;
+  late Color buttonColor = widget.buttonColor;
+  late TextEditingController countryOf = widget.countryOf;
 
   String getText() {
     if (country.countryCode == "WW") {
@@ -84,8 +73,10 @@ class _CountryPickerWidgetState extends State<CountryPickerWidget> {
     showCountryPicker(
         context: context,
         onSelect: (Country newCountry) {
-          setState(
-              () => {country = newCountry, countryOf.text = newCountry.name});
+          setState(() {
+            country = newCountry;
+            countryOf.text = newCountry.name;
+          });
         });
   }
 }

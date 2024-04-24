@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:news_api_flutter_package/model/article.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -94,7 +92,7 @@ class NewsSliderItem extends StatelessWidget {
   }
 
   _launchURL(url) async {
-    Uri _url = Uri.parse(url);
-    if (!await launchUrl(_url)) throw 'Could not launch $_url';
+    Uri url0 = Uri.parse(url);
+    if (!await launchUrl(url0)) throw 'Could not launch $url0';
   }
 }

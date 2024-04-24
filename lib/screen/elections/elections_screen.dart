@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vote/model/user.dart';
 import 'package:vote/screen/elections/election_screen.dart';
+import 'package:vote/service/storage_service.dart';
+import 'package:vote/service/user_service.dart';
 
 import '../../model/election.dart';
 import '../../widget/menu_widget.dart';
@@ -12,123 +16,152 @@ class ElectionsScreen extends StatefulWidget {
 }
 
 class _ElectionsScreenState extends State<ElectionsScreen> {
+  User? user = FirebaseAuth.instance.currentUser;
+  UserModel loggedInUser = UserModel();
+  final StorageService storageService = StorageService();
+  final UserService userService = UserService();
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<void> getData() async {
+    userService.getUser(user!.uid).then((value) {
+      loggedInUser = value;
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     ThemeData theme = Theme.of(context);
 
-    int count = 5;
+    if (loggedInUser.firstname == null) {
+      return Container(
+          color: theme.primaryColor,
+          child: Center(
+              child: CircularProgressIndicator(
+            color: theme.scaffoldBackgroundColor,
+          )));
+    } else {
+      int count = 5;
 
-    return Scaffold(
-      backgroundColor: theme.primaryColor,
-      body: Stack(children: <Widget>[
-        Positioned(
-          top: height * 0.14,
-          height: height * 0.1,
-          left: 0,
-          right: 0,
-          child: Container(
-              decoration: BoxDecoration(
-                color: theme.primaryColor,
-              ),
-              padding: const EdgeInsets.only(
-                  top: 10, left: 32, right: 32, bottom: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '"Your Voice, Your Vote:',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(color: theme.scaffoldBackgroundColor),
-                  ),
-                  Text(
-                    'Every Ballot Shapes Our Future!"',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(color: theme.scaffoldBackgroundColor),
-                  ),
-                ],
-              )),
-        ),
-        Positioned(
-            top: height * 0.24,
-            height: height * 0.65,
+      return Scaffold(
+        backgroundColor: theme.primaryColor,
+        body: Stack(children: <Widget>[
+          Positioned(
+            top: height * 0.14,
+            height: height * 0.1,
             left: 0,
             right: 0,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(45), top: Radius.circular(45)),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(45), top: Radius.circular(45)),
-                  color: theme.scaffoldBackgroundColor,
+                  color: theme.primaryColor,
                 ),
+                padding: const EdgeInsets.only(
+                    top: 10, left: 32, right: 32, bottom: 10),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                        flex: 1,
-                        child: Container(
-                            width: width,
-                            decoration: BoxDecoration(
-                              color: theme.scaffoldBackgroundColor,
-                            ),
-                            child: Center(
-                                child: Text("There are $count elections")))),
-                    Expanded(
-                        flex: 15,
-                        child: ListView.builder(
-                            itemCount: count,
-                            itemBuilder: (context, index) {
-                              return buildElection(Election(), theme);
-                            })),
+                    Text(
+                      '"Your Voice, Your Vote:',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(color: theme.scaffoldBackgroundColor),
+                    ),
+                    Text(
+                      'Every Ballot Shapes Our Future!"',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(color: theme.scaffoldBackgroundColor),
+                    ),
                   ],
+                )),
+          ),
+          Positioned(
+              top: height * 0.24,
+              height: height * 0.65,
+              left: 0,
+              right: 0,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(45), top: Radius.circular(45)),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.vertical(
+                        bottom: Radius.circular(45), top: Radius.circular(45)),
+                    color: theme.scaffoldBackgroundColor,
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                              width: width,
+                              decoration: BoxDecoration(
+                                color: theme.scaffoldBackgroundColor,
+                              ),
+                              child: Center(
+                                  child: Text("There are $count elections")))),
+                      Expanded(
+                          flex: 15,
+                          child: ListView.builder(
+                              itemCount: count,
+                              itemBuilder: (context, index) {
+                                return buildElection(Election(), theme);
+                              })),
+                    ],
+                  ),
                 ),
-              ),
-            )),
-        Positioned(
-          top: 0,
-          height: height * 0.14,
-          left: 0,
-          right: 0,
-          child: Container(
-              decoration: BoxDecoration(
-                color: theme.scaffoldBackgroundColor,
-                borderRadius:
-                    const BorderRadius.vertical(bottom: Radius.circular(45)),
-              ),
-              padding: const EdgeInsets.only(
-                  top: 10, left: 32, right: 32, bottom: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.ballot,
-                    color: theme.dialogBackgroundColor,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    "Elections",
-                    style: theme.textTheme.headlineMedium,
-                  ),
-                ],
               )),
-        ),
-        Positioned(
-            top: height * 0.04,
-            height: height * 0.05,
+          Positioned(
+            top: 0,
+            height: height * 0.14,
             left: 0,
-            right: height / 2.5,
-            child: const MenuWidget()),
-      ]),
-    );
+            right: 0,
+            child: Container(
+                decoration: BoxDecoration(
+                  color: theme.scaffoldBackgroundColor,
+                  borderRadius:
+                      const BorderRadius.vertical(bottom: Radius.circular(45)),
+                ),
+                padding: const EdgeInsets.only(
+                    top: 10, left: 32, right: 32, bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.ballot,
+                      color: theme.dialogBackgroundColor,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Elections",
+                      style: theme.textTheme.headlineMedium,
+                    ),
+                  ],
+                )),
+          ),
+          Positioned(
+              top: height * 0.04,
+              height: height * 0.05,
+              left: 0,
+              right: height / 2.5,
+              child: const MenuWidget()),
+        ]),
+      );
+    }
   }
 
   Widget buildElection(Election election, ThemeData theme) {
@@ -143,7 +176,7 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ElectionScreen(
+                  builder: (context) => const ElectionScreen(
                         electionId: '0',
                       )));
         },

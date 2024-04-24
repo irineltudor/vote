@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:vote/screen/onboarding/Intro4_screen.dart';
+import 'package:vote/screen/onboarding/intro4_screen.dart';
 import 'package:vote/screen/onboarding/intro1_screen.dart';
 import 'package:vote/screen/onboarding/intro2_screen.dart';
 import 'package:vote/screen/onboarding/intro3_screen.dart';
@@ -62,7 +62,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   count: 4,
                   effect: ExpandingDotsEffect(
                     dotColor: theme.scaffoldBackgroundColor,
-                    activeDotColor: Color.fromARGB(255, 12, 100, 250),
+                    activeDotColor: const Color.fromARGB(255, 12, 100, 250),
                   ),
                 ),
                 onLastPage

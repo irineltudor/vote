@@ -6,23 +6,19 @@
 // import 'package:fiteat/screens/signup-signin/details_screen.dart';
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vote/screen/navigator/navigator_screen.dart';
-import 'package:vote/screen/verify/verify_intro_screen.dart';
 import 'package:vote/service/user_service.dart';
-import 'package:vote/widget/country_picker_widget.dart';
 
 import '../../model/user.dart';
 import '../../widget/date_picker_widget.dart';
 
 class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({Key? key}) : super(key: key);
+  const RegistrationScreen({super.key});
 
   @override
-  _RegistrationScreenState createState() => _RegistrationScreenState();
+  State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
@@ -380,9 +376,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           default:
             errorMessage = "An undefined Error happened.";
         }
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(errorMessage!),
-        ));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(errorMessage!),
+          ));
+        }
       }
     }
   }

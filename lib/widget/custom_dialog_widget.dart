@@ -1,16 +1,15 @@
-
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomDialogBox extends StatefulWidget {
-  Function onCameraBTNPressed, onGalleryBTNPressed;
+  final Function onCameraBTNPressed, onGalleryBTNPressed;
 
-  CustomDialogBox(
-      {required this.onCameraBTNPressed, required this.onGalleryBTNPressed});
+  const CustomDialogBox(
+      {super.key,
+      required this.onCameraBTNPressed,
+      required this.onGalleryBTNPressed});
 
   @override
-  _CustomDialogBoxState createState() => _CustomDialogBoxState();
+  State<CustomDialogBox> createState() => _CustomDialogBoxState();
 }
 
 class _CustomDialogBoxState extends State<CustomDialogBox> {
@@ -31,13 +30,14 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
     return Stack(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(left: 20, top: 65, right: 20, bottom: 20),
-          margin: EdgeInsets.only(top: 45),
+          padding:
+              const EdgeInsets.only(left: 20, top: 65, right: 20, bottom: 20),
+          margin: const EdgeInsets.only(top: 45),
           decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               color: theme.scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(20),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                     color: Colors.black, offset: Offset(0, 10), blurRadius: 10),
               ]),
@@ -48,7 +48,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 'Cnic Scanner',
                 style: theme.textTheme.titleLarge,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
               Text(
@@ -56,7 +56,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
                 style: theme.textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 22,
               ),
               Row(
@@ -94,7 +94,7 @@ class _CustomDialogBoxState extends State<CustomDialogBox> {
             backgroundColor: Colors.transparent,
             radius: 45,
             child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(45)),
+                borderRadius: const BorderRadius.all(Radius.circular(45)),
                 child: Image.asset("assets/profile/profile.png")),
           ),
         ),

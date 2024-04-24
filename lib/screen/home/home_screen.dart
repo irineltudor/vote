@@ -1,9 +1,6 @@
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:vote/consts.dart';
 import 'package:vote/screen/more/pin_screen.dart';
 import 'package:vote/screen/verify/verify_intro_screen.dart';
 import 'package:vote/service/storage_service.dart';
@@ -45,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     ThemeData theme = Theme.of(context);
 
     if (loggedInUser.firstname == null) {
@@ -120,18 +116,18 @@ class _HomeScreenState extends State<HomeScreen> {
               right: 0,
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(
-                    top: const Radius.circular(45),
-                    bottom: const Radius.circular(45)),
+                    top: Radius.circular(45), bottom: Radius.circular(45)),
                 child: Container(
                   color: theme.scaffoldBackgroundColor,
                   child: Column(children: [
                     Padding(
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       child: Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                             color: theme.scaffoldBackgroundColor,
-                            borderRadius: BorderRadius.all(Radius.circular(50)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(50)),
                             border: Border.all(
                                 color: theme.dialogBackgroundColor
                                     .withOpacity(0.5),
@@ -152,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             loggedInUser.status == 0
                                 ? Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.not_interested,
                                         color: Colors.red,
                                       ),
@@ -166,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 : loggedInUser.status == 1
                                     ? Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.verified,
                                             color: Colors.blue,
                                           ),
@@ -179,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )
                                     : Row(
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.arrow_drop_down_circle,
                                             color: Colors.orange,
                                           ),
@@ -196,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -220,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -238,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    NewsSlider(),
+                    const NewsSlider(),
                   ]),
                 ),
               )),

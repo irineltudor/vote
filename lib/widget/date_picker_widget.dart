@@ -8,13 +8,12 @@ class DatePickerWidget extends StatefulWidget {
   TextEditingController dob;
 
   DatePickerWidget(
-      {Key? key,
+      {super.key,
       required this.userDate,
       required this.buttonColor,
-      required this.dob})
-      : super(key: key);
+      required this.dob});
   @override
-  _DatePickerWidgetState createState() => _DatePickerWidgetState();
+  State<DatePickerWidget> createState() => _DatePickerWidgetState();
 }
 
 class _DatePickerWidgetState extends State<DatePickerWidget> {
@@ -73,11 +72,8 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
 
   Future pickDate(BuildContext context) async {
     ThemeData theme = Theme.of(context);
-    DateTime currentDate = DateTime.now();
 
-    if (date.year != 0) {
-      currentDate = date;
-    }
+    if (date.year != 0) {}
 
     final newDate = await showDatePicker(
         context: context,
@@ -102,7 +98,9 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
 
     if (newDate == null) return;
 
-    setState(() =>
-        {date = newDate, dob.text = DateFormat('MM-dd-yyyy').format(newDate)});
+    setState(() {
+      date = newDate;
+      dob.text = DateFormat('MM-dd-yyyy').format(newDate);
+    });
   }
 }

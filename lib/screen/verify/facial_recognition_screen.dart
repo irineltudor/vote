@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:lottie/lottie.dart';
-import 'package:vote/screen/home/home_screen.dart';
-import 'package:vote/screen/navigator/navigator_screen.dart';
 
 class FacialRecognitionScreen extends StatefulWidget {
   const FacialRecognitionScreen({super.key});
@@ -62,19 +58,19 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
                                       ?.copyWith(color: Colors.white),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               Center(
                                   child: GestureDetector(
                                 onTap: () {},
                                 child: Container(
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(45)),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(45)),
                                       border: Border.all(color: Colors.white)),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.camera,
                                     color: Colors.white,
                                   ),
@@ -85,7 +81,7 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
                         ),
                       ])),
             ),
-            SizedBox(
+            const SizedBox(
               height: 100,
             ),
             _next(theme: theme)
