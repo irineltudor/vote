@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vote/screen/navigator/navigator_screen.dart';
 import 'package:vote/screen/signup-signin/registration_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:vote/widget/code_dialog_widget.dart';
 
 import 'forgot_password_screen.dart';
 
@@ -146,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     emailController.text = "tirynel@yahoo.com";
-    passwordController.text = "1234567";
+    passwordController.text = "12345678";
 
     // if (isLoggedIn) {
     //   return Scaffold(
@@ -304,6 +306,66 @@ class _LoginScreenState extends State<LoginScreen> {
                           builder: (context) => const NavigatorScreen())),
                     }
                 });
+      } on FirebaseAuthMultiFactorException catch (e) {
+        print(e.message);
+        final firstHint = e.resolver.hints.first;
+        if (firstHint is! PhoneMultiFactorInfo) {
+          return;
+        }
+        await FirebaseAuth.instance.verifyPhoneNumber(
+          multiFactorSession: e.resolver.session,
+          multiFactorInfo: firstHint,
+          verificationCompleted: (_) {},
+          verificationFailed: (_) {},
+          codeSent: (String verificationId, int? resendToken) async {
+            // See `firebase_auth` example app for a method of retrieving user's sms code:
+            // https://github.com/firebase/flutterfire/blob/master/packages/firebase_auth/firebase_auth/example/lib/auth.dart#L591
+            final smsCode = await await showDialog(
+                context: context,
+                barrierColor: Colors.black38,
+                builder: (BuildContext context) {
+                  return CodeDialogBox(
+                      function: () async {},
+                      code: "000000",
+                      text: "Type sent code");
+                });
+            ;
+
+            if (smsCode != null) {
+              // Create a PhoneAuthCredential with the code
+              final credential = PhoneAuthProvider.credential(
+                verificationId: verificationId,
+                smsCode: smsCode,
+              );
+
+              try {
+                await e.resolver.resolveSignIn(
+                  PhoneMultiFactorGenerator.getAssertion(
+                    credential,
+                  ),
+                );
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const NavigatorScreen()));
+              } on FirebaseAuthException catch (e) {
+                switch (e.code) {
+                  case "invalid-verification-code":
+                    Fluttertoast.showToast(
+                      msg: "Invalid Code Try Again",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.SNACKBAR,
+                    );
+                  default:
+                    Fluttertoast.showToast(
+                      msg: e.message!,
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.SNACKBAR,
+                    );
+                }
+              }
+            }
+          },
+          codeAutoRetrievalTimeout: (_) {},
+        );
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case "invalid-email":

@@ -101,7 +101,8 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                         bottom: Radius.circular(45), top: Radius.circular(45)),
                     color: theme.scaffoldBackgroundColor,
                   ),
-                  child: loggedInUser.status == 1
+                  child: loggedInUser.status == 1 &&
+                          loggedInUser.phoneNumber != ''
                       ? Column(
                           children: [
                             Expanded(
@@ -147,35 +148,23 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                                     color: theme.scaffoldBackgroundColor,
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(45))),
-                                child: loggedInUser.status == 0
-                                    ? Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Icon(
-                                            Icons.not_interested,
-                                            color: Colors.red,
-                                          ),
-                                          Text(
-                                            "Unverified",
-                                            style: theme.textTheme.labelMedium
-                                                ?.copyWith(color: Colors.red),
-                                          ),
-                                        ],
-                                      )
-                                    : loggedInUser.status == 1
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    loggedInUser.phoneNumber == ''
                                         ? Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               const Icon(
-                                                Icons.verified,
-                                                color: Colors.blue,
+                                                Icons.not_interested,
+                                                color: Colors.red,
                                               ),
                                               Text(
-                                                "Verified",
+                                                "2FA",
                                                 style: theme
                                                     .textTheme.labelMedium
                                                     ?.copyWith(
-                                                        color: Colors.blue),
+                                                        color: Colors.red),
                                               ),
                                             ],
                                           )
@@ -183,18 +172,72 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               const Icon(
-                                                Icons.arrow_drop_down_circle,
-                                                color: Colors.orange,
+                                                Icons.verified,
+                                                color: Colors.blue,
                                               ),
                                               Text(
-                                                "Waiting",
+                                                "2FA",
                                                 style: theme
                                                     .textTheme.labelMedium
                                                     ?.copyWith(
-                                                        color: Colors.orange),
+                                                        color: Colors.blue),
                                               ),
                                             ],
                                           ),
+                                    loggedInUser.status == 0
+                                        ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Icon(
+                                                Icons.not_interested,
+                                                color: Colors.red,
+                                              ),
+                                              Text(
+                                                "ID CARD",
+                                                style: theme
+                                                    .textTheme.labelMedium
+                                                    ?.copyWith(
+                                                        color: Colors.red),
+                                              ),
+                                            ],
+                                          )
+                                        : loggedInUser.status == 1
+                                            ? Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Icon(
+                                                    Icons.verified,
+                                                    color: Colors.blue,
+                                                  ),
+                                                  Text(
+                                                    "VERIFIED ID CARD",
+                                                    style: theme
+                                                        .textTheme.labelMedium
+                                                        ?.copyWith(
+                                                            color: Colors.blue),
+                                                  ),
+                                                ],
+                                              )
+                                            : Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Icon(
+                                                    Icons
+                                                        .arrow_drop_down_circle,
+                                                    color: Colors.orange,
+                                                  ),
+                                                  Text(
+                                                    "WAITING ID CARD",
+                                                    style: theme
+                                                        .textTheme.labelMedium
+                                                        ?.copyWith(
+                                                            color:
+                                                                Colors.orange),
+                                                  ),
+                                                ],
+                                              ),
+                                  ],
+                                ),
                               ),
                             ]),
                 ),

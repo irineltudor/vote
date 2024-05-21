@@ -37,6 +37,14 @@ class UserService {
         .set(user.toMap());
   }
 
+  Future<void> updatePhoneNumber(UserModel user, String phoneNumnber) async {
+    user.phoneNumber = phoneNumnber;
+    await FirebaseFirestore.instance
+        .collection("user")
+        .doc(user.uid!)
+        .set(user.toMap());
+  }
+
   Future<void> deleteIdCard(UserModel user) async {
     LinkedHashMap<String, String> idCard = LinkedHashMap();
 

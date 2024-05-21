@@ -119,79 +119,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Container(
                   color: theme.scaffoldBackgroundColor,
                   child: Column(children: [
+                    status("Identification Card", loggedInUser.status!, theme),
                     Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: theme.scaffoldBackgroundColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(50)),
-                            border: Border.all(
-                                color: theme.dialogBackgroundColor
-                                    .withOpacity(0.5),
-                                width: 2),
-                            boxShadow: ([
-                              BoxShadow(
-                                  color: theme.dialogBackgroundColor
-                                      .withOpacity(0.8),
-                                  blurRadius: 1.5)
-                            ])),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Account status",
-                              style: theme.textTheme.headlineSmall,
-                            ),
-                            loggedInUser.status == 0
-                                ? Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.not_interested,
-                                        color: Colors.red,
-                                      ),
-                                      Text(
-                                        "Unverified",
-                                        style: theme.textTheme.labelMedium
-                                            ?.copyWith(color: Colors.red),
-                                      ),
-                                    ],
-                                  )
-                                : loggedInUser.status == 1
-                                    ? Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.verified,
-                                            color: Colors.blue,
-                                          ),
-                                          Text(
-                                            "Verified",
-                                            style: theme.textTheme.labelMedium
-                                                ?.copyWith(color: Colors.blue),
-                                          ),
-                                        ],
-                                      )
-                                    : Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.arrow_drop_down_circle,
-                                            color: Colors.orange,
-                                          ),
-                                          Text(
-                                            "Waiting",
-                                            style: theme.textTheme.labelMedium
-                                                ?.copyWith(
-                                                    color: Colors.orange),
-                                          ),
-                                        ],
-                                      ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 20, horizontal: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -240,5 +171,78 @@ class _HomeScreenState extends State<HomeScreen> {
         ]),
       );
     }
+  }
+
+  Widget status(String title, int status, ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: theme.scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.all(Radius.circular(50)),
+            border: Border.all(
+                color: theme.dialogBackgroundColor.withOpacity(0.5), width: 2),
+            boxShadow: ([
+              BoxShadow(
+                  color: theme.dialogBackgroundColor.withOpacity(0.8),
+                  blurRadius: 1.5)
+            ])),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: theme.textTheme.headlineSmall,
+                ),
+                status == 0
+                    ? Row(
+                        children: [
+                          const Icon(
+                            Icons.not_interested,
+                            color: Colors.red,
+                          ),
+                          Text(
+                            "Unverified",
+                            style: theme.textTheme.labelMedium
+                                ?.copyWith(color: Colors.red),
+                          ),
+                        ],
+                      )
+                    : status == 1
+                        ? Row(
+                            children: [
+                              const Icon(
+                                Icons.verified,
+                                color: Colors.blue,
+                              ),
+                              Text(
+                                "Verified",
+                                style: theme.textTheme.labelMedium
+                                    ?.copyWith(color: Colors.blue),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              const Icon(
+                                Icons.arrow_drop_down_circle,
+                                color: Colors.orange,
+                              ),
+                              Text(
+                                "Waiting",
+                                style: theme.textTheme.labelMedium
+                                    ?.copyWith(color: Colors.orange),
+                              ),
+                            ],
+                          ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

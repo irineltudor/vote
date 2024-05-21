@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:vote/screen/more/account_details_screen.dart';
 import 'package:vote/screen/more/change_password_screen.dart';
 import 'package:vote/screen/more/pin_screen.dart';
+import 'package:vote/screen/more/two_factor_auth_screen.dart';
 import 'package:vote/screen/signup-signin/login_screen.dart';
 import 'package:vote/screen/verify/card_change_screen.dart';
+import 'package:vote/widget/two_factor_card_widget.dart';
 
 import '../../model/user.dart';
 import '../../service/storage_service.dart';
@@ -58,9 +61,13 @@ class _MoreScreenState extends State<MoreScreen> {
       String pin = loggedInUser.pin!;
 
       DateTime today = DateTime.now();
-      DateTime date = DateFormat('MM-dd-yyyy').parse(loggedInUser.dob!);
 
-      int age = (today.difference(date).inDays / 365).floor();
+      int age = 0;
+      if (loggedInUser.dob != "") {
+        DateTime date = DateFormat('MM-dd-yyyy').parse(loggedInUser.dob!);
+
+        age = (today.difference(date).inDays / 365).floor();
+      }
 
       final logoutButton = Container(
         height: height / 15,
@@ -171,7 +178,10 @@ class _MoreScreenState extends State<MoreScreen> {
                                             ?.copyWith(
                                                 color: Colors.white
                                                     .withOpacity(0.5))),
-                                    Text("$age years old",
+                                    Text(
+                                        age == 0
+                                            ? "Age not available"
+                                            : "$age years old",
                                         style: theme.textTheme.labelSmall
                                             ?.copyWith(
                                                 color: Colors.white
@@ -180,6 +190,67 @@ class _MoreScreenState extends State<MoreScreen> {
                                 ),
                               ),
                             ]),
+                      ),
+                      Column(
+                        children: [
+                          user!.emailVerified
+                              ? TwoFactorCardWidget(
+                                  text: loggedInUser.phoneNumber != ''
+                                      ? 'Two Factor Auth'
+                                      : 'Add Two Factor Auth',
+                                  icon: Icons.mobile_friendly,
+                                  statefulWidget: const TwoFactorAuthScreen(),
+                                  pin: pin,
+                                  function: getData,
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    Fluttertoast.showToast(
+                                      msg: "Verify your email first",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.SNACKBAR,
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    width: 200,
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                        color: theme.scaffoldBackgroundColor,
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(50)),
+                                        border: Border.all(
+                                            color: theme.dialogBackgroundColor
+                                                .withOpacity(0.5),
+                                            width: 2),
+                                        boxShadow: ([
+                                          BoxShadow(
+                                              color: theme.dialogBackgroundColor
+                                                  .withOpacity(0.8),
+                                              blurRadius: 1.5)
+                                        ])),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.mobile_friendly,
+                                          color: theme.primaryColor,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "Add Two Factor Auth",
+                                          style: theme.textTheme.bodySmall,
+                                          textAlign: TextAlign.center,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                        ],
                       ),
                       Column(
                         children: [

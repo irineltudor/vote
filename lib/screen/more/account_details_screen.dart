@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import '../../model/user.dart';
@@ -46,9 +47,12 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
           )));
     } else {
       DateTime today = DateTime.now();
-      DateTime date = DateFormat('MM-dd-yyyy').parse(loggedInUser.dob!);
+      DateTime date = DateTime(0);
+      if (loggedInUser.dob! != '') {
+        DateTime date = DateFormat('MM-dd-yyyy').parse(loggedInUser.dob!);
 
-      (today.difference(date).inDays / 365).floor();
+        (today.difference(date).inDays / 365).floor();
+      }
 
       return Scaffold(
         backgroundColor: theme.primaryColor,
@@ -78,18 +82,27 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  detailContainer("Email", loggedInUser.email!),
+                  emailContainer("Email", loggedInUser.email!),
                   detailContainer(
-                      "Date of Birth", DateFormat("d MMMM yyyy").format(date)),
-                  detailContainer("Pin", loggedInUser.pin!),
+                      "Date of Birth",
+                      date.year == 0
+                          ? "Not specified"
+                          : DateFormat("d MMMM yyyy").format(date)),
+                  detailContainer("Pin",
+                      loggedInUser.pin! != '' ? loggedInUser.pin! : "Not set"),
                   detailContainer(
-                    "Account Status",
+                    "Id Card Status",
                     loggedInUser.status! == 0
                         ? "Unverified"
                         : loggedInUser.status == 1
                             ? "Verified"
                             : "Waiting",
                   ),
+                  detailContainer(
+                      "Two factor authenticator",
+                      loggedInUser.phoneNumber == ''
+                          ? "Not set"
+                          : "Set with : ${loggedInUser.phoneNumber}"),
                 ],
               ),
             ),
@@ -161,6 +174,56 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         ]),
       );
     }
+  }
+
+  Widget emailContainer(String detail, String text) {
+    ThemeData theme = Theme.of(context);
+    final width = MediaQuery.of(context).size.width;
+
+    return Container(
+      height: 100,
+      width: width,
+      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: theme.dialogBackgroundColor.withOpacity(0.1),
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  detail,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                      color: theme.dialogBackgroundColor.withOpacity(0.8)),
+                ),
+                Text(
+                  text,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.dialogBackgroundColor.withOpacity(0.8)),
+                ),
+              ]),
+          user!.emailVerified
+              ? const Icon(Icons.verified)
+              : GestureDetector(
+                  onTap: () async => {
+                    await user!.sendEmailVerification(),
+                    Fluttertoast.showToast(
+                      msg: "Check your inbox",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.SNACKBAR,
+                    ),
+                    Navigator.of(context).pop("refresh")
+                  },
+                  child: Icon(Icons.send),
+                )
+        ],
+      ),
+    );
   }
 
   Widget detailContainer(String detail, String text) {

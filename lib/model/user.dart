@@ -6,6 +6,7 @@ class UserModel {
   String? dob;
   String? pin;
   int? status; // 0-unverified,1-verified,2-waiting
+  String? phoneNumber;
   Map<String, dynamic>? idCard;
 
   UserModel(
@@ -16,20 +17,21 @@ class UserModel {
       this.dob,
       this.pin,
       this.status,
-      this.idCard});
+      this.idCard,
+      this.phoneNumber});
 
   // data from server
   factory UserModel.fromMap(map) {
     return UserModel(
-      uid: map['uid'],
-      email: map['email'],
-      firstname: map['firstname'],
-      lastname: map['lastname'],
-      dob: map['dob'],
-      pin: map['pin'],
-      status: map['status'],
-      idCard: Map<String, dynamic>.from(map['idCard']),
-    );
+        uid: map['uid'],
+        email: map['email'],
+        firstname: map['firstname'],
+        lastname: map['lastname'],
+        dob: map['dob'],
+        pin: map['pin'],
+        status: map['status'],
+        idCard: Map<String, dynamic>.from(map['idCard']),
+        phoneNumber: map['phoneNumber']);
   }
 
   // sendig data to our server
@@ -43,6 +45,7 @@ class UserModel {
       'pin': pin,
       'status': status,
       'idCard': idCard,
+      'phoneNumber': phoneNumber,
     };
   }
 

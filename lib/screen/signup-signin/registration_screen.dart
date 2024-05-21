@@ -415,9 +415,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         dob: birthEditingController.text,
         status: 0,
         pin: "",
+        phoneNumber: "",
         idCard: idCard);
 
     userService.addUser(userModel);
+
+    await user.sendEmailVerification();
 
     Navigator.pushAndRemoveUntil(
         (context),

@@ -94,7 +94,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Here you can search details about any candidate or party that are currently running in an election",
+                    "Explore details about the elections you've been a part of, including the candidates you voted for and the outcomes.",
                     textAlign: TextAlign.center,
                     style: theme.textTheme.titleMedium
                         ?.copyWith(color: theme.scaffoldBackgroundColor),
@@ -175,7 +175,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget buildSearch() {
     return SearchWidget(
-        text: query, hintText: 'Search for party', onChanged: searchTournament);
+        text: query,
+        hintText: 'Search for election',
+        onChanged: searchTournament);
   }
 
   Widget buildParty(Party party) {
