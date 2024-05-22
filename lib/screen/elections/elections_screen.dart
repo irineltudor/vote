@@ -1,10 +1,16 @@
 import 'package:blur/blur.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:vote/consts.dart';
+import 'package:vote/model/election_contract.dart';
 import 'package:vote/model/user.dart';
 import 'package:vote/screen/elections/election_screen.dart';
+import 'package:vote/service/contract_service.dart';
+import 'package:vote/service/election_service.dart';
 import 'package:vote/service/storage_service.dart';
 import 'package:vote/service/user_service.dart';
+import 'package:web3dart/web3dart.dart';
 
 import '../../model/election.dart';
 import '../../widget/menu_widget.dart';
@@ -21,14 +27,43 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
   UserModel loggedInUser = UserModel();
   final StorageService storageService = StorageService();
   final UserService userService = UserService();
+  final ElectionService electionService = ElectionService();
+  final ContractService contractService = ContractService();
+  Client? httpClient;
+  Web3Client? ethClient;
+
+  List<Election> electionList = [];
+  List<ElectionContract> electionContractList = [];
 
   @override
   void initState() {
+    httpClient = Client();
+    ethClient = Web3Client(INFURA_URL, httpClient!);
     super.initState();
     getData();
   }
 
   Future<void> getData() async {
+    electionService.getAll().then((value) async {
+      electionList = value;
+      for (Election election in electionList) {
+        List<dynamic> result1 = await contractService.getElectionInfo(
+            ethClient!, election.contractAddress!);
+        print(result1);
+        List<dynamic> result2 = await contractService.getCandidatesNum(
+            ethClient!, election.contractAddress!);
+        electionContractList.add(ElectionContract(
+            electionName: result1[0],
+            country: result1[1],
+            startDate: result1[2],
+            endDate: result1[3],
+            noOfCandidates: result2[0].toInt()));
+        // ElectionContract electionContract = ;
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    });
     userService.getUser(user!.uid).then((value) {
       loggedInUser = value;
       if (mounted) {
@@ -43,7 +78,9 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
     final width = MediaQuery.of(context).size.width;
     ThemeData theme = Theme.of(context);
 
-    if (loggedInUser.firstname == null) {
+    if (loggedInUser.firstname == null ||
+        electionList.isEmpty ||
+        electionContractList.isEmpty) {
       return Container(
           color: theme.primaryColor,
           child: Center(
@@ -51,7 +88,7 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
             color: theme.scaffoldBackgroundColor,
           )));
     } else {
-      int count = 5;
+      int count = electionContractList.length;
 
       return Scaffold(
         backgroundColor: theme.primaryColor,
@@ -120,7 +157,8 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                                 child: ListView.builder(
                                     itemCount: count,
                                     itemBuilder: (context, index) {
-                                      return buildElection(Election(), theme);
+                                      return buildElection(
+                                          electionContractList[index], theme);
                                     })),
                           ],
                         )
@@ -136,9 +174,9 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(45))),
                                   child: ListView.builder(
-                                      itemCount: 2,
+                                      itemCount: 3,
                                       itemBuilder: (context, index) {
-                                        return buildElection(Election(), theme);
+                                        return buildBlurredElections(theme);
                                       }),
                                 ),
                               ),
@@ -284,7 +322,7 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
     }
   }
 
-  Widget buildElection(Election election, ThemeData theme) {
+  Widget buildElection(ElectionContract election, ThemeData theme) {
     Widget img = Image.asset("assets/election/election.jpg");
 
     return Container(
@@ -326,7 +364,76 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Election name",
+                    election.electionName!,
+                    style: theme.textTheme.titleLarge
+                        ?.copyWith(color: Colors.white),
+                    maxLines: 1,
+                  ),
+                  Text(
+                    "${election.noOfCandidates} Candidates",
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(color: Colors.white),
+                    maxLines: 1,
+                  ),
+                  Text(
+                    election.startDate!,
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: Colors.white.withOpacity(0.6),
+                    ),
+                    maxLines: 1,
+                  ),
+                ],
+              ),
+            )
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget buildBlurredElections(ThemeData theme) {
+    Widget img = Image.asset("assets/election/election.jpg");
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: MaterialButton(
+        splashColor: theme.scaffoldBackgroundColor,
+        onPressed: () {
+          //In order to use go back
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ElectionScreen(
+                        electionId: '0',
+                      )));
+        },
+        child: Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+            boxShadow: [BoxShadow(color: Colors.black, blurRadius: 3)],
+          ),
+          child: Stack(alignment: AlignmentDirectional.bottomStart, children: [
+            ClipRRect(borderRadius: BorderRadius.circular(30), child: img),
+            Container(
+              padding: const EdgeInsets.all(10),
+              width: double.maxFinite,
+              decoration: BoxDecoration(
+                color: theme.primaryColor,
+                borderRadius:
+                    const BorderRadius.vertical(bottom: Radius.circular(30)),
+                // border: Border.all(color: Colors.black, width: 2),
+                // boxShadow: [BoxShadow(color: Colors.black, blurRadius: 10)],
+                // gradient: LinearGradient(colors: [
+                //   Colors.black,
+                //   Colors.transparent,
+                // ], begin: Alignment.bottomCenter, end: Alignment.topCenter)
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Election Name",
                     style: theme.textTheme.titleLarge
                         ?.copyWith(color: Colors.white),
                     maxLines: 1,
@@ -338,7 +445,7 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                     maxLines: 1,
                   ),
                   Text(
-                    "X days left",
+                    "Election date",
                     style: theme.textTheme.labelLarge?.copyWith(
                       color: Colors.white.withOpacity(0.6),
                     ),

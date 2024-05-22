@@ -159,7 +159,10 @@ class _ElectionScreenState extends State<ElectionScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _canditateCard(
-                            candidate: Candidate(), theme: theme, index: first),
+                            candidate: Candidate(
+                                name: "test", about: "test", numVotes: 0),
+                            theme: theme,
+                            index: first),
                       ],
                     );
                   } else {
@@ -167,9 +170,13 @@ class _ElectionScreenState extends State<ElectionScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _canditateCard(
-                            candidate: Candidate(), theme: theme, index: first),
+                            candidate: Candidate(
+                                name: "test", about: "test", numVotes: 0),
+                            theme: theme,
+                            index: first),
                         _canditateCard(
-                            candidate: Candidate(),
+                            candidate: Candidate(
+                                name: "test", about: "test", numVotes: 0),
                             theme: theme,
                             index: second),
                       ],
@@ -342,7 +349,10 @@ class _ElectionScreenState extends State<ElectionScreen> {
                     ),
                     IconButton(
                         onPressed: () {
-                          openDetailsDialog(Candidate(), theme);
+                          openDetailsDialog(
+                              Candidate(
+                                  name: "test", about: "test", numVotes: 0),
+                              theme);
                         },
                         icon: Icon(
                           Icons.more_vert,

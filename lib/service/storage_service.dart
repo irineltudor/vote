@@ -27,8 +27,8 @@ class StorageService {
     return downloadURL;
   }
 
-  Future<String> getCandidatePicture(String id) async {
-    String imageUrl = 'candidate-pic/$id.png';
+  Future<String> getCandidatePicture(String name) async {
+    String imageUrl = 'candidate-pic/$name.png';
     String error = "";
     String downloadURL = "";
     try {
@@ -43,16 +43,15 @@ class StorageService {
     if (error == "") {
       downloadURL = await storageService.ref(imageUrl).getDownloadURL();
     } else {
-      downloadURL = await storageService
-          .ref("profile-pic/tournament.png")
-          .getDownloadURL();
+      downloadURL =
+          await storageService.ref("candidate/candidate.png").getDownloadURL();
     }
 
     return downloadURL;
   }
 
-  Future<String> getElectionPicture(String id) async {
-    String imageUrl = 'election-pic/$id.png';
+  Future<String> getElectionPicture(String name) async {
+    String imageUrl = 'election/$name.jpg';
     String error = "";
     String downloadURL = "";
     try {
@@ -67,31 +66,8 @@ class StorageService {
     if (error == "") {
       downloadURL = await storageService.ref(imageUrl).getDownloadURL();
     } else {
-      downloadURL = await storageService
-          .ref("profile-pic/tournament.png")
-          .getDownloadURL();
-    }
-
-    return downloadURL;
-  }
-
-  Future<String> getTournamentPromo(String id) async {
-    String imageUrl = 'tournament-promo/$id.mp4';
-    String error = "";
-    String downloadURL = "";
-    try {
-      await storageService.ref(imageUrl).getDownloadURL();
-    } on firebase_storage.FirebaseException catch (myError) {
-      switch (myError.code) {
-        case 'object-not-found':
-          error = myError.toString();
-      }
-    }
-
-    if (error == "") {
-      downloadURL = await storageService.ref(imageUrl).getDownloadURL();
-    } else {
-      downloadURL = "error";
+      downloadURL =
+          await storageService.ref("election/election.jpg").getDownloadURL();
     }
 
     return downloadURL;
