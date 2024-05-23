@@ -166,15 +166,14 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
             ),
             Container(
               height: 150,
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              padding: EdgeInsets.only(left: 20, right: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: const EdgeInsets.only(left: 20, right: 20),
               decoration: BoxDecoration(
                   color: theme.scaffoldBackgroundColor,
                   borderRadius: BorderRadius.circular(40),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
-                        color: const Color.fromARGB(246, 0, 0, 0),
-                        blurRadius: 4)
+                        color: Color.fromARGB(246, 0, 0, 0), blurRadius: 4)
                   ]),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -363,9 +362,8 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(40)),
             color: theme.scaffoldBackgroundColor,
-            boxShadow: [
-              BoxShadow(
-                  color: const Color.fromARGB(246, 0, 0, 0), blurRadius: 4)
+            boxShadow: const [
+              BoxShadow(color: Color.fromARGB(246, 0, 0, 0), blurRadius: 4)
             ]),
         duration: const Duration(milliseconds: 200),
         child: ClipRRect(

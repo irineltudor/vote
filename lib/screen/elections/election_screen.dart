@@ -160,9 +160,6 @@ class _ElectionScreenState extends State<ElectionScreen> {
                                 setState(() {
                                   voteProcessing = true;
                                 });
-                                var receipt = await ethClient!
-                                    .getTransactionReceipt(value);
-                                print(receipt);
                                 while ((await ethClient!
                                         .getTransactionReceipt(value)) ==
                                     null) {
@@ -177,6 +174,7 @@ class _ElectionScreenState extends State<ElectionScreen> {
                                   gravity: ToastGravity.SNACKBAR,
                                 );
                                 if (mounted) {
+                                  // ignore: use_build_context_synchronously
                                   Navigator.of(context).pop("refresh");
                                 }
                               });

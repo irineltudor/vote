@@ -9,13 +9,13 @@ class RadialProgress extends StatelessWidget {
   final double height, width;
 
   const RadialProgress({
-    Key? key,
+    super.key,
     required this.candidateList,
     required this.totalVotes,
     required this.height,
     required this.width,
     required this.colorList,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class RadialProgress extends StatelessWidget {
           candidateList: candidateList,
           colorList: colorList,
           totalVotes: totalVotes),
-      child: Container(
+      child: SizedBox(
         height: height,
         width: width,
         child: Center(
@@ -34,7 +34,7 @@ class RadialProgress extends StatelessWidget {
               text: TextSpan(children: [
                 TextSpan(
                     text: '$totalVotes', style: theme.textTheme.titleLarge),
-                TextSpan(text: "\n"),
+                const TextSpan(text: "\n"),
                 TextSpan(
                     text: totalVotes == 1 ? "VOTE" : "VOTES",
                     style: theme.textTheme.titleLarge)
