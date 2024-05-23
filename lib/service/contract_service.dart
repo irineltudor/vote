@@ -14,15 +14,18 @@ class ContractService {
       Web3Client ethClient, String privateKey, String contractAddress) async {
     EthPrivateKey credentials = EthPrivateKey.fromHex(privateKey);
     DeployedContract contract = await loadContract(contractAddress);
-
+    final nonce = await ethClient.getTransactionCount(credentials.address,
+        atBlock: const BlockNum.pending());
     final ethFunction = contract.function(functionName);
     final result = await ethClient.sendTransaction(
         credentials,
+        chainId: 11155111,
         Transaction.callContract(
             from: contract.address,
             contract: contract,
             function: ethFunction,
             maxGas: 100000,
+            nonce: nonce,
             parameters: args));
 
     return result;
@@ -32,7 +35,6 @@ class ContractService {
       String privateKey, String contractAddress) async {
     var response = await callFunction("vote", [BigInt.from(candidateIndex)],
         ethClient, privateKey, contractAddress);
-    print("Vote Counted Succesfully");
     return response;
   }
 

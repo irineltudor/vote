@@ -1,10 +1,6 @@
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_randomcolor/flutter_randomcolor.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:vote/consts.dart';
 import 'package:vote/model/election_contract.dart';
@@ -91,7 +87,6 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    final width = MediaQuery.of(context).size.width;
 
     if (loggedInUser.status == null || candidateList.isEmpty) {
       return Container(
@@ -135,7 +130,12 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
                       child: ClipRRect(
                           borderRadius: const BorderRadius.vertical(
                               bottom: Radius.circular(40)),
-                          child: img),
+                          child: Container(
+                              foregroundDecoration: const BoxDecoration(
+                                color: Colors.grey,
+                                backgroundBlendMode: BlendMode.saturation,
+                              ),
+                              child: img)),
                     ),
                   ],
                 ),
@@ -322,16 +322,19 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
                           Text(
                             candidate.name,
                             style: theme.textTheme.headlineMedium,
+                            textAlign: TextAlign.center,
                           ),
                           Text(
                             candidate.about,
                             style: theme.textTheme.headlineSmall,
+                            textAlign: TextAlign.center,
                           ),
                           Text(
                             candidate.numVotes == 1
                                 ? '${candidate.numVotes} vote'
                                 : '${candidate.numVotes} votes',
                             style: theme.textTheme.headlineSmall,
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),

@@ -363,8 +363,12 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                       )));
 
           if (refresh == "refresh") {
-            electionList = [];
-            electionContractList = [];
+            setState(() {
+              electionList = [];
+              electionContractList = [];
+              finishedList = false;
+            });
+
             getData();
           }
         },

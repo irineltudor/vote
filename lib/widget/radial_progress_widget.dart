@@ -35,7 +35,9 @@ class RadialProgress extends StatelessWidget {
                 TextSpan(
                     text: '$totalVotes', style: theme.textTheme.titleLarge),
                 TextSpan(text: "\n"),
-                TextSpan(text: "VOTES", style: theme.textTheme.titleLarge)
+                TextSpan(
+                    text: totalVotes == 1 ? "VOTE" : "VOTES",
+                    style: theme.textTheme.titleLarge)
               ])),
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:vote/consts.dart';
 import 'package:vote/model/election_contract.dart';
 import 'package:vote/model/user.dart';
@@ -40,6 +41,7 @@ class _ElectionScreenState extends State<ElectionScreen> {
   List<Candidate> candidateList = [];
 
   int selectedCandidateIndex = -1;
+  bool voteProcessing = false;
 
   @override
   void initState() {
@@ -89,192 +91,234 @@ class _ElectionScreenState extends State<ElectionScreen> {
             color: theme.scaffoldBackgroundColor,
           )));
     } else {
-      int noCandidates = candidateList.length;
-
-      Widget img = Image.asset(
-        "assets/election/election.jpg",
-        fit: BoxFit.cover,
-      );
-
-      final voteButton = AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-            color:
-                selectedCandidateIndex != -1 ? theme.primaryColor : Colors.grey,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-            boxShadow: [
-              selectedCandidateIndex != -1
-                  ? BoxShadow(
-                      color: Colors.black.withOpacity(0.5), blurRadius: 10)
-                  : const BoxShadow()
-            ]),
-        child: SizedBox(
-          width: width,
-          child: Material(
-              color: Colors.transparent,
-              child: TextButton(
-                  onPressed: selectedCandidateIndex != -1
-                      ? () async {
-                          final confirm = await openDialog(
-                              candidateList[selectedCandidateIndex].name,
-                              theme);
-                          if (confirm == "confirm") {
-                            contractService
-                                .vote(
-                                    selectedCandidateIndex,
-                                    ethClient!,
-                                    userWallet.privateKey!,
-                                    electionContract.contractAddress!)
-                                .then((value) {
-                              Fluttertoast.showToast(
-                                msg:
-                                    "Congrats! You voted for ${candidateList[selectedCandidateIndex]}",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.SNACKBAR,
-                              );
-                              if (mounted) {
-                                Navigator.of(context).pop("refresh");
-                              }
-                            });
-                          }
-                        }
-                      : null,
-                  child: Text(
-                    "Vote",
-                    style: theme.textTheme.headlineMedium
-                        ?.copyWith(color: Colors.white),
-                  ))),
-        ),
-      );
-
-      final DateTime date =
-          DateFormat('MM-dd-yyyy').parse(electionContract.startDate!);
-      final int remaining = DateTime.now().difference(date).inHours;
-
-      return Scaffold(
-        backgroundColor: theme.primaryColor,
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.only(top: 20),
+      if (voteProcessing == true) {
+        return Container(
+          color: theme.primaryColor,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(40)),
-                child: SizedBox(
-                  width: width / 2.3,
-                  child: Material(
-                      elevation: 5,
-                      color: theme.scaffoldBackgroundColor,
-                      child: Center(
-                        child: Text(
-                          "$remaining hours left",
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      )),
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                LottieBuilder.asset(
+                    "assets/animations/waiting_transaction_animation.json"),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Awaiting the processing of your vote.",
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(color: theme.scaffoldBackgroundColor),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                CircularProgressIndicator(
+                  color: theme.scaffoldBackgroundColor,
+                )
+              ]),
+        );
+      } else {
+        int noCandidates = candidateList.length;
+
+        Widget img = Image.asset(
+          "assets/election/election.jpg",
+          fit: BoxFit.cover,
+        );
+
+        final voteButton = AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+              color: selectedCandidateIndex != -1
+                  ? theme.primaryColor
+                  : Colors.grey,
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(30)),
+              boxShadow: [
+                selectedCandidateIndex != -1
+                    ? BoxShadow(
+                        color: Colors.black.withOpacity(0.5), blurRadius: 10)
+                    : const BoxShadow()
+              ]),
+          child: SizedBox(
+            width: width,
+            child: Material(
+                color: Colors.transparent,
+                child: TextButton(
+                    onPressed: selectedCandidateIndex != -1
+                        ? () async {
+                            final confirm = await openDialog(
+                                candidateList[selectedCandidateIndex].name,
+                                theme);
+                            if (confirm == "confirm") {
+                              contractService
+                                  .vote(
+                                      selectedCandidateIndex,
+                                      ethClient!,
+                                      userWallet.privateKey!,
+                                      electionContract.contractAddress!)
+                                  .then((value) async {
+                                setState(() {
+                                  voteProcessing = true;
+                                });
+                                var receipt = await ethClient!
+                                    .getTransactionReceipt(value);
+                                print(receipt);
+                                while ((await ethClient!
+                                        .getTransactionReceipt(value)) ==
+                                    null) {
+                                  await Future.delayed(
+                                      const Duration(seconds: 2));
+                                }
+
+                                Fluttertoast.showToast(
+                                  msg:
+                                      "Congrats! You voted for ${candidateList[selectedCandidateIndex].name}",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.SNACKBAR,
+                                );
+                                if (mounted) {
+                                  Navigator.of(context).pop("refresh");
+                                }
+                              });
+                            }
+                          }
+                        : null,
+                    child: Text(
+                      "Vote",
+                      style: theme.textTheme.headlineMedium
+                          ?.copyWith(color: Colors.white),
+                    ))),
+          ),
+        );
+
+        final DateTime date =
+            DateFormat('MM-dd-yyyy').parse(electionContract.startDate!);
+        final int remaining = date.difference(DateTime.now()).inHours;
+
+        return Scaffold(
+          backgroundColor: theme.primaryColor,
+          bottomNavigationBar: Container(
+            padding: const EdgeInsets.only(top: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(40)),
+                  child: SizedBox(
+                    width: width / 2.3,
+                    child: Material(
+                        elevation: 5,
+                        color: theme.scaffoldBackgroundColor,
+                        child: Center(
+                          child: Text(
+                            "$remaining hours left",
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        )),
+                  ),
+                ),
+                const SizedBox(
+                  height: 6,
+                ),
+                voteButton
+              ],
+            ),
+          ),
+          body: CustomScrollView(slivers: <Widget>[
+            SliverAppBar(
+              snap: true,
+              floating: true,
+              backgroundColor: Colors.black,
+              expandedHeight: 200,
+              iconTheme: const IconThemeData(
+                  color: Colors.white,
+                  size: 25,
+                  shadows: [Shadow(blurRadius: 5, color: Colors.black)]),
+              shape: const RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.circular(40))),
+              flexibleSpace: FlexibleSpaceBar(
+                background: ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(bottom: Radius.circular(40)),
+                  child: Flex(
+                    direction: Axis.horizontal,
+                    children: [
+                      Flexible(
+                        fit: FlexFit.tight,
+                        child: ClipRRect(
+                            borderRadius: const BorderRadius.vertical(
+                                bottom: Radius.circular(40)),
+                            child: img),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SliverList(
+                delegate: SliverChildListDelegate([
+              const SizedBox(
+                height: 10,
+              ),
+              ListTile(
+                title: Text(
+                  electionContract.electionName!,
+                  style: theme.textTheme.headlineLarge
+                      ?.copyWith(color: theme.scaffoldBackgroundColor),
+                  textAlign: TextAlign.center,
+                ),
+                subtitle: Text(
+                  '${electionContract.noOfCandidates} Candidates',
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(color: theme.scaffoldBackgroundColor),
+                  textAlign: TextAlign.center,
                 ),
               ),
               const SizedBox(
-                height: 6,
+                height: 10,
               ),
-              voteButton
-            ],
-          ),
-        ),
-        body: CustomScrollView(slivers: <Widget>[
-          SliverAppBar(
-            snap: true,
-            floating: true,
-            backgroundColor: Colors.black,
-            expandedHeight: 200,
-            iconTheme: const IconThemeData(
-                color: Colors.white,
-                size: 25,
-                shadows: [Shadow(blurRadius: 5, color: Colors.black)]),
-            shape: const RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.vertical(bottom: Radius.circular(40))),
-            flexibleSpace: FlexibleSpaceBar(
-              background: ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(bottom: Radius.circular(40)),
-                child: Flex(
-                  direction: Axis.horizontal,
-                  children: [
-                    Flexible(
-                      fit: FlexFit.tight,
-                      child: ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                              bottom: Radius.circular(40)),
-                          child: img),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SliverList(
-              delegate: SliverChildListDelegate([
-            const SizedBox(
-              height: 10,
-            ),
-            ListTile(
-              title: Text(
-                electionContract.electionName!,
-                style: theme.textTheme.headlineLarge
-                    ?.copyWith(color: theme.scaffoldBackgroundColor),
-                textAlign: TextAlign.center,
-              ),
-              subtitle: Text(
-                '${electionContract.noOfCandidates} Candidates',
-                style: theme.textTheme.titleMedium
-                    ?.copyWith(color: theme.scaffoldBackgroundColor),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              height: 400,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
-              child: ListView.builder(
-                  itemCount: (noCandidates / 2).ceil(),
-                  itemBuilder: (context, index) {
-                    int first = 2 * index;
-                    int second = 2 * index + 1;
+              Container(
+                height: 400,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
+                child: ListView.builder(
+                    itemCount: (noCandidates / 2).ceil(),
+                    itemBuilder: (context, index) {
+                      int first = 2 * index;
+                      int second = 2 * index + 1;
 
-                    if (second > noCandidates - 1) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _canditateCard(
-                              candidate: candidateList[first],
-                              theme: theme,
-                              index: first),
-                        ],
-                      );
-                    } else {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _canditateCard(
-                              candidate: candidateList[first],
-                              theme: theme,
-                              index: first),
-                          _canditateCard(
-                              candidate: candidateList[second],
-                              theme: theme,
-                              index: second),
-                        ],
-                      );
-                    }
-                  }),
-            )
-          ])),
-        ]),
-      );
+                      if (second > noCandidates - 1) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _canditateCard(
+                                candidate: candidateList[first],
+                                theme: theme,
+                                index: first),
+                          ],
+                        );
+                      } else {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _canditateCard(
+                                candidate: candidateList[first],
+                                theme: theme,
+                                index: first),
+                            _canditateCard(
+                                candidate: candidateList[second],
+                                theme: theme,
+                                index: second),
+                          ],
+                        );
+                      }
+                    }),
+              )
+            ])),
+          ]),
+        );
+      }
     }
   }
 
@@ -353,14 +397,17 @@ class _ElectionScreenState extends State<ElectionScreen> {
                     Expanded(
                       flex: 1,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text(
                             candidate.name,
                             style: theme.textTheme.headlineMedium,
+                            textAlign: TextAlign.center,
                           ),
                           Text(
                             candidate.about,
                             style: theme.textTheme.headlineSmall,
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
