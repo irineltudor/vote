@@ -1,6 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:web3dart/contracts.dart';
-import 'package:web3dart/credentials.dart';
 import 'package:web3dart/web3dart.dart';
 
 class ContractService {
@@ -16,11 +14,16 @@ class ContractService {
       Web3Client ethClient, String privateKey, String contractAddress) async {
     EthPrivateKey credentials = EthPrivateKey.fromHex(privateKey);
     DeployedContract contract = await loadContract(contractAddress);
+
     final ethFunction = contract.function(functionName);
     final result = await ethClient.sendTransaction(
         credentials,
         Transaction.callContract(
-            contract: contract, function: ethFunction, parameters: args));
+            from: contract.address,
+            contract: contract,
+            function: ethFunction,
+            maxGas: 100000,
+            parameters: args));
 
     return result;
   }
@@ -54,6 +57,46 @@ class ContractService {
       Web3Client ethClient, String contractAddress) async {
     List<dynamic> result =
         await ask('getElectionInfo', [], ethClient, contractAddress);
+    return result;
+  }
+
+  Future<List> getCandidateInfo(
+      Web3Client ethClient, String contractAddress, int candidateIndex) async {
+    List<dynamic> result = await ask('getCandidateInfo',
+        [BigInt.from(candidateIndex)], ethClient, contractAddress);
+    return result;
+  }
+
+  Future<List> getTotalVotes(
+      Web3Client ethClient, String contractAddress) async {
+    List<dynamic> result =
+        await ask('getTotalVotes', [], ethClient, contractAddress);
+    return result;
+  }
+
+  Future<List> isEligible(Web3Client ethClient, String contractAddress,
+      String senderAddress) async {
+    final contract = await loadContract(contractAddress);
+    final ethFunction = contract.function("isEligible");
+    final result = ethClient.call(
+        sender: EthereumAddress.fromHex(senderAddress),
+        contract: contract,
+        function: ethFunction,
+        params: []);
+
+    return result;
+  }
+
+  Future<List> alreadyVoted(Web3Client ethClient, String contractAddress,
+      String senderAddress) async {
+    final contract = await loadContract(contractAddress);
+    final ethFunction = contract.function("alreadyVoted");
+    final result = ethClient.call(
+        sender: EthereumAddress.fromHex(senderAddress),
+        contract: contract,
+        function: ethFunction,
+        params: []);
+
     return result;
   }
 }

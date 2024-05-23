@@ -307,7 +307,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                 });
       } on FirebaseAuthMultiFactorException catch (e) {
-        print(e.message);
         final firstHint = e.resolver.hints.first;
         if (firstHint is! PhoneMultiFactorInfo) {
           return;
@@ -329,7 +328,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       code: "000000",
                       text: "Type sent code");
                 });
-            ;
 
             if (smsCode != null) {
               // Create a PhoneAuthCredential with the code
@@ -344,8 +342,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     credential,
                   ),
                 );
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const NavigatorScreen()));
+                if (mounted) {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const NavigatorScreen()));
+                }
               } on FirebaseAuthException catch (e) {
                 switch (e.code) {
                   case "invalid-verification-code":

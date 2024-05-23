@@ -95,7 +95,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
             child: widget!,
           );
         });
-    print(newDate);
+
     if (newDate == null) return;
 
     setState(() {

@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:vote/model/Wallet.dart';
+import 'package:vote/model/wallet.dart';
 
 class WalletService {
   String collection = "wallet";
   User? user = FirebaseAuth.instance.currentUser;
 
-  Future<List<Wallet>> getAll() async {
-    List<Wallet> walletList = [];
+  Future<List<UserWallet>> getAll() async {
+    List<UserWallet> walletList = [];
     await FirebaseFirestore.instance.collection(collection).get().then((value) {
-      Wallet wallet;
+      UserWallet wallet;
       for (var element in value.docs) {
-        wallet = Wallet.fromMap(element.data());
+        wallet = UserWallet.fromMap(element.data());
         walletList.add(wallet);
       }
     });
@@ -19,14 +19,14 @@ class WalletService {
     return walletList;
   }
 
-  Future<Wallet> getWallet(String cnp) async {
-    Wallet wallet = Wallet();
+  Future<UserWallet> getWallet(String cnp) async {
+    UserWallet wallet = UserWallet();
     await FirebaseFirestore.instance
         .collection(collection)
         .doc(cnp)
         .get()
         .then((value) {
-      wallet = Wallet.fromMap(value.data());
+      wallet = UserWallet.fromMap(value.data());
     });
     return wallet;
   }

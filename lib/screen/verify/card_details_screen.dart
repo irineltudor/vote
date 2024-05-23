@@ -65,7 +65,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
       lastnameTEController.text = 'Urma';
       genderTEController.text = 'M';
       nationalityTEController.text = 'romanian';
-      personalCodeTEController.text = '5000911432493';
+      personalCodeTEController.text = '5000911222493';
     });
 
     if (loggedInUser.firstname == null) {

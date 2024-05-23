@@ -1,6 +1,7 @@
 import 'package:vote/model/candidate.dart';
 
 class ElectionContract {
+  String? contractAddress;
   String? electionName;
   String? country;
   String? startDate;
@@ -9,13 +10,13 @@ class ElectionContract {
   int? totalVotes;
   List<Candidate>? candidateList;
 
-  ElectionContract({
-    this.electionName,
-    this.country,
-    this.noOfCandidates,
-    this.startDate,
-    this.endDate,
-    this.totalVotes,
-    this.candidateList,
-  });
+  ElectionContract(
+      {this.electionName,
+      this.country,
+      this.noOfCandidates,
+      this.startDate,
+      this.endDate,
+      this.totalVotes,
+      this.candidateList,
+      this.contractAddress});
 }

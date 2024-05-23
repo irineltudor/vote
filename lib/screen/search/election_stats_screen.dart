@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
-import 'package:intl/intl.dart';
 import 'package:vote/consts.dart';
 import 'package:vote/model/election_contract.dart';
 import 'package:vote/model/user.dart';
@@ -12,19 +15,20 @@ import 'package:vote/service/election_service.dart';
 import 'package:vote/service/storage_service.dart';
 import 'package:vote/service/user_service.dart';
 import 'package:vote/service/wallet_service.dart';
+import 'package:vote/widget/radial_progress_widget.dart';
 import 'package:web3dart/web3dart.dart';
 
 import '../../model/candidate.dart';
 
-class ElectionScreen extends StatefulWidget {
+class ElectionStatsScreen extends StatefulWidget {
   final ElectionContract electionContract;
-  const ElectionScreen({super.key, required this.electionContract});
+  const ElectionStatsScreen({super.key, required this.electionContract});
 
   @override
-  State<ElectionScreen> createState() => _ElectionScreenState();
+  State<ElectionStatsScreen> createState() => _ElectionStatsScreenState();
 }
 
-class _ElectionScreenState extends State<ElectionScreen> {
+class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
   final StorageService storageService = StorageService();
@@ -38,8 +42,7 @@ class _ElectionScreenState extends State<ElectionScreen> {
   Web3Client? ethClient;
 
   List<Candidate> candidateList = [];
-
-  int selectedCandidateIndex = -1;
+  List<Color> colorList = [];
 
   @override
   void initState() {
@@ -62,6 +65,8 @@ class _ElectionScreenState extends State<ElectionScreen> {
       }
     });
 
+    colorList = getColorList(electionContract.noOfCandidates!);
+
     for (int i = 0; i < electionContract.noOfCandidates!; i++) {
       List<dynamic> candidateInfo = await contractService.getCandidateInfo(
           ethClient!, electionContract.contractAddress!, i);
@@ -71,6 +76,13 @@ class _ElectionScreenState extends State<ElectionScreen> {
           numVotes: candidateInfo[2].toInt());
       candidateList.add(candidate);
     }
+
+    candidateList.sort((a, b) => a.numVotes < b.numVotes
+        ? 1
+        : a.numVotes == b.numVotes
+            ? 0
+            : -1);
+
     if (mounted) {
       setState(() {});
     }
@@ -96,91 +108,8 @@ class _ElectionScreenState extends State<ElectionScreen> {
         fit: BoxFit.cover,
       );
 
-      final voteButton = AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-            color:
-                selectedCandidateIndex != -1 ? theme.primaryColor : Colors.grey,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-            boxShadow: [
-              selectedCandidateIndex != -1
-                  ? BoxShadow(
-                      color: Colors.black.withOpacity(0.5), blurRadius: 10)
-                  : const BoxShadow()
-            ]),
-        child: SizedBox(
-          width: width,
-          child: Material(
-              color: Colors.transparent,
-              child: TextButton(
-                  onPressed: selectedCandidateIndex != -1
-                      ? () async {
-                          final confirm = await openDialog(
-                              candidateList[selectedCandidateIndex].name,
-                              theme);
-                          if (confirm == "confirm") {
-                            contractService
-                                .vote(
-                                    selectedCandidateIndex,
-                                    ethClient!,
-                                    userWallet.privateKey!,
-                                    electionContract.contractAddress!)
-                                .then((value) {
-                              Fluttertoast.showToast(
-                                msg:
-                                    "Congrats! You voted for ${candidateList[selectedCandidateIndex]}",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.SNACKBAR,
-                              );
-                              if (mounted) {
-                                Navigator.of(context).pop("refresh");
-                              }
-                            });
-                          }
-                        }
-                      : null,
-                  child: Text(
-                    "Vote",
-                    style: theme.textTheme.headlineMedium
-                        ?.copyWith(color: Colors.white),
-                  ))),
-        ),
-      );
-
-      final DateTime date =
-          DateFormat('MM-dd-yyyy').parse(electionContract.startDate!);
-      final int remaining = DateTime.now().difference(date).inHours;
-
       return Scaffold(
         backgroundColor: theme.primaryColor,
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.only(top: 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(40)),
-                child: SizedBox(
-                  width: width / 2.3,
-                  child: Material(
-                      elevation: 5,
-                      color: theme.scaffoldBackgroundColor,
-                      child: Center(
-                        child: Text(
-                          "$remaining hours left",
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      )),
-                ),
-              ),
-              const SizedBox(
-                height: 6,
-              ),
-              voteButton
-            ],
-          ),
-        ),
         body: CustomScrollView(slivers: <Widget>[
           SliverAppBar(
             snap: true,
@@ -221,13 +150,13 @@ class _ElectionScreenState extends State<ElectionScreen> {
             ListTile(
               title: Text(
                 electionContract.electionName!,
-                style: theme.textTheme.headlineLarge
+                style: theme.textTheme.headlineMedium
                     ?.copyWith(color: theme.scaffoldBackgroundColor),
                 textAlign: TextAlign.center,
               ),
               subtitle: Text(
                 '${electionContract.noOfCandidates} Candidates',
-                style: theme.textTheme.titleMedium
+                style: theme.textTheme.titleSmall
                     ?.copyWith(color: theme.scaffoldBackgroundColor),
                 textAlign: TextAlign.center,
               ),
@@ -236,9 +165,41 @@ class _ElectionScreenState extends State<ElectionScreen> {
               height: 10,
             ),
             Container(
-              height: 400,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
+              height: 150,
+              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: EdgeInsets.only(left: 20, right: 20),
+              decoration: BoxDecoration(
+                  color: theme.scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(40),
+                  boxShadow: [
+                    BoxShadow(
+                        color: const Color.fromARGB(246, 0, 0, 0),
+                        blurRadius: 4)
+                  ]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: RadialProgress(
+                        candidateList: candidateList,
+                        totalVotes: electionContract.totalVotes!,
+                        colorList: colorList,
+                        height: 130,
+                        width: 130),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(),
+                  ),
+                  Expanded(flex: 7, child: topCandidates(theme))
+                ],
+              ),
+            ),
+            Container(
+              height: 362,
+              padding: const EdgeInsets.only(bottom: 1),
+              decoration: BoxDecoration(color: theme.primaryColor),
               child: ListView.builder(
                   itemCount: (noCandidates / 2).ceil(),
                   itemBuilder: (context, index) {
@@ -252,7 +213,8 @@ class _ElectionScreenState extends State<ElectionScreen> {
                           _canditateCard(
                               candidate: candidateList[first],
                               theme: theme,
-                              index: first),
+                              index: first,
+                              color: colorList[first]),
                         ],
                       );
                     } else {
@@ -262,11 +224,13 @@ class _ElectionScreenState extends State<ElectionScreen> {
                           _canditateCard(
                               candidate: candidateList[first],
                               theme: theme,
-                              index: first),
+                              index: first,
+                              color: colorList[first]),
                           _canditateCard(
                               candidate: candidateList[second],
                               theme: theme,
-                              index: second),
+                              index: second,
+                              color: colorList[second]),
                         ],
                       );
                     }
@@ -353,6 +317,7 @@ class _ElectionScreenState extends State<ElectionScreen> {
                     Expanded(
                       flex: 1,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text(
                             candidate.name,
@@ -360,6 +325,12 @@ class _ElectionScreenState extends State<ElectionScreen> {
                           ),
                           Text(
                             candidate.about,
+                            style: theme.textTheme.headlineSmall,
+                          ),
+                          Text(
+                            candidate.numVotes == 1
+                                ? '${candidate.numVotes} vote'
+                                : '${candidate.numVotes} votes',
                             style: theme.textTheme.headlineSmall,
                           ),
                         ],
@@ -374,30 +345,24 @@ class _ElectionScreenState extends State<ElectionScreen> {
   Widget _canditateCard(
       {required Candidate candidate,
       required ThemeData theme,
-      required int index}) {
+      required int index,
+      required Color color}) {
     final img = Image.asset(
       'assets/election/candidate.png',
     );
 
-    bool isSelected = index == selectedCandidateIndex;
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedCandidateIndex = index;
-        });
-      },
+      onTap: () {},
       child: AnimatedContainer(
         height: 200,
         width: 170,
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(40)),
-            color:
-                isSelected ? theme.primaryColor : theme.scaffoldBackgroundColor,
+            color: theme.scaffoldBackgroundColor,
             boxShadow: [
               BoxShadow(
-                  color: const Color.fromARGB(246, 0, 0, 0),
-                  blurRadius: isSelected ? 0 : 4)
+                  color: const Color.fromARGB(246, 0, 0, 0), blurRadius: 4)
             ]),
         duration: const Duration(milliseconds: 200),
         child: ClipRRect(
@@ -409,9 +374,7 @@ class _ElectionScreenState extends State<ElectionScreen> {
                   margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                      color: isSelected
-                          ? theme.scaffoldBackgroundColor
-                          : theme.primaryColor.withOpacity(0.5),
+                      color: color,
                       borderRadius:
                           const BorderRadius.all(Radius.circular(70))),
                   child: ClipOval(child: img)),
@@ -430,10 +393,7 @@ class _ElectionScreenState extends State<ElectionScreen> {
                             ? '${candidate.name.substring(0, 32)}...'
                             : candidate.name,
                         textAlign: TextAlign.center,
-                        style: isSelected
-                            ? theme.textTheme.labelMedium
-                                ?.copyWith(color: theme.scaffoldBackgroundColor)
-                            : theme.textTheme.labelMedium,
+                        style: theme.textTheme.labelMedium,
                       ),
                     ),
                     IconButton(
@@ -442,9 +402,7 @@ class _ElectionScreenState extends State<ElectionScreen> {
                         },
                         icon: Icon(
                           Icons.more_vert,
-                          color: isSelected
-                              ? theme.scaffoldBackgroundColor
-                              : theme.dialogBackgroundColor,
+                          color: theme.dialogBackgroundColor,
                           size: 20,
                         ))
                   ],
@@ -454,6 +412,56 @@ class _ElectionScreenState extends State<ElectionScreen> {
           ]),
         ),
       ),
+    );
+  }
+
+  List<Color> getColorList(int number) {
+    List<Color> colorList = [];
+    Options options = Options(
+      format: Format.rgbArray,
+      luminosity: Luminosity.dark,
+      count: number,
+    );
+    var colors = RandomColor.getColor(options);
+    for (int i = 0; i < number; i++) {
+      Color color = Color.fromRGBO(colors[i][0], colors[i][1], colors[i][2], 1);
+      colorList.add(color);
+    }
+    return colorList;
+  }
+
+  Widget topCandidates(ThemeData theme) {
+    return Center(
+      child: ListView.builder(
+          itemCount: candidateList.length < 5 ? candidateList.length : 5,
+          itemBuilder: (context, index) {
+            Candidate candidate = candidateList[index];
+            return Row(children: [
+              SizedBox(
+                width: 12.5,
+                height: 12.5,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(color: colorList[index]),
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                '${(candidate.numVotes / electionContract.totalVotes! * 100).floor()}%',
+                style: theme.textTheme.bodyLarge,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                candidate.name.length > 15
+                    ? '${candidate.name.substring(0, 15)}...'
+                    : candidate.name,
+                style: theme.textTheme.bodyLarge,
+              ),
+            ]);
+          }),
     );
   }
 }

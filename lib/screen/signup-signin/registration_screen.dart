@@ -421,10 +421,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     userService.addUser(userModel);
 
     await user.sendEmailVerification();
-
-    Navigator.pushAndRemoveUntil(
-        (context),
-        MaterialPageRoute(builder: (context) => const NavigatorScreen()),
-        (route) => false);
+    if (mounted) {
+      Navigator.pushAndRemoveUntil(
+          (context),
+          MaterialPageRoute(builder: (context) => const NavigatorScreen()),
+          (route) => false);
+    }
   }
 }

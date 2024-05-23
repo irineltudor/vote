@@ -1,15 +1,15 @@
-class Wallet {
+class UserWallet {
   String? address;
   String? privateKey;
 
-  Wallet({
+  UserWallet({
     this.address,
     this.privateKey,
   });
 
   // data from server
-  factory Wallet.fromMap(map) {
-    return Wallet(
+  factory UserWallet.fromMap(map) {
+    return UserWallet(
       address: map['address'],
       privateKey: map['privateKey'],
     );
@@ -25,6 +25,6 @@ class Wallet {
 
   @override
   String toString() {
-    return 'Wallet{address: $address, privateKey: $privateKey}';
+    return 'UserWallet{address: $address, privateKey: $privateKey}';
   }
 }

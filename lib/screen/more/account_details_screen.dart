@@ -217,9 +217,9 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.SNACKBAR,
                     ),
-                    Navigator.of(context).pop("refresh")
+                    if (mounted) Navigator.of(context).pop("refresh")
                   },
-                  child: Icon(Icons.send),
+                  child: const Icon(Icons.send),
                 )
         ],
       ),

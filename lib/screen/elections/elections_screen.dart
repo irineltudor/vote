@@ -2,14 +2,17 @@ import 'package:blur/blur.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:vote/consts.dart';
 import 'package:vote/model/election_contract.dart';
 import 'package:vote/model/user.dart';
+import 'package:vote/model/wallet.dart';
 import 'package:vote/screen/elections/election_screen.dart';
 import 'package:vote/service/contract_service.dart';
 import 'package:vote/service/election_service.dart';
 import 'package:vote/service/storage_service.dart';
 import 'package:vote/service/user_service.dart';
+import 'package:vote/service/wallet_service.dart';
 import 'package:web3dart/web3dart.dart';
 
 import '../../model/election.dart';
@@ -29,11 +32,15 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
   final UserService userService = UserService();
   final ElectionService electionService = ElectionService();
   final ContractService contractService = ContractService();
+  final WalletService walletService = WalletService();
+  UserWallet userWallet = UserWallet();
   Client? httpClient;
   Web3Client? ethClient;
 
   List<Election> electionList = [];
   List<ElectionContract> electionContractList = [];
+
+  bool finishedList = false;
 
   @override
   void initState() {
@@ -44,30 +51,49 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
   }
 
   Future<void> getData() async {
-    electionService.getAll().then((value) async {
-      electionList = value;
-      for (Election election in electionList) {
-        List<dynamic> result1 = await contractService.getElectionInfo(
-            ethClient!, election.contractAddress!);
-        print(result1);
-        List<dynamic> result2 = await contractService.getCandidatesNum(
-            ethClient!, election.contractAddress!);
-        electionContractList.add(ElectionContract(
-            electionName: result1[0],
-            country: result1[1],
-            startDate: result1[2],
-            endDate: result1[3],
-            noOfCandidates: result2[0].toInt()));
-        // ElectionContract electionContract = ;
-      }
-      if (mounted) {
-        setState(() {});
-      }
-    });
-    userService.getUser(user!.uid).then((value) {
+    userService.getUser(user!.uid).then((value) async {
       loggedInUser = value;
-      if (mounted) {
-        setState(() {});
+
+      if (loggedInUser.status == 1) {
+        userWallet =
+            await walletService.getWallet(loggedInUser.idCard?['personalCode']);
+
+        electionService.getAll().then((list) async {
+          electionList = list;
+          for (Election election in electionList) {
+            final eligible = await contractService.isEligible(
+                ethClient!, election.contractAddress!, userWallet.address!);
+            final voted = await contractService.alreadyVoted(
+                ethClient!, election.contractAddress!, userWallet.address!);
+
+            if (eligible[0] == true && voted[0] == false) {
+              List<dynamic> result1 = await contractService.getElectionInfo(
+                  ethClient!, election.contractAddress!);
+
+              List<dynamic> result2 = await contractService.getCandidatesNum(
+                  ethClient!, election.contractAddress!);
+
+              electionContractList.add(ElectionContract(
+                  electionName: result1[0],
+                  country: result1[1],
+                  startDate: result1[2],
+                  endDate: result1[3],
+                  noOfCandidates: result2[0].toInt(),
+                  contractAddress: election.contractAddress));
+              // ElectionContract electionContract = ;
+            }
+          }
+
+          finishedList = true;
+          if (mounted) {
+            setState(() {});
+          }
+        });
+      } else {
+        finishedList = true;
+        if (mounted) {
+          setState(() {});
+        }
       }
     });
   }
@@ -78,9 +104,7 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
     final width = MediaQuery.of(context).size.width;
     ThemeData theme = Theme.of(context);
 
-    if (loggedInUser.firstname == null ||
-        electionList.isEmpty ||
-        electionContractList.isEmpty) {
+    if (loggedInUser.firstname == null || finishedList == false) {
       return Container(
           color: theme.primaryColor,
           child: Center(
@@ -329,14 +353,20 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
       margin: const EdgeInsets.only(bottom: 20),
       child: MaterialButton(
         splashColor: theme.scaffoldBackgroundColor,
-        onPressed: () {
+        onPressed: () async {
           //In order to use go back
-          Navigator.push(
+          final refresh = await Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const ElectionScreen(
-                        electionId: '0',
+                  builder: (context) => ElectionScreen(
+                        electionContract: election,
                       )));
+
+          if (refresh == "refresh") {
+            electionList = [];
+            electionContractList = [];
+            getData();
+          }
         },
         child: Container(
           decoration: const BoxDecoration(
@@ -376,7 +406,8 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                     maxLines: 1,
                   ),
                   Text(
-                    election.startDate!,
+                    DateFormat('d MMMM yyyy on EEEE').format(
+                        (DateFormat('MM-dd-yyyy').parse(election.startDate!))),
                     style: theme.textTheme.labelLarge?.copyWith(
                       color: Colors.white.withOpacity(0.6),
                     ),
@@ -398,15 +429,7 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
       margin: const EdgeInsets.only(bottom: 20),
       child: MaterialButton(
         splashColor: theme.scaffoldBackgroundColor,
-        onPressed: () {
-          //In order to use go back
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ElectionScreen(
-                        electionId: '0',
-                      )));
-        },
+        onPressed: () {},
         child: Container(
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(30)),

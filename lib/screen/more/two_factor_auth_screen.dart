@@ -150,8 +150,6 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
 
   void sendCode(String phoneNumber) async {
     if (_formKey.currentState!.validate()) {
-      print("AICI");
-
       final multiFactorSession = await user?.multiFactor.getSession();
 
       await FirebaseAuth.instance.verifyPhoneNumber(
@@ -159,8 +157,6 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
         phoneNumber: phoneNumber,
         verificationCompleted: (_) {},
         verificationFailed: (FirebaseAuthException exception) {
-          print("BLABLABLBA");
-          print(exception.code);
           if (exception.code == "second-factor-already-enrolled") {
             Fluttertoast.showToast(
               msg:
