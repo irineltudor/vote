@@ -1,7 +1,9 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:vote/service/user_service.dart';
 import '../../service/storage_service.dart';
 
@@ -34,6 +36,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
   User? user = FirebaseAuth.instance.currentUser;
   final UserService userService = UserService();
   final StorageService storageService = StorageService();
+  File? _idCardPicture;
 
   @override
   void initState() {
@@ -48,10 +51,97 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
     });
   }
 
+  void _startUpload() {
+    String path = 'idcard/${loggedInUser.uid!}.png';
+    storageService.uploadFile(path, _idCardPicture!);
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    XFile? selected = await ImagePicker().pickImage(source: source);
+
+    setState(() {
+      if (selected != null) _idCardPicture = File(selected.path);
+    });
+  }
+
+  void _clear() {
+    setState(() => _idCardPicture = null);
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
+    final photoButtons = Card(
+        shadowColor: Colors.black45,
+        elevation: 5,
+        margin: const EdgeInsets.only(
+          top: 10,
+          bottom: 5,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: Icon(
+                Icons.image,
+                color: theme.primaryColor,
+                size: 17,
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 15.0, top: 5, bottom: 3),
+                    child: Text(
+                      "ID CARD PHOTO",
+                      style: TextStyle(
+                          color: theme.primaryColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(left: 15.0, bottom: 5),
+                      child: Text(_idCardPicture == null
+                          ? 'Add Id Card Photo'
+                          : 'Id Card Photo')),
+                ],
+              ),
+            ),
+            Expanded(
+                flex: 2,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.photo_camera,
+                        color: theme.primaryColor,
+                        size: 20,
+                      ),
+                      onPressed: () => _pickImage(ImageSource.camera),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.photo_library,
+                          color: theme.primaryColor, size: 20),
+                      onPressed: () => _pickImage(
+                        ImageSource.gallery,
+                      ),
+                    )
+                  ],
+                )),
+          ],
+        ));
 
     setState(() {
       addressTEController.text = 'Sarmisegetuza 12';
@@ -173,6 +263,18 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
                           icon: Icons.calendar_month_outlined,
                           textEditingController: expireDateTEController,
                           theme: theme),
+                      photoButtons,
+                      if (_idCardPicture != null) ...[
+                        Image.file(_idCardPicture!),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextButton(
+                                onPressed: _clear,
+                                child: const Icon(Icons.delete))
+                          ],
+                        ),
+                      ],
                       SizedBox(
                         height: height / 4.5,
                       ),
@@ -534,42 +636,47 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
   }
 
   postDetailsToDB() async {
-    //calling our firestore
-    //calling our usermodel
-    //sending these valuse
-
     ThemeData theme = Theme.of(context);
 
     if (_formKey.currentState!.validate()) {
-      LinkedHashMap<String, String> idCard = LinkedHashMap();
+      if (_idCardPicture == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Add Id Card Photo"),
+          ));
+        }
+      } else {
+        _startUpload();
+        LinkedHashMap<String, String> idCard = LinkedHashMap();
 
-      idCard['firstname'] = firstnameTEController.text;
-      idCard['lastname'] = lastnameTEController.text;
-      idCard['sex'] = genderTEController.text;
-      idCard['nationality'] = nationalityTEController.text;
-      idCard['country'] = countryTEController.text;
-      idCard['county'] = countyTEController.text;
-      idCard['city'] = cityTEController.text;
-      idCard['address'] = addressTEController.text;
-      idCard['dob'] = dobTEController.text;
-      idCard['personalCode'] = personalCodeTEController.text;
-      idCard['issueDate'] = issueDateTEController.text;
-      idCard['expireDate'] = expireDateTEController.text;
+        idCard['firstname'] = firstnameTEController.text;
+        idCard['lastname'] = lastnameTEController.text;
+        idCard['sex'] = genderTEController.text;
+        idCard['nationality'] = nationalityTEController.text;
+        idCard['country'] = countryTEController.text;
+        idCard['county'] = countyTEController.text;
+        idCard['city'] = cityTEController.text;
+        idCard['address'] = addressTEController.text;
+        idCard['dob'] = dobTEController.text;
+        idCard['personalCode'] = personalCodeTEController.text;
+        idCard['issueDate'] = issueDateTEController.text;
+        idCard['expireDate'] = expireDateTEController.text;
 
-      userService.updateIdCard(loggedInUser, idCard);
+        userService.updateIdCard(loggedInUser, idCard);
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.fromLTRB(100, 0, 100, 400),
-            duration: const Duration(seconds: 1),
-            content: const Text(
-              "Details Updated",
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.fromLTRB(100, 0, 100, 400),
+              duration: const Duration(seconds: 1),
+              content: const Text(
+                "Details Updated",
+              ),
+              backgroundColor: theme.primaryColor,
             ),
-            backgroundColor: theme.primaryColor,
-          ),
-        );
+          );
+        }
       }
     }
   }

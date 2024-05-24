@@ -139,28 +139,32 @@ class _MoreScreenState extends State<MoreScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               ListTile(
-                                leading: ClipOval(
-                                  child: FutureBuilder(
-                                    future: storageService.getProfilePicture(
-                                      loggedInUser.uid!,
-                                    ),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                              ConnectionState.done &&
-                                          snapshot.hasData) {
-                                        return Image.network(
-                                          snapshot.data!,
-                                        );
-                                      }
-                                      if (snapshot.connectionState ==
-                                              ConnectionState.waiting ||
-                                          !snapshot.hasData) {
-                                        return const CircularProgressIndicator();
-                                      }
+                                leading: SizedBox(
+                                  width: 55,
+                                  child: ClipOval(
+                                    child: FutureBuilder(
+                                      future: storageService.getProfilePicture(
+                                        loggedInUser.uid!,
+                                      ),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.done &&
+                                            snapshot.hasData) {
+                                          return Image.network(
+                                            snapshot.data!,
+                                            fit: BoxFit.fill,
+                                          );
+                                        }
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.waiting ||
+                                            !snapshot.hasData) {
+                                          return const CircularProgressIndicator();
+                                        }
 
-                                      return Image.asset(
-                                          "assets/profile/profile.jpg");
-                                    },
+                                        return Image.asset(
+                                            "assets/profile/profile.jpg");
+                                      },
+                                    ),
                                   ),
                                 ),
                                 title: Text(

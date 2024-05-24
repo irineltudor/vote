@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:country_flags/country_flags.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:blur/blur.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:vote/widget/pin_dialog_widget.dart';
 import 'dart:math' show pi;
 
@@ -305,25 +309,33 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FutureBuilder(
-                      future: storageService.getProfilePicture(
-                        loggedInUser.uid!,
+                    SizedBox(
+                      width: 110,
+                      height: 110,
+                      child: FutureBuilder(
+                        future: storageService.getProfilePicture(
+                          loggedInUser.uid!,
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                                  ConnectionState.done &&
+                              snapshot.hasData) {
+                            return Image.network(
+                              snapshot.data!,
+                              fit: BoxFit.fill,
+                            );
+                          }
+                          if (snapshot.connectionState ==
+                                  ConnectionState.waiting ||
+                              !snapshot.hasData) {
+                            return const CircularProgressIndicator();
+                          }
+                          return Image.asset("assets/profile/profile.jpg");
+                        },
                       ),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData) {
-                          return Image.network(
-                            snapshot.data!,
-                          );
-                        }
-                        if (snapshot.connectionState ==
-                                ConnectionState.waiting ||
-                            !snapshot.hasData) {
-                          return const CircularProgressIndicator();
-                        }
-
-                        return Image.asset("assets/profile/profile.jpg");
-                      },
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     showPersonalDetails(
                         '${idCard["lastname"]} ${idCard["firstname"]}',
@@ -448,7 +460,7 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
             blur: 2.1,
             blurColor: color,
             child: Text(
-              'x' * detail.length,
+              'x' * (detail.length - 1),
               style: style,
             ),
           );

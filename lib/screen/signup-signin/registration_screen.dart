@@ -343,43 +343,44 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void signUp(String email, String password) async {
     if (_formKey.currentState!.validate()) {
-      try {
-        await _auth
-            .createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) => {postDetailsToDB()})
-            // ignore: body_might_complete_normally_catch_error
-            .catchError((e) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(e!.message),
-          ));
-        });
-      } on FirebaseAuthException catch (error) {
-        switch (error.code) {
-          case "invalid-email":
-            errorMessage = "Your email address appears to be malformed.";
-            break;
-          case "wrong-password":
-            errorMessage = "Your password is wrong.";
-            break;
-          case "user-not-found":
-            errorMessage = "User with this email doesn't exist.";
-            break;
-          case "user-disabled":
-            errorMessage = "User with this email has been disabled.";
-            break;
-          case "too-many-requests":
-            errorMessage = "Too many requests";
-            break;
-          case "operation-not-allowed":
-            errorMessage = "Signing in with Email and Password is not enabled.";
-            break;
-          default:
-            errorMessage = "An undefined Error happened.";
-        }
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(errorMessage!),
-          ));
+      if (birthEditingController.text == "") {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Select birth date"),
+        ));
+      } else {
+        try {
+          await _auth
+              .createUserWithEmailAndPassword(email: email, password: password)
+              .then((value) => {postDetailsToDB()});
+        } on FirebaseAuthException catch (error) {
+          switch (error.code) {
+            case "invalid-email":
+              errorMessage = "Your email address appears to be malformed.";
+              break;
+            case "wrong-password":
+              errorMessage = "Your password is wrong.";
+              break;
+            case "user-not-found":
+              errorMessage = "User with this email doesn't exist.";
+              break;
+            case "user-disabled":
+              errorMessage = "User with this email has been disabled.";
+              break;
+            case "too-many-requests":
+              errorMessage = "Too many requests";
+              break;
+            case "operation-not-allowed":
+              errorMessage =
+                  "Signing in with Email and Password is not enabled.";
+              break;
+            default:
+              errorMessage = error.message;
+          }
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(errorMessage!),
+            ));
+          }
         }
       }
     }

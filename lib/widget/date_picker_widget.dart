@@ -87,7 +87,7 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
               colorScheme: ColorScheme.dark(
                 primary: theme.primaryColor,
                 onPrimary: theme.dialogBackgroundColor,
-                surface: theme.primaryColor,
+                surface: theme.scaffoldBackgroundColor,
                 onSurface: theme.dialogBackgroundColor,
               ),
               dialogBackgroundColor: theme.scaffoldBackgroundColor,

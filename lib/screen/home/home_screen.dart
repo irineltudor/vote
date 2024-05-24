@@ -76,28 +76,33 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: theme.textTheme.bodySmall),
                           subtitle: Text("Hello, ${loggedInUser.firstname}",
                               style: theme.textTheme.headlineLarge),
-                          trailing: ClipOval(
-                              child: FutureBuilder(
-                            future: storageService.getProfilePicture(
-                              loggedInUser.uid!,
-                            ),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                      ConnectionState.done &&
-                                  snapshot.hasData) {
-                                return Image.network(
-                                  snapshot.data!,
-                                );
-                              }
-                              if (snapshot.connectionState ==
-                                      ConnectionState.waiting ||
-                                  !snapshot.hasData) {
-                                return const CircularProgressIndicator();
-                              }
+                          trailing: SizedBox(
+                            width: 60,
+                            child: ClipOval(
+                                child: FutureBuilder(
+                              future: storageService.getProfilePicture(
+                                loggedInUser.uid!,
+                              ),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                        ConnectionState.done &&
+                                    snapshot.hasData) {
+                                  return Image.network(
+                                    snapshot.data!,
+                                    fit: BoxFit.fill,
+                                  );
+                                }
+                                if (snapshot.connectionState ==
+                                        ConnectionState.waiting ||
+                                    !snapshot.hasData) {
+                                  return const CircularProgressIndicator();
+                                }
 
-                              return Image.asset("assets/profile/profile.jpg");
-                            },
-                          )),
+                                return Image.asset(
+                                    "assets/profile/profile.jpg");
+                              },
+                            )),
+                          ),
                         ),
                       ]),
                 ),

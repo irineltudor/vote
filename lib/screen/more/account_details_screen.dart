@@ -119,10 +119,32 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                     shape: BoxShape.circle,
                     border: Border.all(
                         color: theme.scaffoldBackgroundColor, width: 3)),
-                child: ClipOval(
-                    child: Image.asset(
-                  "assets/profile/profile.jpg",
-                )),
+                child: SizedBox(
+                  width: 85,
+                  height: 85,
+                  child: ClipOval(
+                    child: FutureBuilder(
+                      future: storageService.getProfilePicture(
+                        loggedInUser.uid!,
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done &&
+                            snapshot.hasData) {
+                          return Image.network(
+                            snapshot.data!,
+                            fit: BoxFit.fill,
+                          );
+                        }
+                        if (snapshot.connectionState ==
+                                ConnectionState.waiting ||
+                            !snapshot.hasData) {
+                          return const CircularProgressIndicator();
+                        }
+                        return Image.asset("assets/profile/profile.jpg");
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -139,7 +161,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                         Icons.not_interested,
                         color: Colors.red,
                       )
-                    : loggedInUser.status == 1
+                    : loggedInUser.status == 2
                         ? const Icon(
                             Icons.arrow_drop_down_circle,
                             color: Colors.orange,
