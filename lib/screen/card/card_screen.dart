@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:country_flags/country_flags.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:blur/blur.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:vote/widget/pin_dialog_widget.dart';
 import 'dart:math' show pi;
 
@@ -334,7 +330,7 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
                         },
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     showPersonalDetails(

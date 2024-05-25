@@ -72,7 +72,6 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
 
     final photoButtons = Card(
         shadowColor: Colors.black45,

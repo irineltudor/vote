@@ -21,7 +21,6 @@ class StorageService {
   Future<String> getProfilePicture(String uid) async {
     String imageUrl = 'profile-pic/$uid.png';
     String ref = 'profile-pic/';
-    String error = "";
     String downloadURL = "";
     try {
       final list = await storageService.ref().child(ref).listAll();
@@ -35,7 +34,8 @@ class StorageService {
             .getDownloadURL();
       }
     } catch (myError) {
-      error = myError.toString();
+      // ignore: avoid_print
+      print(myError);
     }
 
     return downloadURL;
@@ -44,7 +44,6 @@ class StorageService {
   Future<String> getCandidatePicture(String name) async {
     String imageUrl = 'candidate-pic/$name.png';
     String ref = 'candidate-pic';
-    String error = "";
     String downloadURL = "";
 
     try {
@@ -59,14 +58,14 @@ class StorageService {
             .getDownloadURL();
       }
     } catch (myError) {
-      error = myError.toString();
+      // ignore: avoid_print
+      print(myError.toString());
     }
     return downloadURL;
   }
 
   Future<String> getElectionPicture(String name) async {
     String imageUrl = 'election/$name.jpg';
-    String error = "";
     String ref = 'election/';
     String downloadURL = "";
     try {
@@ -80,7 +79,8 @@ class StorageService {
             await storageService.ref("election/election.jpg").getDownloadURL();
       }
     } catch (myError) {
-      error = myError.toString();
+      // ignore: avoid_print
+      print(myError.toString());
     }
 
     return downloadURL;

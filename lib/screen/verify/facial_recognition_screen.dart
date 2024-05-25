@@ -164,7 +164,7 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
                                                   ),
                                                 ),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 100,
                                               ),
                                               GestureDetector(
