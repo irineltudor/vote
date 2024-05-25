@@ -70,6 +70,9 @@ dependencies:
   flutter_randomcolor: ^1.0.15
   http:
   vector_math: ^2.1.4
+  encrypt: ^5.0.0
+  pointycastle: ^3.4.1
+  asn1lib: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -113,6 +116,8 @@ flutter:
   - assets/fonts/Kanit-Regular.ttf
   - assets/party/party.jpg
   - assets/abi/abi.json
+  - assets/rsa_keys.json
+  - assets/secret.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

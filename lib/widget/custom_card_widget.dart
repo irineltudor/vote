@@ -51,7 +51,12 @@ class _CustomCardWidgetState extends State<CustomCardWidget> {
                   );
                 })
             : await Navigator.push(context,
-                MaterialPageRoute(builder: (context) => statefulWidget));
+                    MaterialPageRoute(builder: (context) => statefulWidget))
+                .then((value) {
+                if (value == "refresh") {
+                  widget.function.call();
+                }
+              });
       },
       child: Container(
         height: 160,

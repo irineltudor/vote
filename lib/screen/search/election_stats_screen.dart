@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_randomcolor/flutter_randomcolor.dart';
@@ -53,8 +55,7 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
     userService.getUser(user!.uid).then((value) async {
       loggedInUser = value;
       if (loggedInUser.status == 1) {
-        userWallet =
-            await walletService.getWallet(loggedInUser.idCard?['personalCode']);
+        userWallet = await walletService.getWallet(loggedInUser);
       }
       if (mounted) {
         setState(() {});

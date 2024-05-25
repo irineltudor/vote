@@ -177,7 +177,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                     Text(
                                         loggedInUser.idCard!["country"] == ""
                                             ? "Country not available"
-                                            : loggedInUser.idCard!["country"],
+                                            : loggedInUser.idCard!["country"]!,
                                         style: theme.textTheme.bodySmall
                                             ?.copyWith(
                                                 color: Colors.white

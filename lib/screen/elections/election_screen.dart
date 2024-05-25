@@ -56,8 +56,7 @@ class _ElectionScreenState extends State<ElectionScreen> {
     userService.getUser(user!.uid).then((value) async {
       loggedInUser = value;
       if (loggedInUser.status == 1) {
-        userWallet =
-            await walletService.getWallet(loggedInUser.idCard?['personalCode']);
+        userWallet = await walletService.getWallet(loggedInUser);
       }
       if (mounted) {
         setState(() {});

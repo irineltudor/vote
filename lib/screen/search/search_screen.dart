@@ -60,8 +60,7 @@ class _SearchScreenState extends State<SearchScreen> {
       loggedInUser = value;
 
       if (loggedInUser.status == 1) {
-        userWallet =
-            await walletService.getWallet(loggedInUser.idCard?['personalCode']);
+        userWallet = await walletService.getWallet(loggedInUser);
 
         electionService.getAll().then((list) async {
           List<Election> electionList = list;

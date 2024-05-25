@@ -13,6 +13,7 @@ class StorageService {
     try {
       await storageService.ref().child(path).putFile(file);
     } on firebase_storage.FirebaseException catch (e) {
+      // ignore: avoid_print
       print(e);
     }
   }

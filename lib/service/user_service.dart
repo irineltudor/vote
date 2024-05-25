@@ -2,12 +2,14 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vote/service/encryption_service.dart';
 
 import '../model/user.dart';
 
 class UserService {
   String collection = "user";
   User? user = FirebaseAuth.instance.currentUser;
+  final EncryptionService encryptionService = EncryptionService();
 
   Future<UserModel> getUser(String uid) async {
     UserModel user = UserModel();
@@ -15,8 +17,12 @@ class UserService {
         .collection(collection)
         .doc(uid)
         .get()
-        .then((value) {
+        .then((value) async {
       user = UserModel.fromMap(value.data());
+
+      if (user.idCard!['address'] != "") {
+        user.idCard = await encryptionService.decryptIdCard(user.idCard!);
+      }
     });
 
     return user;
@@ -30,19 +36,17 @@ class UserService {
   }
 
   Future<void> updatePin(UserModel user, String pin) async {
-    user.pin = pin;
     await FirebaseFirestore.instance
         .collection("user")
         .doc(user.uid!)
-        .set(user.toMap());
+        .update({'pin': pin});
   }
 
-  Future<void> updatePhoneNumber(UserModel user, String phoneNumnber) async {
-    user.phoneNumber = phoneNumnber;
+  Future<void> updatePhoneNumber(UserModel user, String phoneNumber) async {
     await FirebaseFirestore.instance
         .collection("user")
         .doc(user.uid!)
-        .set(user.toMap());
+        .update({'phoneNumber': phoneNumber});
   }
 
   Future<void> deleteIdCard(UserModel user) async {
@@ -61,24 +65,21 @@ class UserService {
     idCard['issueDate'] = "";
     idCard['expireDate'] = "";
 
-    user.idCard = idCard;
-    user.status = 0;
-
     await FirebaseFirestore.instance
         .collection("user")
         .doc(user.uid)
-        .set(user.toMap());
+        .update({'idCard': idCard, 'status': 0});
   }
 
   Future<void> updateIdCard(
       UserModel user, LinkedHashMap<String, String> idCard) async {
-    user.idCard = idCard;
+    user.idCard = await encryptionService.encryptIdCard(idCard);
     user.status = 2;
 
     await FirebaseFirestore.instance
         .collection("user")
         .doc(user.uid)
-        .set(user.toMap());
+        .update({'idCard': user.idCard, 'status': user.status});
   }
 
   Future<String> changePassword(String newPassword, String oldPassword) async {

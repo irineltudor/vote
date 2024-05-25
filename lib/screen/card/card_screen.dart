@@ -507,6 +507,7 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
                 userService.deleteIdCard(loggedInUser);
                 Navigator.pop(context);
                 if (mounted) {
+                  getData();
                   setState(() {});
                 }
               },

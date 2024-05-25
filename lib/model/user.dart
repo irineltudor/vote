@@ -7,7 +7,7 @@ class UserModel {
   String? pin;
   int? status; // 0-unverified,1-verified,2-waiting
   String? phoneNumber;
-  Map<String, dynamic>? idCard;
+  Map<String, String>? idCard;
 
   UserModel(
       {this.uid,
@@ -30,7 +30,7 @@ class UserModel {
         dob: map['dob'],
         pin: map['pin'],
         status: map['status'],
-        idCard: Map<String, dynamic>.from(map['idCard']),
+        idCard: Map<String, String>.from(map['idCard']),
         phoneNumber: map['phoneNumber']);
   }
 
