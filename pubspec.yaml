@@ -73,6 +73,9 @@ dependencies:
   encrypt: ^5.0.0
   pointycastle: ^3.4.1
   asn1lib: ^1.0.0
+  googleapis: ^13.1.0
+  googleapis_auth: ^1.6.0
+  firebase_app_check: ^0.2.2+6
 
 dev_dependencies:
   flutter_test:
@@ -116,8 +119,8 @@ flutter:
   - assets/fonts/Kanit-Regular.ttf
   - assets/party/party.jpg
   - assets/abi/abi.json
-  - assets/rsa_keys.json
   - assets/secret.json
+  - assets/json/vote-db-cbc06-e03febde6146.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

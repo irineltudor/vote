@@ -5,12 +5,17 @@ import 'package:flutter/services.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 import 'package:vote/model/wallet.dart';
+import 'package:googleapis/secretmanager/v1.dart';
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:http/http.dart' as http;
 
 class EncryptionService {
   String keyPath = "assets/secret.json";
+  final String secretsPath = 'projects/4052793079/secrets/vote/versions/1';
+  final String asset = 'assets/json/vote-db-cbc06-e03febde6146.json';
 
   Future<String> getUserWalletId(String personalCode) async {
-    String jsonString = await rootBundle.loadString(keyPath);
+    String jsonString = await getSecret();
     final secret = json.decode(jsonString);
 
     return secret["wallet_keys"][personalCode]['document_id'];
@@ -18,7 +23,7 @@ class EncryptionService {
 
   Future<Map<String, String>> encryptIdCard(Map<String, String> idCard) async {
     // Load keys from JSON file
-    String jsonString = await rootBundle.loadString(keyPath);
+    String jsonString = await getSecret();
     final secret = json.decode(jsonString);
     final fernetKey = secret['fernet_key'];
 
@@ -37,7 +42,7 @@ class EncryptionService {
 
   Future<Map<String, String>> decryptIdCard(Map<String, String> idCard) async {
     // Load keys from JSON file
-    String jsonString = await rootBundle.loadString(keyPath);
+    String jsonString = await getSecret();
     final secret = json.decode(jsonString);
     final fernetKey = secret['fernet_key'];
 
@@ -81,5 +86,24 @@ class EncryptionService {
     wallet.privateKey = decPrivateKey;
 
     return wallet;
+  }
+
+  Future<String> getSecret() async {
+    final credentials = json.decode(await rootBundle.loadString(asset));
+
+    final AutoRefreshingAuthClient client = await clientViaServiceAccount(
+        ServiceAccountCredentials.fromJson(credentials),
+        [SecretManagerApi.cloudPlatformScope],
+        baseClient: http.Client());
+
+    final SecretManagerApi api = SecretManagerApi(client);
+
+    final AccessSecretVersionResponse secrets =
+        await api.projects.secrets.versions.access(secretsPath);
+
+    final String decoded =
+        utf8.decode(base64Url.decode(secrets.payload!.data!));
+
+    return decoded;
   }
 }
