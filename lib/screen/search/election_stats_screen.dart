@@ -40,6 +40,8 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
   List<Candidate> candidateList = [];
   List<Color> colorList = [];
 
+  bool sorted = false;
+
   @override
   void initState() {
     httpClient = Client();
@@ -78,6 +80,8 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
             ? 0
             : -1);
 
+    sorted = true;
+
     if (mounted) {
       setState(() {});
     }
@@ -87,7 +91,7 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
-    if (loggedInUser.status == null || candidateList.isEmpty) {
+    if (loggedInUser.status == null || candidateList.isEmpty || !sorted) {
       return Container(
           color: theme.primaryColor,
           child: Center(

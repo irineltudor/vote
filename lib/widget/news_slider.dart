@@ -30,9 +30,7 @@ class _NewsSliderState extends State<NewsSlider> {
 
   Future<void> getData() async {
     await _newsApi
-        .getEverything(
-      query: 'politics&romania',
-    )
+        .getEverything(query: 'politic', language: 'ro')
         .then((value) {
       setState(() {
         value.removeWhere((element) {

@@ -9,7 +9,8 @@ import 'package:vote/service/storage_service.dart';
 import 'package:vote/service/user_service.dart';
 
 class FacialRecognitionScreen extends StatefulWidget {
-  const FacialRecognitionScreen({super.key});
+  final Function function;
+  const FacialRecognitionScreen({super.key, required this.function});
 
   @override
   State<FacialRecognitionScreen> createState() =>
@@ -22,6 +23,7 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
   final UserService userService = UserService();
   final StorageService storageService = StorageService();
   File? _selfie;
+  bool facialUpdated = false;
 
   @override
   void initState() {
@@ -111,7 +113,9 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
                                   child: Text(
                                     _selfie == null
                                         ? "Take a picture in good light"
-                                        : "Looking good !",
+                                        : facialUpdated
+                                            ? "Selfie updated"
+                                            : "Looking good !",
                                     style: theme.textTheme.headlineSmall
                                         ?.copyWith(color: Colors.white),
                                   ),
@@ -128,67 +132,92 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
                                             child: Container(
                                               padding: const EdgeInsets.all(10),
                                               decoration: BoxDecoration(
+                                                  color: Colors.white,
                                                   borderRadius:
                                                       const BorderRadius.all(
                                                           Radius.circular(45)),
                                                   border: Border.all(
+                                                      width: 3,
                                                       color: Colors.white)),
-                                              child: const Icon(
+                                              child: Icon(
                                                 Icons.camera,
-                                                color: Colors.white,
+                                                color: theme.primaryColor,
                                               ),
                                             ),
                                           )
-                                        : Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  postDetailsToDB();
-                                                },
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .all(
-                                                              Radius.circular(
-                                                                  45)),
-                                                      border: Border.all(
-                                                          color: Colors.white)),
-                                                  child: const Icon(
-                                                    Icons.check,
-                                                    color: Colors.white,
+                                        : AnimatedContainer(
+                                            duration:
+                                                const Duration(seconds: 2),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    facialUpdated
+                                                        ? null
+                                                        : postDetailsToDB();
+                                                  },
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10),
+                                                    decoration: BoxDecoration(
+                                                        color: facialUpdated
+                                                            ? Colors.white
+                                                            : Colors.green,
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .all(
+                                                                Radius.circular(
+                                                                    45)),
+                                                        border: Border.all(
+                                                            width: 3,
+                                                            color:
+                                                                Colors.white)),
+                                                    child: Icon(
+                                                      Icons.check,
+                                                      color: facialUpdated
+                                                          ? Colors.green
+                                                          : Colors.white,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              const SizedBox(
-                                                width: 100,
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  _clear();
-                                                },
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.all(10),
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .all(
-                                                              Radius.circular(
-                                                                  45)),
-                                                      border: Border.all(
-                                                          color: Colors.white)),
-                                                  child: const Icon(
-                                                    Icons.close,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              )
-                                            ],
+                                                facialUpdated
+                                                    ? Container()
+                                                    : const SizedBox(
+                                                        width: 100,
+                                                      ),
+                                                facialUpdated
+                                                    ? Container()
+                                                    : GestureDetector(
+                                                        onTap: () {
+                                                          _clear();
+                                                        },
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(10),
+                                                          decoration: BoxDecoration(
+                                                              color: Colors
+                                                                  .redAccent,
+                                                              borderRadius:
+                                                                  const BorderRadius
+                                                                      .all(
+                                                                      Radius.circular(
+                                                                          45)),
+                                                              border: Border.all(
+                                                                  width: 3,
+                                                                  color: Colors
+                                                                      .white)),
+                                                          child: const Icon(
+                                                            Icons.close,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      )
+                                              ],
+                                            ),
                                           ))
                               ],
                             ),
@@ -206,7 +235,6 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
   }
 
   postDetailsToDB() async {
-    ThemeData theme = Theme.of(context);
     if (_selfie == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -214,20 +242,11 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
         ));
       }
     } else {
+      widget.function.call(true);
+      setState(() {
+        facialUpdated = true;
+      });
       _startUpload();
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.fromLTRB(100, 0, 100, 400),
-            duration: const Duration(seconds: 1),
-            content: const Text(
-              "Details Updated",
-            ),
-            backgroundColor: theme.primaryColor,
-          ),
-        );
-      }
     }
   }
 }

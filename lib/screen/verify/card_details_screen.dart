@@ -10,7 +10,8 @@ import '../../service/storage_service.dart';
 import '../../model/user.dart';
 
 class CardDetailsScreen extends StatefulWidget {
-  const CardDetailsScreen({super.key});
+  final Function function;
+  const CardDetailsScreen({super.key, required this.function});
 
   @override
   State<CardDetailsScreen> createState() => _CardDetailsScreenState();
@@ -645,6 +646,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
           ));
         }
       } else {
+        widget.function.call(true);
         _startUpload();
         LinkedHashMap<String, String> idCard = LinkedHashMap();
 
