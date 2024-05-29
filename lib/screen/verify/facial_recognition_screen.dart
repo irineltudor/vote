@@ -7,6 +7,7 @@ import 'package:lottie/lottie.dart';
 import 'package:vote/model/user.dart';
 import 'package:vote/service/storage_service.dart';
 import 'package:vote/service/user_service.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class FacialRecognitionScreen extends StatefulWidget {
   final Function function;
@@ -242,11 +243,13 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
         ));
       }
     } else {
-      widget.function.call(true);
+      userService.setStatusToWaiting(loggedInUser);
+
       setState(() {
         facialUpdated = true;
       });
       _startUpload();
+      widget.function.call(true);
     }
   }
 }

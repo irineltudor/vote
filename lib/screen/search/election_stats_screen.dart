@@ -66,7 +66,10 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
 
     for (int i = 0; i < electionContract.noOfCandidates!; i++) {
       List<dynamic> candidateInfo = await contractService.getCandidateInfo(
-          ethClient!, electionContract.contractAddress!, i);
+          ethClient!,
+          electionContract.contractAddress!,
+          i,
+          electionContract.testContract!);
       Candidate candidate = Candidate(
           name: candidateInfo[0],
           about: candidateInfo[1],

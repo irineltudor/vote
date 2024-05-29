@@ -61,27 +61,49 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
           electionList = list;
           for (Election election in electionList) {
             final eligible = await contractService.isEligible(
-                ethClient!, election.contractAddress!, userWallet.address!);
+                ethClient!,
+                election.contractAddress!,
+                userWallet.address!,
+                election.testContract!);
             final voted = await contractService.alreadyVoted(
-                ethClient!, election.contractAddress!, userWallet.address!);
+                ethClient!,
+                election.contractAddress!,
+                userWallet.address!,
+                election.testContract!);
 
-            if (eligible[0] == true && voted[0] == false) {
+            final finished = await contractService.hasFinished(
+                ethClient!,
+                election.contractAddress!,
+                userWallet.address!,
+                election.testContract!);
+
+            if (eligible[0] == true &&
+                voted[0] == false &&
+                finished[0] == false) {
               List<dynamic> result1 = await contractService.getElectionInfo(
-                  ethClient!, election.contractAddress!);
+                  ethClient!,
+                  election.contractAddress!,
+                  election.testContract!);
 
               List<dynamic> result2 = await contractService.getCandidatesNum(
-                  ethClient!, election.contractAddress!);
+                  ethClient!,
+                  election.contractAddress!,
+                  election.testContract!);
 
               electionContractList.add(ElectionContract(
                   electionName: result1[0],
                   country: result1[1],
-                  startDate: result1[2],
-                  endDate: result1[3],
+                  startDate: result1[2].toInt(),
+                  duration: result1[3].toInt(),
                   noOfCandidates: result2[0].toInt(),
-                  contractAddress: election.contractAddress));
+                  contractAddress: election.contractAddress,
+                  testContract: election.testContract!));
               // ElectionContract electionContract = ;
             }
           }
+
+          electionContractList
+              .sort((a, b) => a.startDate!.compareTo(b.startDate!));
 
           finishedList = true;
           if (mounted) {
@@ -348,27 +370,37 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
   Widget buildElection(ElectionContract election, ThemeData theme) {
     Widget img = Image.asset("assets/election/election.jpg");
 
+    final today = DateTime.now();
+    final electionDate =
+        DateTime.fromMillisecondsSinceEpoch(election.startDate! * 1000);
+
+    final difference = today.difference(electionDate).inSeconds;
+    final active = difference >= 0 ? difference <= election.duration! : false;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       child: MaterialButton(
         splashColor: theme.scaffoldBackgroundColor,
         onPressed: () async {
           //In order to use go back
-          final refresh = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ElectionScreen(
-                        electionContract: election,
-                      )));
 
-          if (refresh == "refresh") {
-            setState(() {
-              electionList = [];
-              electionContractList = [];
-              finishedList = false;
-            });
+          if (active) {
+            final refresh = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ElectionScreen(
+                          electionContract: election,
+                        )));
 
-            getData();
+            if (refresh == "refresh") {
+              setState(() {
+                electionList = [];
+                electionContractList = [];
+                finishedList = false;
+              });
+
+              getData();
+            }
           }
         },
         child: Container(
@@ -382,7 +414,7 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
               padding: const EdgeInsets.all(10),
               width: double.maxFinite,
               decoration: BoxDecoration(
-                color: theme.primaryColor,
+                color: active ? theme.primaryColor : Colors.grey,
                 borderRadius:
                     const BorderRadius.vertical(bottom: Radius.circular(30)),
                 // border: Border.all(color: Colors.black, width: 2),
@@ -410,7 +442,8 @@ class _ElectionsScreenState extends State<ElectionsScreen> {
                   ),
                   Text(
                     DateFormat('d MMMM yyyy on EEEE').format(
-                        (DateFormat('MM-dd-yyyy').parse(election.startDate!))),
+                        (DateTime.fromMillisecondsSinceEpoch(
+                            election.startDate! * 1000))),
                     style: theme.textTheme.labelLarge?.copyWith(
                       color: Colors.white.withOpacity(0.6),
                     ),

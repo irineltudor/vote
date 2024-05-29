@@ -66,28 +66,39 @@ class _SearchScreenState extends State<SearchScreen> {
           List<Election> electionList = list;
           for (Election election in electionList) {
             final eligible = await contractService.isEligible(
-                ethClient!, election.contractAddress!, userWallet.address!);
+                ethClient!,
+                election.contractAddress!,
+                userWallet.address!,
+                election.testContract!);
             final voted = await contractService.alreadyVoted(
-                ethClient!, election.contractAddress!, userWallet.address!);
+                ethClient!,
+                election.contractAddress!,
+                userWallet.address!,
+                election.testContract!);
 
             if (eligible[0] == true && voted[0] == true) {
-              List<dynamic> electionInfo = await contractService
-                  .getElectionInfo(ethClient!, election.contractAddress!);
+              List<dynamic> electionInfo =
+                  await contractService.getElectionInfo(ethClient!,
+                      election.contractAddress!, election.testContract!);
 
-              List<dynamic> candidatesNum = await contractService
-                  .getCandidatesNum(ethClient!, election.contractAddress!);
+              List<dynamic> candidatesNum =
+                  await contractService.getCandidatesNum(ethClient!,
+                      election.contractAddress!, election.testContract!);
 
               List<dynamic> totalVotes = await contractService.getTotalVotes(
-                  ethClient!, election.contractAddress!);
+                  ethClient!,
+                  election.contractAddress!,
+                  election.testContract!);
 
               electionContractList.add(ElectionContract(
                   electionName: electionInfo[0],
                   country: electionInfo[1],
-                  startDate: electionInfo[2],
-                  endDate: electionInfo[3],
+                  startDate: electionInfo[2].toInt(),
+                  duration: electionInfo[3].toInt(),
                   totalVotes: totalVotes[0].toInt(),
                   noOfCandidates: candidatesNum[0].toInt(),
-                  contractAddress: election.contractAddress));
+                  contractAddress: election.contractAddress,
+                  testContract: election.testContract));
               // ElectionContract electionContract = ;
             }
           }
@@ -249,6 +260,7 @@ class _SearchScreenState extends State<SearchScreen> {
           foregroundDecoration: const BoxDecoration(
             color: Colors.grey,
             backgroundBlendMode: BlendMode.saturation,
+            borderRadius: BorderRadius.all(Radius.circular(30)),
           ),
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -288,7 +300,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   Text(
                     DateFormat('d MMMM yyyy on EEEE').format(
-                        (DateFormat('MM-dd-yyyy').parse(election.startDate!))),
+                        (DateTime.fromMillisecondsSinceEpoch(
+                            election.startDate! * 1000))),
                     style: theme.textTheme.labelLarge?.copyWith(
                       color: Colors.white.withOpacity(0.6),
                     ),

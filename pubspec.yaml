@@ -121,6 +121,7 @@ flutter:
   - assets/abi/abi.json
   - assets/secret.json
   - assets/json/vote-db-cbc06-e03febde6146.json
+  - assets/abi/election_abi.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

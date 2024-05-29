@@ -11,7 +11,7 @@ class StorageService {
     File file,
   ) async {
     try {
-      await storageService.ref().child(path).putFile(file);
+      await storageService.ref().child(path).putFile(file).whenComplete(() {});
     } on firebase_storage.FirebaseException catch (e) {
       // ignore: avoid_print
       print(e);

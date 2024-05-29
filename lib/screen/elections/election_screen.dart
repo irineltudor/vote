@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
-import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:vote/consts.dart';
 import 'package:vote/model/election_contract.dart';
@@ -65,7 +64,10 @@ class _ElectionScreenState extends State<ElectionScreen> {
 
     for (int i = 0; i < electionContract.noOfCandidates!; i++) {
       List<dynamic> candidateInfo = await contractService.getCandidateInfo(
-          ethClient!, electionContract.contractAddress!, i);
+          ethClient!,
+          electionContract.contractAddress!,
+          i,
+          electionContract.testContract!);
       Candidate candidate = Candidate(
           name: candidateInfo[0],
           about: candidateInfo[1],
@@ -149,34 +151,62 @@ class _ElectionScreenState extends State<ElectionScreen> {
                                 candidateList[selectedCandidateIndex].name,
                                 theme);
                             if (confirm == "confirm") {
-                              contractService
-                                  .vote(
-                                      selectedCandidateIndex,
-                                      ethClient!,
-                                      userWallet.privateKey!,
-                                      electionContract.contractAddress!)
-                                  .then((value) async {
-                                setState(() {
-                                  voteProcessing = true;
-                                });
+                              setState(() {
+                                voteProcessing = true;
+                              });
+
+                              final result = await contractService.vote(
+                                  selectedCandidateIndex,
+                                  ethClient!,
+                                  userWallet.privateKey!,
+                                  electionContract.contractAddress!,
+                                  electionContract.testContract!);
+
+                              print(result);
+
+                              if (result[0] != "0" && result[1] != "x") {
+                                Fluttertoast.showToast(
+                                  msg: result,
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.SNACKBAR,
+                                );
+                              } else {
                                 while ((await ethClient!
-                                        .getTransactionReceipt(value)) ==
+                                        .getTransactionReceipt(result)) ==
                                     null) {
+                                  print((await ethClient!
+                                      .getTransactionReceipt(result)));
                                   await Future.delayed(
                                       const Duration(seconds: 2));
                                 }
 
-                                Fluttertoast.showToast(
-                                  msg:
-                                      "Congrats! You voted for ${candidateList[selectedCandidateIndex].name}",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.SNACKBAR,
-                                );
-                                if (mounted) {
-                                  // ignore: use_build_context_synchronously
-                                  Navigator.of(context).pop("refresh");
+                                final receipt = await ethClient!
+                                    .getTransactionReceipt(result);
+
+                                print(receipt!.status);
+                                print(receipt);
+
+                                if (receipt.status!) {
+                                  Fluttertoast.showToast(
+                                    msg:
+                                        "Congrats! You voted for ${candidateList[selectedCandidateIndex].name}",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.SNACKBAR,
+                                  );
+                                } else {
+                                  Fluttertoast.showToast(
+                                    msg:
+                                        "An error happend(Sepolia network prices are high) , try again.",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.SNACKBAR,
+                                  );
                                 }
-                              });
+                              }
+
+                              if (mounted) {
+                                // ignore: use_build_context_synchronously
+                                Navigator.of(context).pop("refresh");
+                              }
                             }
                           }
                         : null,
@@ -188,8 +218,9 @@ class _ElectionScreenState extends State<ElectionScreen> {
           ),
         );
 
-        final DateTime date =
-            DateFormat('MM-dd-yyyy').parse(electionContract.startDate!);
+        final DateTime date = DateTime.fromMillisecondsSinceEpoch(
+            electionContract.startDate! * 1000 +
+                electionContract.duration! * 1000);
         final int remaining = date.difference(DateTime.now()).inHours;
 
         return Scaffold(

@@ -4,10 +4,11 @@ class ElectionContract {
   String? contractAddress;
   String? electionName;
   String? country;
-  String? startDate;
-  String? endDate;
+  int? startDate;
+  int? duration;
   int? noOfCandidates;
   int? totalVotes;
+  bool? testContract;
   List<Candidate>? candidateList;
 
   ElectionContract(
@@ -15,8 +16,9 @@ class ElectionContract {
       this.country,
       this.noOfCandidates,
       this.startDate,
-      this.endDate,
+      this.duration,
       this.totalVotes,
       this.candidateList,
-      this.contractAddress});
+      this.contractAddress,
+      this.testContract});
 }

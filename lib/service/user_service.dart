@@ -74,12 +74,18 @@ class UserService {
   Future<void> updateIdCard(
       UserModel user, LinkedHashMap<String, String> idCard) async {
     user.idCard = await encryptionService.encryptIdCard(idCard);
-    user.status = 2;
 
     await FirebaseFirestore.instance
         .collection("user")
         .doc(user.uid)
         .update({'idCard': user.idCard, 'status': user.status});
+  }
+
+  Future<void> setStatusToWaiting(user) async {
+    await FirebaseFirestore.instance
+        .collection("user")
+        .doc(user.uid)
+        .update({'status': 2});
   }
 
   Future<String> changePassword(String newPassword, String oldPassword) async {
