@@ -371,17 +371,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   .then((value) {
                 user?.updatePassword(newPassword);
               });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    "Password changed succesfully",
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                  backgroundColor: theme.primaryColor,
-                  showCloseIcon: false,
-                ),
-              );
+
               if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Password changed succesfully",
+                      style: theme.textTheme.bodyLarge,
+                    ),
+                    backgroundColor: theme.primaryColor,
+                    showCloseIcon: false,
+                  ),
+                );
                 Navigator.pop(context);
               }
             } on FirebaseAuthException catch (e) {

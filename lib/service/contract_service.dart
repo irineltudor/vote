@@ -40,6 +40,7 @@ class ContractService {
       data: yourFunctionData,
     );
 
+    // ignore: avoid_print
     print(estimatedGas);
 
     // Set the gas limit to estimatedGas + some buffer
@@ -47,10 +48,10 @@ class ContractService {
 
     // Get gas price
     final gasPrice = await ethClient.getGasPrice();
-
+// ignore: avoid_print
     print(
         "PRICE in eth: ${(gasPrice.getInWei.toInt() * estimatedGas.toInt() / 1000000000000000000)}");
-
+// ignore: avoid_print
     print(
         "PRICE in eth for me: ${(100000000000 * estimatedGas.toInt() / 1000000000000000000)}");
 
@@ -69,7 +70,7 @@ class ContractService {
                 parameters: args))
         .catchError((errorCatched) {
       RPCError error = errorCatched as RPCError;
-      print(error.message);
+
       return error.message;
     });
 

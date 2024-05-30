@@ -8,7 +8,6 @@ import 'package:lottie/lottie.dart';
 import 'package:vote/model/user.dart';
 import 'package:vote/service/storage_service.dart';
 import 'package:vote/service/user_service.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class FacialRecognitionScreen extends StatefulWidget {
   final Function function;
@@ -252,7 +251,6 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
   }
 
   postDetailsToDB() async {
-    ThemeData theme = Theme.of(context);
     if (_selfie == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

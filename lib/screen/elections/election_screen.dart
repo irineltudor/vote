@@ -162,8 +162,6 @@ class _ElectionScreenState extends State<ElectionScreen> {
                                   electionContract.contractAddress!,
                                   electionContract.testContract!);
 
-                              print(result);
-
                               if (result[0] != "0" && result[1] != "x") {
                                 Fluttertoast.showToast(
                                   msg: result,
@@ -174,8 +172,6 @@ class _ElectionScreenState extends State<ElectionScreen> {
                                 while ((await ethClient!
                                         .getTransactionReceipt(result)) ==
                                     null) {
-                                  print((await ethClient!
-                                      .getTransactionReceipt(result)));
                                   await Future.delayed(
                                       const Duration(seconds: 2));
                                 }
@@ -183,10 +179,7 @@ class _ElectionScreenState extends State<ElectionScreen> {
                                 final receipt = await ethClient!
                                     .getTransactionReceipt(result);
 
-                                print(receipt!.status);
-                                print(receipt);
-
-                                if (receipt.status!) {
+                                if (receipt!.status!) {
                                   Fluttertoast.showToast(
                                     msg:
                                         "Congrats! You voted for ${candidateList[selectedCandidateIndex].name}",
