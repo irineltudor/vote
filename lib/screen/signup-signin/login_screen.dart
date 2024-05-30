@@ -284,9 +284,9 @@ class _LoginScreenState extends State<LoginScreen> {
         await _auth
             .signInWithEmailAndPassword(email: email, password: password)
             .then((uid) async => {
-                  prefs = await SharedPreferences.getInstance(),
-                  prefs.setString("email", email),
-                  prefs.setString("password", password),
+                  // prefs = await SharedPreferences.getInstance(),
+                  // prefs.setString("email", email),
+                  // prefs.setString("password", password),
                   if (mounted)
                     {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

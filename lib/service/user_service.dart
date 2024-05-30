@@ -96,29 +96,35 @@ class UserService {
       await user
           ?.reauthenticateWithCredential(credentials)
           .then((value) async => {
-                user
-                    ?.updatePassword(newPassword)
-                    // ignore: body_might_complete_normally_catch_error
-                    .catchError((onError) {
-                  // ignore: invalid_return_type_for_catch_error
-                  return "Password can't be changed $onError";
-                })
+                user?.updatePassword(newPassword),
               });
-      return "Successfully changed password";
+      return "good";
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case "invalid-email":
           return "Your email address appears to be malformed.";
+
         case "wrong-password":
-          return "Current password is wrong.";
+          return "Your password is wrong.";
+
         case "user-not-found":
           return "User with this email doesn't exist.";
+
         case "user-disabled":
           return "User with this email has been disabled.";
+
         case "too-many-requests":
           return "Too many requests";
+
         case "operation-not-allowed":
           return "Signing in with Email and Password is not enabled.";
+
+        case "invalid-credential":
+          return "Your password is invalid.";
+
+        case 'network-request-failed':
+          return "No internet connection";
+
         default:
           return "An undefined Error happened.";
       }

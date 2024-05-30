@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vote/service/user_service.dart';
+import 'package:vote/widget/code_dialog_widget.dart';
 
 import '../../model/user.dart';
 
@@ -188,9 +190,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       ),
     );
 
-    oldPasswordEditingController.text = "1234567";
-    newPasswordEditingController.text = "123456";
-    renewPasswordEditingController.text = "123456";
+    oldPasswordEditingController.text = "12345678";
+    newPasswordEditingController.text = "12345678";
+    renewPasswordEditingController.text = "12345678";
 
     return Scaffold(
       backgroundColor: theme.primaryColor,
@@ -291,25 +293,159 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   void changePassword(String newPassword, String oldPassword) async {
+    ThemeData theme = Theme.of(context);
     if (_formKey.currentState!.validate()) {
-      await userService.changePassword(newPassword, oldPassword).then((value) {
+      List<MultiFactorInfo> mfi = await user!.multiFactor.getEnrolledFactors();
+
+      if (mfi.isEmpty) {
+        await userService
+            .changePassword(newPassword, oldPassword)
+            .then((value) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                "Password changed succesfully",
+                style: theme.textTheme.bodyLarge,
+              ),
+              backgroundColor: theme.primaryColor,
+              showCloseIcon: false,
+            ),
+          );
+
+          if (value == "good") {
+            Navigator.pop(context);
+          }
+        });
+      } else {
+        changePasswordWithTwoFactor(newPassword, oldPassword);
+      }
+    }
+  }
+
+  Future<void> changePasswordWithTwoFactor(
+      String newPassword, String oldPassword) async {
+    ThemeData theme = Theme.of(context);
+    String errorMessage = '';
+    var credentials = EmailAuthProvider.credential(
+        email: user?.email ?? " ", password: oldPassword);
+
+    try {
+      await user?.reauthenticateWithCredential(credentials);
+    } on FirebaseAuthMultiFactorException catch (e) {
+      final firstHint = e.resolver.hints.first;
+      if (firstHint is! PhoneMultiFactorInfo) {
+        return;
+      }
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        multiFactorSession: e.resolver.session,
+        multiFactorInfo: firstHint,
+        verificationCompleted: (_) {},
+        verificationFailed: (_) {},
+        codeSent: (String verificationId, int? resendToken) async {
+          // See `firebase_auth` example app for a method of retrieving user's sms code:
+          // https://github.com/firebase/flutterfire/blob/master/packages/firebase_auth/firebase_auth/example/lib/auth.dart#L591
+          final smsCode = await await showDialog(
+              context: context,
+              barrierColor: Colors.black38,
+              builder: (BuildContext context) {
+                return CodeDialogBox(
+                    function: () async {},
+                    code: "000000",
+                    text: "Type sent code");
+              });
+
+          if (smsCode != null) {
+            // Create a PhoneAuthCredential with the code
+            final credential = PhoneAuthProvider.credential(
+              verificationId: verificationId,
+              smsCode: smsCode,
+            );
+
+            try {
+              await e.resolver
+                  .resolveSignIn(
+                PhoneMultiFactorGenerator.getAssertion(
+                  credential,
+                ),
+              )
+                  .then((value) {
+                user?.updatePassword(newPassword);
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "Password changed succesfully",
+                    style: theme.textTheme.bodyLarge,
+                  ),
+                  backgroundColor: theme.primaryColor,
+                  showCloseIcon: false,
+                ),
+              );
+              if (mounted) {
+                Navigator.pop(context);
+              }
+            } on FirebaseAuthException catch (e) {
+              switch (e.code) {
+                case "invalid-verification-code":
+                  Fluttertoast.showToast(
+                    msg: "Invalid Code Try Again",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.SNACKBAR,
+                  );
+                default:
+                  Fluttertoast.showToast(
+                    msg: e.message!,
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.SNACKBAR,
+                  );
+              }
+            }
+          }
+        },
+        codeAutoRetrievalTimeout: (_) {},
+      );
+    } on FirebaseAuthException catch (error) {
+      switch (error.code) {
+        case "invalid-email":
+          errorMessage = "Your email address appears to be malformed.";
+
+          break;
+        case "wrong-password":
+          errorMessage = "Your password is wrong.";
+          break;
+        case "user-not-found":
+          errorMessage = "User with this email doesn't exist.";
+          break;
+        case "user-disabled":
+          errorMessage = "User with this email has been disabled.";
+          break;
+        case "too-many-requests":
+          errorMessage = "Too many requests";
+          break;
+        case "operation-not-allowed":
+          errorMessage = "Signing in with Email and Password is not enabled.";
+          break;
+        case "invalid-credential":
+          errorMessage = "Your password is invalid.";
+          break;
+        case 'network-request-failed':
+          errorMessage = "No internet connection";
+          break;
+        default:
+          errorMessage = "An undefined Error happened.";
+      }
+
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              value,
+              errorMessage,
+              style: theme.textTheme.bodyLarge,
             ),
-            backgroundColor: value == "Successfully changed password"
-                ? Colors.green
-                : Colors.red,
-            closeIconColor: Colors.white,
-            showCloseIcon: true,
+            backgroundColor: Colors.red,
           ),
         );
-
-        if (value == "Successfully changed password") {
-          Navigator.pop(context);
-        }
-      });
+      }
     }
   }
 }
