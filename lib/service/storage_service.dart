@@ -6,12 +6,13 @@ class StorageService {
   final firebase_storage.FirebaseStorage storageService =
       firebase_storage.FirebaseStorage.instance;
 
-  Future<void> uploadFile(
-    String path,
-    File file,
-  ) async {
+  Future<void> uploadFile(String path, File file) async {
     try {
-      await storageService.ref().child(path).putFile(file).whenComplete(() {});
+      await storageService
+          .ref()
+          .child(path)
+          .putFile(file)
+          .whenComplete(() => null);
     } on firebase_storage.FirebaseException catch (e) {
       // ignore: avoid_print
       print(e);

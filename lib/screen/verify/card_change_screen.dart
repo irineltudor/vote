@@ -17,12 +17,12 @@ class _CardChangeScreenState extends State<CardChangeScreen> {
 
   bool onLastPage = false;
   bool onFirstPage = true;
-  bool cardIdUpdate = false;
+  bool cardIdUpdated = false;
   bool facialUpdate = false;
 
   void setCardIdUpdate(bool condition) {
     setState(() {
-      cardIdUpdate = condition;
+      cardIdUpdated = condition;
     });
   }
 
@@ -51,7 +51,8 @@ class _CardChangeScreenState extends State<CardChangeScreen> {
           children: [
             const VerifyIntroScreen(),
             CardDetailsScreen(function: setCardIdUpdate),
-            FacialRecognitionScreen(function: setFacialUpdate),
+            FacialRecognitionScreen(
+                function: setFacialUpdate, cardIdUpdated: cardIdUpdated),
           ],
         ),
         Container(
@@ -96,7 +97,7 @@ class _CardChangeScreenState extends State<CardChangeScreen> {
                 onLastPage
                     ? GestureDetector(
                         onTap: () {
-                          if (!cardIdUpdate || facialUpdate) {
+                          if (!cardIdUpdated || facialUpdate) {
                             Navigator.of(context).pop("refresh");
                           } else {
                             Fluttertoast.showToast(

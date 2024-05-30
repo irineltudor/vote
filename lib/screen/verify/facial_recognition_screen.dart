@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:vote/model/user.dart';
@@ -11,7 +12,9 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class FacialRecognitionScreen extends StatefulWidget {
   final Function function;
-  const FacialRecognitionScreen({super.key, required this.function});
+  final bool cardIdUpdated;
+  const FacialRecognitionScreen(
+      {super.key, required this.function, required this.cardIdUpdated});
 
   @override
   State<FacialRecognitionScreen> createState() =>
@@ -25,6 +28,7 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
   final StorageService storageService = StorageService();
   File? _selfie;
   bool facialUpdated = false;
+  bool waitingForUpload = false;
 
   @override
   void initState() {
@@ -128,7 +132,19 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
                                     child: _selfie == null
                                         ? GestureDetector(
                                             onTap: () {
-                                              _pickImage(ImageSource.camera);
+                                              if (widget.cardIdUpdated) {
+                                                _pickImage(ImageSource.camera);
+                                              } else {
+                                                Fluttertoast.showToast(
+                                                  msg:
+                                                      "Try updating your card details first",
+                                                  backgroundColor: Colors.red,
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity:
+                                                      ToastGravity.SNACKBAR,
+                                                );
+                                              }
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(10),
@@ -236,6 +252,7 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
   }
 
   postDetailsToDB() async {
+    ThemeData theme = Theme.of(context);
     if (_selfie == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -243,12 +260,11 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
         ));
       }
     } else {
+      _startUpload();
       userService.setStatusToWaiting(loggedInUser);
-
       setState(() {
         facialUpdated = true;
       });
-      _startUpload();
       widget.function.call(true);
     }
   }

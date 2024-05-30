@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vote/service/user_service.dart';
 import '../../service/storage_service.dart';
@@ -38,6 +39,7 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
   final UserService userService = UserService();
   final StorageService storageService = StorageService();
   File? _idCardPicture;
+  bool waitingForUpload = false;
 
   @override
   void initState() {
@@ -55,6 +57,12 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
   void _startUpload() {
     String path = 'idcard/${loggedInUser.uid!}.png';
     storageService.uploadFile(path, _idCardPicture!);
+  }
+
+  void setWaitingForUpload(bool value) {
+    setState(() {
+      waitingForUpload = value;
+    });
   }
 
   Future<void> _pickImage(ImageSource source) async {
@@ -666,16 +674,11 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
         userService.updateIdCard(loggedInUser, idCard);
 
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
-              margin: const EdgeInsets.fromLTRB(100, 0, 100, 400),
-              duration: const Duration(seconds: 1),
-              content: const Text(
-                "Details Updated",
-              ),
-              backgroundColor: theme.primaryColor,
-            ),
+          Fluttertoast.showToast(
+            msg: "Id Card Details Updated",
+            backgroundColor: theme.primaryColor,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.SNACKBAR,
           );
         }
       }

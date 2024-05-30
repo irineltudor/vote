@@ -152,7 +152,21 @@ class _MoreScreenState extends State<MoreScreen> {
                                             snapshot.hasData) {
                                           return Image.network(
                                             snapshot.data!,
-                                            fit: BoxFit.fill,
+                                            fit: BoxFit.fitWidth,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              if (error
+                                                      is NetworkImageLoadException &&
+                                                  error.statusCode == 403) {
+                                                return const Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              } else {
+                                                return const Center(
+                                                    child:
+                                                        CircularProgressIndicator());
+                                              }
+                                            },
                                           );
                                         }
                                         if (snapshot.connectionState ==
@@ -262,9 +276,9 @@ class _MoreScreenState extends State<MoreScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               CustomCardWidget(
-                                text: loggedInUser.idCard!['firstname'] != ''
-                                    ? 'Change ID Card'
-                                    : 'Add ID Card',
+                                text: loggedInUser.status == 0
+                                    ? 'Add ID Card'
+                                    : 'Change ID Card',
                                 icon: Icons.perm_identity,
                                 statefulWidget: const CardChangeScreen(),
                                 pin: pin,

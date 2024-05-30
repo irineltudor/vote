@@ -84,10 +84,19 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
                 child: Container(
                     padding: const EdgeInsets.fromLTRB(10, 90, 10, 10),
                     color: theme.scaffoldBackgroundColor,
-                    child: loggedInUser.idCard!["country"] == ""
+                    child: loggedInUser.status == 0
                         ? Center(
-                            child: Text('No id card assigned',
-                                style: theme.textTheme.headlineSmall),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                    'Your identification card is currently not assigned.',
+                                    style: theme.textTheme.headlineSmall),
+                                Text(
+                                    'Please try adding one using the "Add ID Card" section',
+                                    style: theme.textTheme.headlineSmall)
+                              ],
+                            ),
                           )
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -305,33 +314,38 @@ class _CardScreenState extends State<CardScreen> with TickerProviderStateMixin {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 110,
-                      height: 110,
-                      child: FutureBuilder(
-                        future: storageService.getProfilePicture(
-                          loggedInUser.uid!,
+                    Blur(
+                      blur: personalDetails ? 0 : 5,
+                      colorOpacity: personalDetails ? 0 : 0.25,
+                      blurColor: theme.scaffoldBackgroundColor,
+                      child: SizedBox(
+                        width: 110,
+                        height: 110,
+                        child: FutureBuilder(
+                          future: storageService.getProfilePicture(
+                            loggedInUser.uid!,
+                          ),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                snapshot.hasData) {
+                              return Image.network(
+                                snapshot.data!,
+                                fit: BoxFit.fitWidth,
+                              );
+                            }
+                            if (snapshot.connectionState ==
+                                    ConnectionState.waiting ||
+                                !snapshot.hasData) {
+                              return const CircularProgressIndicator();
+                            }
+                            return Image.asset("assets/profile/profile.jpg");
+                          },
                         ),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                                  ConnectionState.done &&
-                              snapshot.hasData) {
-                            return Image.network(
-                              snapshot.data!,
-                              fit: BoxFit.fill,
-                            );
-                          }
-                          if (snapshot.connectionState ==
-                                  ConnectionState.waiting ||
-                              !snapshot.hasData) {
-                            return const CircularProgressIndicator();
-                          }
-                          return Image.asset("assets/profile/profile.jpg");
-                        },
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     showPersonalDetails(
                         '${idCard["lastname"]} ${idCard["firstname"]}',

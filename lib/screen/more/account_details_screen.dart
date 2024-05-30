@@ -132,7 +132,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                             snapshot.hasData) {
                           return Image.network(
                             snapshot.data!,
-                            fit: BoxFit.fill,
+                            fit: BoxFit.fitWidth,
                           );
                         }
                         if (snapshot.connectionState ==
