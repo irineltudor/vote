@@ -15,7 +15,6 @@ import 'package:vote/service/user_service.dart';
 import 'package:vote/service/wallet_service.dart';
 import 'package:web3dart/web3dart.dart';
 
-import '../../model/party.dart';
 import '../../widget/menu_widget.dart';
 import '../../widget/search_widget.dart';
 
@@ -43,9 +42,6 @@ class _SearchScreenState extends State<SearchScreen> {
   bool finishedList = false;
   List<ElectionContract> electionContractList = [];
   List<ElectionContract> searchedelectionContractList = [];
-
-  List<Party> searchedPartyList = [];
-  List<Party> partyList = [];
 
   @override
   void initState() {
