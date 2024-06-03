@@ -326,7 +326,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   return CodeDialogBox(
                       function: () async {},
                       code: "000000",
-                      text: "Type sent code");
+                      text: "We've sent a code to your phone");
                 });
 
             if (smsCode != null) {

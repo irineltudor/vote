@@ -88,8 +88,12 @@ class ContractService {
       Web3Client ethClient, String contractAddress, bool testContract) async {
     final contract = await loadContract(contractAddress, testContract);
     final ethFunction = contract.function(functionName);
-    final result =
-        ethClient.call(contract: contract, function: ethFunction, params: args);
+    final result = ethClient
+        .call(contract: contract, function: ethFunction, params: args)
+        .onError((error, stackTrace) {
+      print(error);
+      return [];
+    });
 
     return result;
   }

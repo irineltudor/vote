@@ -1,5 +1,7 @@
+import 'package:blur/blur.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:vote/consts.dart';
@@ -71,6 +73,15 @@ class _SearchScreenState extends State<SearchScreen> {
                 election.contractAddress!,
                 userWallet.address!,
                 election.testContract!);
+
+            if (eligible.isEmpty || voted.isEmpty) {
+              Fluttertoast.showToast(
+                msg: "Too much request, try again later",
+                backgroundColor: Colors.black,
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.SNACKBAR,
+              );
+            }
 
             if (eligible[0] == true && voted[0] == true) {
               List<dynamic> electionInfo =
@@ -172,19 +183,137 @@ class _SearchScreenState extends State<SearchScreen> {
                         bottom: Radius.circular(45), top: Radius.circular(45)),
                     color: theme.scaffoldBackgroundColor,
                   ),
-                  child: Column(
-                    children: [
-                      buildSearch(),
-                      Expanded(
-                          child: ListView.builder(
-                        itemCount: searchedelectionContractList.length,
-                        itemBuilder: (context, index) {
-                          return buildElection(
-                              searchedelectionContractList[index], theme);
-                        },
-                      ))
-                    ],
-                  ),
+                  child: loggedInUser.status == 1 &&
+                          loggedInUser.phoneNumber != ''
+                      ? Column(
+                          children: [
+                            buildSearch(),
+                            Expanded(
+                                child: ListView.builder(
+                              itemCount: searchedelectionContractList.length,
+                              itemBuilder: (context, index) {
+                                return buildElection(
+                                    searchedelectionContractList[index], theme);
+                              },
+                            ))
+                          ],
+                        )
+                      : Stack(
+                          alignment: AlignmentDirectional.center,
+                          children: [
+                              Blur(
+                                blur: 10,
+                                blurColor: theme.scaffoldBackgroundColor,
+                                borderRadius: BorderRadius.circular(45),
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(45))),
+                                  child: ListView.builder(
+                                      itemCount: 3,
+                                      itemBuilder: (context, index) {
+                                        return buildBlurredElections(theme);
+                                      }),
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    color: theme.scaffoldBackgroundColor,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(45))),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    loggedInUser.phoneNumber == ''
+                                        ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Icon(
+                                                Icons.not_interested,
+                                                color: Colors.red,
+                                              ),
+                                              Text(
+                                                "2FA",
+                                                style: theme
+                                                    .textTheme.labelMedium
+                                                    ?.copyWith(
+                                                        color: Colors.red),
+                                              ),
+                                            ],
+                                          )
+                                        : Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Icon(
+                                                Icons.verified,
+                                                color: Colors.blue,
+                                              ),
+                                              Text(
+                                                "2FA",
+                                                style: theme
+                                                    .textTheme.labelMedium
+                                                    ?.copyWith(
+                                                        color: Colors.blue),
+                                              ),
+                                            ],
+                                          ),
+                                    loggedInUser.status == 0
+                                        ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Icon(
+                                                Icons.not_interested,
+                                                color: Colors.red,
+                                              ),
+                                              Text(
+                                                "ID CARD",
+                                                style: theme
+                                                    .textTheme.labelMedium
+                                                    ?.copyWith(
+                                                        color: Colors.red),
+                                              ),
+                                            ],
+                                          )
+                                        : loggedInUser.status == 1
+                                            ? Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Icon(
+                                                    Icons.verified,
+                                                    color: Colors.blue,
+                                                  ),
+                                                  Text(
+                                                    "VERIFIED ID CARD",
+                                                    style: theme
+                                                        .textTheme.labelMedium
+                                                        ?.copyWith(
+                                                            color: Colors.blue),
+                                                  ),
+                                                ],
+                                              )
+                                            : Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Icon(
+                                                    Icons
+                                                        .arrow_drop_down_circle,
+                                                    color: Colors.orange,
+                                                  ),
+                                                  Text(
+                                                    "WAITING ID CARD",
+                                                    style: theme
+                                                        .textTheme.labelMedium
+                                                        ?.copyWith(
+                                                            color:
+                                                                Colors.orange),
+                                                  ),
+                                                ],
+                                              ),
+                                  ],
+                                ),
+                              ),
+                            ]),
                 ),
               )),
           Positioned(
@@ -298,6 +427,72 @@ class _SearchScreenState extends State<SearchScreen> {
                     DateFormat('d MMMM yyyy on EEEE').format(
                         (DateTime.fromMillisecondsSinceEpoch(
                             election.startDate! * 1000))),
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: Colors.white.withOpacity(0.6),
+                    ),
+                    maxLines: 1,
+                  ),
+                ],
+              ),
+            )
+          ]),
+        ),
+      ),
+    );
+  }
+
+  Widget buildBlurredElections(ThemeData theme) {
+    Widget img = Image.asset("assets/election/election.jpg");
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: MaterialButton(
+        splashColor: theme.scaffoldBackgroundColor,
+        onPressed: () {},
+        child: Container(
+          foregroundDecoration: const BoxDecoration(
+            color: Colors.grey,
+            backgroundBlendMode: BlendMode.saturation,
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+          ),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+            boxShadow: [BoxShadow(color: Colors.black, blurRadius: 3)],
+          ),
+          child: Stack(alignment: AlignmentDirectional.bottomStart, children: [
+            ClipRRect(borderRadius: BorderRadius.circular(30), child: img),
+            Container(
+              padding: const EdgeInsets.all(10),
+              width: double.maxFinite,
+              decoration: BoxDecoration(
+                color: theme.primaryColor,
+                borderRadius:
+                    const BorderRadius.vertical(bottom: Radius.circular(30)),
+                // border: Border.all(color: Colors.black, width: 2),
+                // boxShadow: [BoxShadow(color: Colors.black, blurRadius: 10)],
+                // gradient: LinearGradient(colors: [
+                //   Colors.black,
+                //   Colors.transparent,
+                // ], begin: Alignment.bottomCenter, end: Alignment.topCenter)
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Election Name",
+                    style: theme.textTheme.titleLarge
+                        ?.copyWith(color: Colors.white),
+                    maxLines: 1,
+                  ),
+                  Text(
+                    "X Candidates",
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(color: Colors.white),
+                    maxLines: 1,
+                  ),
+                  Text(
+                    "Election date",
                     style: theme.textTheme.labelLarge?.copyWith(
                       color: Colors.white.withOpacity(0.6),
                     ),
