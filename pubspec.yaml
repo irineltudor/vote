@@ -47,21 +47,13 @@ dependencies:
   image_cropper: 5.0.1
   image_picker: ^1.0.4
   permission_handler: ^10.2.0 
-  barcode: ^2.2.3
-  barcode_image: ^2.0.2
-  barcode_widget: ^2.0.3
   cloud_firestore: ^4.5.3
-  shared_preferences: ^2.1.0
-  google_maps_flutter: ^2.1.7
-  google_sign_in: ^6.1.0
   rxdart: ^0.27.7
   flutter_zoom_drawer: ^3.2.0
-  video_player: ^2.4.7
   country_picker: ^2.0.20
   smooth_page_indicator: ^1.0.0
   news_api_flutter_package: ^1.2.0
   lottie: ^3.1.0
-  cnic_scanner: ^0.0.4
   country_flags: ^2.2.0
   blur: ^3.1.0
   url_launcher: ^6.0.0

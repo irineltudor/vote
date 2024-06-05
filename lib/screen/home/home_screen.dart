@@ -23,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   UserModel loggedInUser = UserModel();
   final StorageService storageService = StorageService();
   final UserService userService = UserService();
-  String encrypted = '';
 
   @override
   void initState() {

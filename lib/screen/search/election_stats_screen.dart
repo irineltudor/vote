@@ -42,6 +42,8 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
 
   bool sorted = false;
 
+  int who = 0;
+
   @override
   void initState() {
     httpClient = Client();
@@ -52,7 +54,7 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
   }
 
   Future<void> getData() async {
-    userService.getUser(user!.uid).then((value) async {
+    await userService.getUser(user!.uid).then((value) async {
       loggedInUser = value;
       if (loggedInUser.status == 1) {
         userWallet = await walletService.getWallet(loggedInUser);
@@ -61,6 +63,13 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
         setState(() {});
       }
     });
+
+    who = (await contractService.getVoter(
+            ethClient!,
+            widget.electionContract.contractAddress!,
+            userWallet.address!,
+            widget.electionContract.testContract!))[0]
+        .toInt();
 
     colorList = getColorList(electionContract.noOfCandidates!);
 
@@ -73,7 +82,8 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
       Candidate candidate = Candidate(
           name: candidateInfo[0],
           about: candidateInfo[1],
-          numVotes: candidateInfo[2].toInt());
+          numVotes: candidateInfo[2].toInt(),
+          index: i);
       candidateList.add(candidate);
     }
 
@@ -110,7 +120,7 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
       );
 
       return Scaffold(
-        backgroundColor: theme.primaryColor,
+        backgroundColor: theme.scaffoldBackgroundColor,
         body: CustomScrollView(slivers: <Widget>[
           SliverAppBar(
             snap: true,
@@ -157,13 +167,13 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
               title: Text(
                 electionContract.electionName!,
                 style: theme.textTheme.headlineMedium
-                    ?.copyWith(color: theme.scaffoldBackgroundColor),
+                    ?.copyWith(color: theme.dialogBackgroundColor),
                 textAlign: TextAlign.center,
               ),
               subtitle: Text(
                 '${electionContract.noOfCandidates} Candidates',
                 style: theme.textTheme.titleSmall
-                    ?.copyWith(color: theme.scaffoldBackgroundColor),
+                    ?.copyWith(color: theme.dialogBackgroundColor),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -202,9 +212,8 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
               ),
             ),
             Container(
-              height: 362,
-              padding: const EdgeInsets.only(bottom: 1),
-              decoration: BoxDecoration(color: theme.primaryColor),
+              height: 370,
+              decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
               child: ListView.builder(
                   itemCount: (noCandidates / 2).ceil(),
                   itemBuilder: (context, index) {
@@ -367,7 +376,8 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(40)),
-            color: theme.scaffoldBackgroundColor,
+            color:
+                candidate.index == who ? color : theme.scaffoldBackgroundColor,
             boxShadow: const [
               BoxShadow(color: Color.fromARGB(246, 0, 0, 0), blurRadius: 4)
             ]),
@@ -381,11 +391,23 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
                   margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                      color: color,
+                      color: candidate.index == who
+                          ? theme.scaffoldBackgroundColor
+                          : color,
                       borderRadius:
                           const BorderRadius.all(Radius.circular(70))),
                   child: ClipOval(child: img)),
             ),
+            candidate.index == who
+                ? Flexible(
+                    child: Text(
+                      'You Voted For',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.labelMedium
+                          ?.copyWith(color: theme.scaffoldBackgroundColor),
+                    ),
+                  )
+                : Container(),
             Expanded(
               flex: 3,
               child: Container(
@@ -400,7 +422,10 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
                             ? '${candidate.name.substring(0, 32)}...'
                             : candidate.name,
                         textAlign: TextAlign.center,
-                        style: theme.textTheme.labelMedium,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                            color: candidate.index == who
+                                ? theme.scaffoldBackgroundColor
+                                : theme.dialogBackgroundColor),
                       ),
                     ),
                     IconButton(
@@ -409,7 +434,9 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
                         },
                         icon: Icon(
                           Icons.more_vert,
-                          color: theme.dialogBackgroundColor,
+                          color: candidate.index == who
+                              ? theme.scaffoldBackgroundColor
+                              : theme.dialogBackgroundColor,
                           size: 20,
                         ))
                   ],
@@ -462,8 +489,8 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
                 width: 10,
               ),
               Text(
-                candidate.name.length > 15
-                    ? '${candidate.name.substring(0, 15)}...'
+                candidate.name.length > 10
+                    ? '${candidate.name.substring(0, 10)}...'
                     : candidate.name,
                 style: theme.textTheme.bodyLarge,
               ),

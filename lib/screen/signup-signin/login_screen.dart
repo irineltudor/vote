@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vote/screen/navigator/navigator_screen.dart';
 import 'package:vote/screen/signup-signin/registration_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:vote/service/user_service.dart';
 import 'package:vote/widget/code_dialog_widget.dart';
 
 import 'forgot_password_screen.dart';
@@ -23,6 +23,9 @@ class _LoginScreenState extends State<LoginScreen> {
   // firebase
   final _auth = FirebaseAuth.instance;
 
+  //service
+  final userService = UserService();
+
   //editing controller
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -30,11 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
   // string for displaying the error
   String? errorMessage;
 
-  bool isLoggedIn = true;
-
   bool passVisibility = false;
-
-  late SharedPreferences prefs;
 
   late bool isDarkMode;
 
@@ -149,17 +148,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     emailController.text = "tirynel@yahoo.com";
     passwordController.text = "12345678";
-
-    // if (isLoggedIn) {
-    //   return Scaffold(
-    //     body: Container(
-    //         color: Colors.black,
-    //         child: const Center(
-    //             child: CircularProgressIndicator(
-    //           color: Colors.white,
-    //         ))),
-    //   );
-    // }
 
     return Scaffold(
         body: Stack(
@@ -284,9 +272,6 @@ class _LoginScreenState extends State<LoginScreen> {
         await _auth
             .signInWithEmailAndPassword(email: email, password: password)
             .then((uid) async => {
-                  // prefs = await SharedPreferences.getInstance(),
-                  // prefs.setString("email", email),
-                  // prefs.setString("password", password),
                   if (mounted)
                     {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

@@ -71,7 +71,8 @@ class _ElectionScreenState extends State<ElectionScreen> {
       Candidate candidate = Candidate(
           name: candidateInfo[0],
           about: candidateInfo[1],
-          numVotes: candidateInfo[2].toInt());
+          numVotes: candidateInfo[2].toInt(),
+          index: i);
       candidateList.add(candidate);
     }
     if (mounted) {

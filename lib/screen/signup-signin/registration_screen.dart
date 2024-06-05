@@ -32,7 +32,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final passwordEditingController = TextEditingController();
   final confirmPasswordEditingController = TextEditingController();
   final birthEditingController = TextEditingController();
-  final countryEditingController = TextEditingController();
 
   final UserService userService = UserService();
 

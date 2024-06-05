@@ -123,6 +123,17 @@ class ContractService {
     return result;
   }
 
+  Future<List> getVoter(Web3Client ethClient, String contractAddress,
+      String senderAddress, bool testContract) async {
+    List<dynamic> result = await ask(
+        '_eligibleVoters',
+        [EthereumAddress.fromHex(senderAddress)],
+        ethClient,
+        contractAddress,
+        testContract);
+    return result;
+  }
+
   Future<List> getTotalVotes(
       Web3Client ethClient, String contractAddress, bool testContract) async {
     List<dynamic> result = await ask(

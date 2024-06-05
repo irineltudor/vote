@@ -176,7 +176,7 @@ class _TwoFactorAuthScreenState extends State<TwoFactorAuthScreen> {
                 return CodeDialogBox(
                     function: () async {},
                     code: "000000",
-                    text: "Code sent for $phoneNumber");
+                    text: "Enter sent code $phoneNumber");
               });
 
           final credential = PhoneAuthProvider.credential(

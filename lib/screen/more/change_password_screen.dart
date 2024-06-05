@@ -351,7 +351,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 return CodeDialogBox(
                     function: () async {},
                     code: "000000",
-                    text: "Type sent code");
+                    text: "Enter sent code ${loggedInUser.phoneNumber}");
               });
 
           if (smsCode != null) {

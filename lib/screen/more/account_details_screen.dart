@@ -233,13 +233,21 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
               ? const Icon(Icons.verified)
               : GestureDetector(
                   onTap: () async => {
-                    await user!.sendEmailVerification(),
-                    Fluttertoast.showToast(
-                      msg: "Check your inbox",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.SNACKBAR,
-                    ),
-                    if (mounted) Navigator.of(context).pop("refresh")
+                    await user!.sendEmailVerification().then((value) {
+                      Fluttertoast.showToast(
+                        msg: "Check your inbox",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.SNACKBAR,
+                      );
+                      if (mounted) Navigator.of(context).pop("refresh");
+                    }).onError((error, stackTrace) {
+                      print(error);
+                      Fluttertoast.showToast(
+                        msg: error.toString(),
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.SNACKBAR,
+                      );
+                    }),
                   },
                   child: const Icon(Icons.send),
                 )
