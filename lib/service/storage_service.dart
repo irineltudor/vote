@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -12,6 +13,19 @@ class StorageService {
           .ref()
           .child(path)
           .putFile(file)
+          .whenComplete(() => null);
+    } on firebase_storage.FirebaseException catch (e) {
+      // ignore: avoid_print
+      print(e);
+    }
+  }
+
+  Future<void> uploadImage(String path, Uint8List image) async {
+    try {
+      await storageService
+          .ref()
+          .child(path)
+          .putData(image)
           .whenComplete(() => null);
     } on firebase_storage.FirebaseException catch (e) {
       // ignore: avoid_print

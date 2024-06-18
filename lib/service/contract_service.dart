@@ -91,6 +91,7 @@ class ContractService {
     final result = ethClient
         .call(contract: contract, function: ethFunction, params: args)
         .onError((error, stackTrace) {
+      // ignore: avoid_print
       print(error);
       return [];
     });

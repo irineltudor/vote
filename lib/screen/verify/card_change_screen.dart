@@ -1,9 +1,13 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:vote/screen/verify/card_details_screen.dart';
 import 'package:vote/screen/verify/facial_recognition_screen.dart';
 import 'package:vote/screen/verify/verify_intro_screen.dart';
+import 'package:vote/service/face_recognition_service.dart';
 
 class CardChangeScreen extends StatefulWidget {
   const CardChangeScreen({super.key});
@@ -13,22 +17,30 @@ class CardChangeScreen extends StatefulWidget {
 }
 
 class _CardChangeScreenState extends State<CardChangeScreen> {
+  User? user = FirebaseAuth.instance.currentUser;
   final PageController _controller = PageController();
+  final FaceRecognitionService faceRecognitionService =
+      FaceRecognitionService();
+
+  late File _idCardImage;
+  late File _selfieImage;
 
   bool onLastPage = false;
   bool onFirstPage = true;
   bool cardIdUpdated = false;
   bool facialUpdate = false;
 
-  void setCardIdUpdate(bool condition) {
+  void setCardIdUpdate(bool condition, File image) {
     setState(() {
       cardIdUpdated = condition;
+      _idCardImage = image;
     });
   }
 
-  void setFacialUpdate(bool condition) {
+  void setFacialUpdate(bool condition, File image) {
     setState(() {
       facialUpdate = condition;
+      _selfieImage = image;
     });
   }
 
@@ -96,8 +108,13 @@ class _CardChangeScreenState extends State<CardChangeScreen> {
                 ),
                 onLastPage
                     ? GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           if (!cardIdUpdated || facialUpdate) {
+                            print(_idCardImage);
+                            print(_selfieImage);
+
+                            await faceRecognitionService.postFaces(
+                                _idCardImage, _selfieImage, user!.uid);
                             Navigator.of(context).pop("refresh");
                           } else {
                             Fluttertoast.showToast(

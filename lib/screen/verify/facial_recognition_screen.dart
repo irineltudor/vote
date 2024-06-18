@@ -263,7 +263,7 @@ class _FacialRecognitionScreenState extends State<FacialRecognitionScreen> {
       setState(() {
         facialUpdated = true;
       });
-      widget.function.call(true);
+      widget.function.call(true, _selfie!);
     }
   }
 }

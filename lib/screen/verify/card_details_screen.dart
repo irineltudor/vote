@@ -654,8 +654,8 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
           ));
         }
       } else {
-        widget.function.call(true);
-        _startUpload();
+        widget.function.call(true, _idCardPicture!);
+        // _startUpload();
         LinkedHashMap<String, String> idCard = LinkedHashMap();
 
         idCard['firstname'] = firstnameTEController.text;

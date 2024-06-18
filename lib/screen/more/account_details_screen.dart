@@ -241,6 +241,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                       );
                       if (mounted) Navigator.of(context).pop("refresh");
                     }).onError((error, stackTrace) {
+                      // ignore: avoid_print
                       print(error);
                       Fluttertoast.showToast(
                         msg: error.toString(),
