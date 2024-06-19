@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
-import 'package:image/image.dart';
 import 'package:vote/service/storage_service.dart';
 import 'package:image/image.dart' as img;
 
@@ -22,8 +21,10 @@ class FaceRecognitionService {
   }
 
   Future<void> postFaces(File idCardImage, File selfieImage, String uid) async {
-    final faceRectangleIdCard = await detectFace(idCardImage);
-    final faceRectangleSelfie = await detectFace(selfieImage);
+    final faceRectangleIdCard =
+        (await detectFace(idCardImage))['faceRectangle'];
+    final faceRectangleSelfie =
+        (await detectFace(selfieImage))['faceRectangle'];
 
     final croppedCardImage =
         _cropFace(idCardImage.readAsBytesSync(), faceRectangleIdCard);
@@ -34,25 +35,48 @@ class FaceRecognitionService {
     _startUpload(croppedCardImage, croppedSelfieImage, uid);
   }
 
-  // Future<bool> verifyFaces(File idCardImage, File selfieImage) async {
-  //   // Create a new person and add the ID card face to it
-  //   final personId = await createPerson();
-  //   if (personId == null) return false;
+  Future<bool> verifyFaces(File idCardImage, File selfieImage) async {
+    // Create a new person and add the ID card face to it
+    final personId = await createPerson();
+    if (personId == null) return false;
 
-  //   await addFaceToPerson(personId, idCardImage);
+    final faceRectangleIdCard =
+        (await detectFace(idCardImage))['faceRectangle'];
 
-  //   // Train the person group after adding the face
-  //   await trainPersonGroup();
+    final croppedCardImage =
+        _cropFace(idCardImage.readAsBytesSync(), faceRectangleIdCard);
 
-  //   // Detect face in the selfie
-  //   final selfieFaceId = await detectFace(selfieImage!);
-  //   if (selfieFaceId == null) return false;
+    await addFaceToPerson(personId, croppedCardImage);
 
-  //   // Verify the detected face against the person group
-  //   final isIdentical = await verifyFaceWithPersonGroup(selfieFaceId, personId);
+    // Train the person group after adding the face
+    await trainPersonGroup();
 
-  //   return isIdentical;
-  // }
+    // Detect face in the selfie
+    final selfieFaceId = (await detectFace(selfieImage))['faceId'];
+    if (selfieFaceId == null) return false;
+
+    // Verify the detected face against the person group
+    final isIdentical = await verifyFaceWithPersonGroup(selfieFaceId, personId);
+
+    deletePerson(personId);
+
+    return isIdentical;
+  }
+
+  Future<void> deletePerson(String personId) async {
+    final url = '$apiEndpoint/persongroups/$personGroupId/persons/$personId';
+    final headers = {
+      'Ocp-Apim-Subscription-Key': apiKey,
+    };
+
+    final response = await http.delete(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      print('Person deleted: $personId');
+    } else {
+      print('Error deleting person: ${response.body}');
+    }
+  }
 
   Future<Map<String, dynamic>> detectFace(File image) async {
     final endpoint = apiEndpoint + '/detect';
@@ -69,8 +93,7 @@ class FaceRecognitionService {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       if (data.isNotEmpty) {
-        print("DATA IS NOT EMPTY");
-        return data[0]['faceRectangle'];
+        return data[0];
       }
     }
 
@@ -79,7 +102,6 @@ class FaceRecognitionService {
 
   Uint8List _cropFace(
       Uint8List imageBytes, Map<String, dynamic> faceRectangle) {
-    print(faceRectangle);
     final image = img.decodeImage(imageBytes);
     final top = faceRectangle['top'];
     final left = faceRectangle['left'];
@@ -94,7 +116,7 @@ class FaceRecognitionService {
 
   Future<void> createPersonGroup() async {
     final response = await http.put(
-      Uri.parse('$apiEndpoint/largepersongroups/$personGroupId'),
+      Uri.parse('$apiEndpoint/persongroups/$personGroupId'),
       headers: {
         'Content-Type': 'application/json',
         'Ocp-Apim-Subscription-Key': apiKey,
@@ -104,8 +126,6 @@ class FaceRecognitionService {
         'userData': 'Person group for face verification',
       }),
     );
-
-    print(response.body);
 
     if (response.statusCode == 200) {
       print('Person group created successfully');
@@ -136,8 +156,7 @@ class FaceRecognitionService {
     }
   }
 
-  Future<void> addFaceToPerson(String personId, File image) async {
-    final bytes = await image.readAsBytes();
+  Future<void> addFaceToPerson(String personId, Uint8List bytes) async {
     final response = await http.post(
       Uri.parse(
           '$apiEndpoint/persongroups/$personGroupId/persons/$personId/persistedFaces'),

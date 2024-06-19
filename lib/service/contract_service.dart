@@ -206,4 +206,17 @@ class ContractService {
 
     return result;
   }
+
+  Future<List> whom(Web3Client ethClient, String contractAddress,
+      String senderAddress, bool testContract) async {
+    final contract = await loadContract(contractAddress, testContract);
+    final ethFunction = contract.function("whom");
+    final result = ethClient.call(
+        sender: EthereumAddress.fromHex(senderAddress),
+        contract: contract,
+        function: ethFunction,
+        params: []);
+
+    return result;
+  }
 }

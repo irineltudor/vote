@@ -130,4 +130,11 @@ class UserService {
       }
     }
   }
+
+  void setStatusToVerified() async {
+    await FirebaseFirestore.instance
+        .collection("user")
+        .doc(user!.uid)
+        .update({'status': 1});
+  }
 }
