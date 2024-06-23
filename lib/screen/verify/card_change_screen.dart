@@ -161,6 +161,7 @@ class _CardChangeScreenState extends State<CardChangeScreen> {
                                 gravity: ToastGravity.SNACKBAR,
                               );
 
+                              // ignore: use_build_context_synchronously
                               Navigator.of(context).pop("refresh");
                             } else {
                               Fluttertoast.showToast(

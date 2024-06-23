@@ -72,14 +72,16 @@ class FaceRecognitionService {
     final response = await http.delete(Uri.parse(url), headers: headers);
 
     if (response.statusCode == 200) {
+      // ignore: avoid_print
       print('Person deleted: $personId');
     } else {
+      // ignore: avoid_print
       print('Error deleting person: ${response.body}');
     }
   }
 
   Future<Map<String, dynamic>> detectFace(File image) async {
-    final endpoint = apiEndpoint + '/detect';
+    final endpoint = '$apiEndpoint/detect';
     final bytes = await image.readAsBytes();
     final response = await http.post(
       Uri.parse(endpoint),
@@ -128,8 +130,10 @@ class FaceRecognitionService {
     );
 
     if (response.statusCode == 200) {
+      // ignore: avoid_print
       print('Person group created successfully');
     } else {
+      // ignore: avoid_print
       print('Error creating person group: ${response.body}');
     }
   }
@@ -151,6 +155,7 @@ class FaceRecognitionService {
       final data = json.decode(response.body);
       return data['personId'];
     } else {
+      // ignore: avoid_print
       print('Error creating person: ${response.body}');
       return null;
     }
@@ -168,8 +173,10 @@ class FaceRecognitionService {
     );
 
     if (response.statusCode == 200) {
+      // ignore: avoid_print
       print('Face added to person successfully');
     } else {
+      // ignore: avoid_print
       print('Error adding face to person: ${response.body}');
     }
   }
@@ -183,8 +190,10 @@ class FaceRecognitionService {
     );
 
     if (response.statusCode == 202) {
+      // ignore: avoid_print
       print('Person group training initiated');
     } else {
+      // ignore: avoid_print
       print('Error training person group: ${response.body}');
     }
   }
@@ -207,6 +216,7 @@ class FaceRecognitionService {
       final data = json.decode(response.body);
       return data['isIdentical'];
     } else {
+      // ignore: avoid_print
       print('Error verifying face: ${response.body}');
     }
 

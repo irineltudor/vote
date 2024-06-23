@@ -40,9 +40,6 @@ class ContractService {
       data: yourFunctionData,
     );
 
-    // ignore: avoid_print
-    print(estimatedGas);
-
     // Set the gas limit to estimatedGas + some buffer
     final gasLimit = estimatedGas + BigInt.from(10000); // Adding buffer
 
@@ -51,9 +48,6 @@ class ContractService {
 // ignore: avoid_print
     print(
         "PRICE in eth: ${(gasPrice.getInWei.toInt() * estimatedGas.toInt() / 1000000000000000000)}");
-// ignore: avoid_print
-    print(
-        "PRICE in eth for me: ${(100000000000 * estimatedGas.toInt() / 1000000000000000000)}");
 
     final result = await ethClient
         .sendTransaction(
@@ -217,6 +211,17 @@ class ContractService {
         function: ethFunction,
         params: []);
 
+    return result;
+  }
+
+  Future<List> getCandidateResults(Web3Client ethClient, String contractAddress,
+      int candidateIndex, bool testContract) async {
+    List<dynamic> result = await ask(
+        'getCandidateResults',
+        [BigInt.from(candidateIndex)],
+        ethClient,
+        contractAddress,
+        testContract);
     return result;
   }
 }

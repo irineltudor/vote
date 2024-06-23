@@ -54,11 +54,6 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
     });
   }
 
-  void _startUpload() {
-    String path = 'idcard/${loggedInUser.uid!}.png';
-    storageService.uploadFile(path, _idCardPicture!);
-  }
-
   void setWaitingForUpload(bool value) {
     setState(() {
       waitingForUpload = value;
@@ -655,7 +650,6 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
         }
       } else {
         widget.function.call(true, _idCardPicture!);
-        // _startUpload();
         LinkedHashMap<String, String> idCard = LinkedHashMap();
 
         idCard['firstname'] = firstnameTEController.text;

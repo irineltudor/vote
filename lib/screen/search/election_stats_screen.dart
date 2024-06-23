@@ -64,7 +64,7 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
       }
     });
 
-    who = (await contractService.getVoter(
+    who = (await contractService.whom(
             ethClient!,
             widget.electionContract.contractAddress!,
             userWallet.address!,
@@ -74,7 +74,7 @@ class _ElectionStatsScreenState extends State<ElectionStatsScreen> {
     colorList = getColorList(electionContract.noOfCandidates!);
 
     for (int i = 0; i < electionContract.noOfCandidates!; i++) {
-      List<dynamic> candidateInfo = await contractService.getCandidateInfo(
+      List<dynamic> candidateInfo = await contractService.getCandidateResults(
           ethClient!,
           electionContract.contractAddress!,
           i,

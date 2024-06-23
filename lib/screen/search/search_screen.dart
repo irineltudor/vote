@@ -74,7 +74,13 @@ class _SearchScreenState extends State<SearchScreen> {
                 userWallet.address!,
                 election.testContract!);
 
-            if (eligible.isEmpty || voted.isEmpty) {
+            final hasFinished = await contractService.hasFinished(
+                ethClient!,
+                election.contractAddress!,
+                userWallet.address!,
+                election.testContract!);
+
+            if (eligible.isEmpty || voted.isEmpty || hasFinished.isEmpty) {
               Fluttertoast.showToast(
                 msg: "Too much request, try again later",
                 backgroundColor: Colors.black,
@@ -83,7 +89,9 @@ class _SearchScreenState extends State<SearchScreen> {
               );
             }
 
-            if (eligible[0] == true && voted[0] == true) {
+            if (eligible[0] == true &&
+                voted[0] == true &&
+                hasFinished[0] == true) {
               List<dynamic> electionInfo =
                   await contractService.getElectionInfo(ethClient!,
                       election.contractAddress!, election.testContract!);
