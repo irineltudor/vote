@@ -39,6 +39,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String? errorMessage;
 
   @override
+  void initState() {
+    super.initState();
+    firstNameEditingController.text = "Tudor";
+    lastNameEditingController.text = "Urma";
+    emailEditingController.text = "tirynel@yahoo.com";
+    passwordEditingController.text = "12345678";
+    confirmPasswordEditingController.text = "12345678";
+  }
+
+  @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
@@ -262,12 +272,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
       ),
     );
-
-    firstNameEditingController.text = "Tudor";
-    lastNameEditingController.text = "Urma";
-    emailEditingController.text = "tirynel@yahoo.com";
-    passwordEditingController.text = "12345678";
-    confirmPasswordEditingController.text = "12345678";
 
     return Scaffold(
         backgroundColor: theme.primaryColor,

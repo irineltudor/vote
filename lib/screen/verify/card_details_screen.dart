@@ -48,6 +48,19 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
   }
 
   Future<void> getData() async {
+    addressTEController.text = 'Sarmisegetuza 12';
+    cityTEController.text = 'Iasi';
+    countyTEController.text = 'Iasi';
+    countryTEController.text = 'Romania';
+    dobTEController.text = '09-11-2000';
+    expireDateTEController.text = '09-11-2028';
+    issueDateTEController.text = '09-11-2022';
+    firstnameTEController.text = 'Tudor Irinel';
+    lastnameTEController.text = 'Urma';
+    genderTEController.text = 'M';
+    nationalityTEController.text = 'romanian';
+    personalCodeTEController.text = '5000911222493';
+
     userService.getUser(user!.uid).then((value) {
       loggedInUser = value;
       setState(() {});
@@ -145,21 +158,6 @@ class _CardDetailsScreenState extends State<CardDetailsScreen> {
                 )),
           ],
         ));
-
-    setState(() {
-      addressTEController.text = 'Sarmisegetuza 12';
-      cityTEController.text = 'Iasi';
-      countyTEController.text = 'Iasi';
-      countryTEController.text = 'Romania';
-      dobTEController.text = '09-11-2000';
-      expireDateTEController.text = '09-11-2028';
-      issueDateTEController.text = '09-11-2022';
-      firstnameTEController.text = 'Tudor Irinel';
-      lastnameTEController.text = 'Urma';
-      genderTEController.text = 'M';
-      nationalityTEController.text = 'romanian';
-      personalCodeTEController.text = '5000911222493';
-    });
 
     if (loggedInUser.firstname == null) {
       return Container(

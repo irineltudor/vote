@@ -40,6 +40,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    emailController.text = "tirynel@yahoo.com";
+    passwordController.text = "12345678";
   }
 
   @override
@@ -145,9 +147,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-
-    emailController.text = "tirynel@yahoo.com";
-    passwordController.text = "12345678";
 
     return Scaffold(
         body: Stack(
