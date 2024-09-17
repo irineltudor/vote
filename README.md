@@ -1,6 +1,6 @@
 # Master Thesis
 
-##Rezumat
+## Rezumat
 
 Această lucrare de disertație are scopul de a prezenta potențialul pe care îl oferă tehnologia
 blockchain în integrarea unui sistem de vot securizat, accesibil, transparent și de
